@@ -1,0 +1,3 @@
+Task: Implement core publishing logic (WeChat draft creation part)
+Changes: Updated wechat-api.ts to include createDraft method. Added tests.
+Why: Enable publishing content to WeChat.
