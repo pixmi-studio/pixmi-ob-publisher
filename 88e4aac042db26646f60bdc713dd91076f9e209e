@@ -1,0 +1,3 @@
+Task: Implement Markdown parser to extract images and convert to WeChat-compatible HTML
+Changes: Created src/markdown-parser.ts and tests. Used markdown-it for rendering.
+Why: Core functionality for processing content.
