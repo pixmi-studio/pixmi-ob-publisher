@@ -2,6 +2,15 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { PixmiSettingTab } from '../src/settings-tab';
 // @ts-ignore
 import { getCreatedSettings, clearCreatedSettings } from '../__mocks__/obsidian';
+import { Notice } from 'obsidian';
+
+vi.mock('obsidian', async () => {
+    const actual = await vi.importActual('obsidian') as any;
+    return {
+        ...actual,
+        Notice: vi.fn()
+    };
+});
 
 describe('PixmiSettingTab', () => {
   let plugin: any;
@@ -13,7 +22,10 @@ describe('PixmiSettingTab', () => {
     containerEl = document.createElement('div');
     plugin = {
       settings: { appId: '', appSecret: '' },
-      saveSettings: vi.fn().mockResolvedValue(undefined)
+      saveSettings: vi.fn().mockResolvedValue(undefined),
+      apiClient: {
+        getAccessToken: vi.fn()
+      }
     };
     tab = new PixmiSettingTab({} as any, plugin);
     (tab as any).containerEl = containerEl;
@@ -45,5 +57,36 @@ describe('PixmiSettingTab', () => {
     
     expect(plugin.settings.appSecret).toBe('new-app-secret');
     expect(plugin.saveSettings).toHaveBeenCalled();
+  });
+
+  it('should have a Test Connection button', () => {
+    tab.display();
+    const settings = getCreatedSettings();
+    const testBtn = settings.find((s: any) => s.name === 'Test Connection');
+    expect(testBtn).toBeDefined();
+  });
+
+  it('should call api client when test button clicked', async () => {
+    plugin.apiClient.getAccessToken.mockResolvedValue('token');
+    tab.display();
+    const settings = getCreatedSettings();
+    const testBtn = settings.find((s: any) => s.name === 'Test Connection');
+    
+    await testBtn.onClickCb();
+    
+    expect(plugin.apiClient.getAccessToken).toHaveBeenCalled();
+    expect(Notice).toHaveBeenCalledWith('Connection successful!');
+  });
+
+  it('should show error notice when connection fails', async () => {
+    plugin.apiClient.getAccessToken.mockRejectedValue(new Error('Auth failed'));
+    tab.display();
+    const settings = getCreatedSettings();
+    const testBtn = settings.find((s: any) => s.name === 'Test Connection');
+    
+    await testBtn.onClickCb();
+    
+    expect(plugin.apiClient.getAccessToken).toHaveBeenCalled();
+    expect(Notice).toHaveBeenCalledWith('Connection failed: Error: Auth failed');
   });
 });
