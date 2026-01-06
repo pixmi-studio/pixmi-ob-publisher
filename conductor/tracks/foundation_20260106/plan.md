@@ -27,7 +27,7 @@
 
 ## Phase 4: Markdown Processing & Publishing Flow
 
-- [ ] Task: Implement Markdown parser to extract images and convert to WeChat-compatible HTML
+- [x] Task: Implement Markdown parser to extract images and convert to WeChat-compatible HTML 88e4aac
 - [ ] Task: Write tests for Markdown to HTML conversion (headers, lists, images)
 - [ ] Task: Implement core publishing logic: Upload images -> Replace URLs -> Create WeChat Draft
 - [ ] Task: Write integration tests for the publishing flow (mocking all external APIs)
