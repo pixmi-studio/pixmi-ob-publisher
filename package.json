@@ -11,8 +11,16 @@
     "coverage": "vitest run --coverage"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "Pixmi Studio",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pixmi-studio/pixmi-ob-publisher.git"
+  },
+  "bugs": {
+    "url": "https://github.com/pixmi-studio/pixmi-ob-publisher/issues"
+  },
+  "homepage": "https://github.com/pixmi-studio/pixmi-ob-publisher#readme",
   "dependencies": {
     "axios": "^1.13.2"
   },

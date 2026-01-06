@@ -4,7 +4,7 @@
   "version": "0.1.0",
   "minAppVersion": "0.15.0",
   "description": "Publish Obsidian notes to WeChat Official Account draft box.",
-  "author": "Pixmi",
-  "authorUrl": "",
+  "author": "Pixmi Studio",
+  "authorUrl": "https://github.com/pixmi-studio",
   "isDesktopOnly": false
 }
