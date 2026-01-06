@@ -1,0 +1,3 @@
+Task: Configure TypeScript and Vite
+Changes: Added tsconfig.json, vite.config.ts, vitest.config.ts, .gitignore, .geminiignore.
+Why: Development environment configuration.
