@@ -1,0 +1,3 @@
+Task: Implement secure storage and retrieval of settings
+Changes: Updated main.ts to include loadSettings, saveSettings and constructor initialization.
+Why: Ensures user configuration is persisted between sessions.
