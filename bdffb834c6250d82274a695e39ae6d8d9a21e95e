@@ -1,0 +1,3 @@
+Task: Implement 'Test Connection' functionality in settings
+Changes: Updated settings-tab.ts to add button and handler. Updated main.ts to initialize API client. Added tests.
+Why: Allows users to verify their credentials.
