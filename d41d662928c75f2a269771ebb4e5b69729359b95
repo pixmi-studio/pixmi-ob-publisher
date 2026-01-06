@@ -1,0 +1,3 @@
+Task: Define settings interface and default settings
+Changes: Created settings.ts and tests/settings.test.ts.
+Why: Essential for WeChat API configuration.
