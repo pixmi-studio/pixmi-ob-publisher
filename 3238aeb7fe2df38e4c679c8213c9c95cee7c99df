@@ -1,0 +1,3 @@
+Task: Write tests for settings management
+Changes: Updated tests/main.test.ts and tests/settings-tab.test.ts. Improved __mocks__/obsidian.js.
+Why: Ensures high reliability and coverage of configuration logic.
