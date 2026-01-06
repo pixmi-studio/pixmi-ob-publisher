@@ -1,0 +1,3 @@
+Task: Implement image upload service to WeChat Media Library
+Changes: Updated wechat-api.ts and tests/wechat-api.test.ts. Implemented uploadImage.
+Why: Required for including images in published drafts.
