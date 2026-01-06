@@ -104,4 +104,36 @@ describe('WeChatApiClient', () => {
 
     await expect(client.uploadImage(mockBuffer, 'image.jpg')).rejects.toThrow('Upload failed');
   });
+
+  it('should create draft', async () => {
+    const mockToken = 'mock-access-token';
+    const mockMediaId = 'mock-draft-media-id';
+    const articles = [{ title: 'Test', content: 'Content', thumb_media_id: 'thumb' }];
+    
+    client.getAccessToken = vi.fn().mockResolvedValue(mockToken);
+    
+    (axios.post as any).mockResolvedValue({
+      data: {
+        media_id: mockMediaId
+      }
+    });
+
+    const mediaId = await client.createDraft(articles);
+    
+    expect(mediaId).toBe(mockMediaId);
+    expect(axios.post).toHaveBeenCalledWith(
+      expect.stringContaining('https://api.weixin.qq.com/cgi-bin/draft/add'),
+      { articles },
+      { params: { access_token: mockToken } }
+    );
+  });
+
+  it('should handle create draft error', async () => {
+    client.getAccessToken = vi.fn().mockResolvedValue('token');
+    
+    const error = new Error('Draft creation failed');
+    (axios.post as any).mockRejectedValue(error);
+
+    await expect(client.createDraft([])).rejects.toThrow('Draft creation failed');
+  });
 });

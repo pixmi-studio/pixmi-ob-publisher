@@ -10,6 +10,21 @@ interface UploadMaterialResponse {
   url: string;
 }
 
+export interface WeChatArticle {
+  title: string;
+  author?: string;
+  digest?: string;
+  content: string;
+  content_source_url?: string;
+  thumb_media_id: string;
+  need_open_comment?: number;
+  only_fans_can_comment?: number;
+}
+
+interface AddDraftResponse {
+  media_id: string;
+}
+
 export class WeChatApiClient {
   private appId: string;
   private appSecret: string;
@@ -55,12 +70,6 @@ export class WeChatApiClient {
     const url = 'https://api.weixin.qq.com/cgi-bin/material/add_material';
     
     const formData = new FormData();
-    // In a real browser environment, we can construct a Blob from the buffer.
-    // Since we are targeting Obsidian (Electron), this works.
-    // For tests in jsdom, we might need to handle Blob/File creation carefully if strictly typed.
-    // But axios handles FormData.
-    
-    // Note: Creating a File object from buffer in browser environment
     const blob = new Blob([buffer]);
     formData.append('media', blob, filename);
 
@@ -79,6 +88,22 @@ export class WeChatApiClient {
     } catch (error) {
         console.error('Error uploading image:', error);
         throw error;
+    }
+  }
+
+  async createDraft(articles: WeChatArticle[]): Promise<string> {
+    const accessToken = await this.getAccessToken();
+    const url = 'https://api.weixin.qq.com/cgi-bin/draft/add';
+    
+    try {
+      const response = await axios.post<AddDraftResponse>(url, { articles }, {
+        params: { access_token: accessToken }
+      });
+      
+      return response.data.media_id;
+    } catch (error) {
+      console.error('Error creating draft:', error);
+      throw error;
     }
   }
 }
