@@ -64,4 +64,44 @@ describe('WeChatApiClient', () => {
     (axios.get as any).mockRejectedValue(error);
     await expect(client.getAccessToken()).rejects.toThrow('Network error');
   });
+
+  it('should upload image', async () => {
+    const mockToken = 'mock-access-token';
+    const mockMediaId = 'mock-media-id';
+    const mockUrl = 'http://mock-url.com/image.jpg';
+    const mockBuffer = Buffer.from('mock-image-data');
+    
+    // Mock getAccessToken to return a token
+    client.getAccessToken = vi.fn().mockResolvedValue(mockToken);
+    
+    (axios.post as any).mockResolvedValue({
+      data: {
+        media_id: mockMediaId,
+        url: mockUrl
+      }
+    });
+
+    const result = await client.uploadImage(mockBuffer, 'image.jpg');
+    
+    expect(result.media_id).toBe(mockMediaId);
+    expect(result.url).toBe(mockUrl);
+    expect(axios.post).toHaveBeenCalledWith(
+      expect.stringContaining('https://api.weixin.qq.com/cgi-bin/material/add_material'),
+      expect.any(FormData),
+      expect.objectContaining({
+        params: { access_token: mockToken, type: 'image' },
+        headers: expect.any(Object)
+      })
+    );
+  });
+
+  it('should handle upload image error', async () => {
+    const mockBuffer = Buffer.from('mock-image-data');
+    client.getAccessToken = vi.fn().mockResolvedValue('token');
+    
+    const error = new Error('Upload failed');
+    (axios.post as any).mockRejectedValue(error);
+
+    await expect(client.uploadImage(mockBuffer, 'image.jpg')).rejects.toThrow('Upload failed');
+  });
 });

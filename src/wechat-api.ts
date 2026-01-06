@@ -5,6 +5,11 @@ interface AccessTokenResponse {
   expires_in: number;
 }
 
+interface UploadMaterialResponse {
+  media_id: string;
+  url: string;
+}
+
 export class WeChatApiClient {
   private appId: string;
   private appSecret: string;
@@ -42,6 +47,38 @@ export class WeChatApiClient {
     } catch (error) {
       console.error('Error fetching access token:', error);
       throw error;
+    }
+  }
+
+  async uploadImage(buffer: ArrayBuffer | Buffer, filename: string): Promise<UploadMaterialResponse> {
+    const accessToken = await this.getAccessToken();
+    const url = 'https://api.weixin.qq.com/cgi-bin/material/add_material';
+    
+    const formData = new FormData();
+    // In a real browser environment, we can construct a Blob from the buffer.
+    // Since we are targeting Obsidian (Electron), this works.
+    // For tests in jsdom, we might need to handle Blob/File creation carefully if strictly typed.
+    // But axios handles FormData.
+    
+    // Note: Creating a File object from buffer in browser environment
+    const blob = new Blob([buffer]);
+    formData.append('media', blob, filename);
+
+    try {
+        const response = await axios.post<UploadMaterialResponse>(url, formData, {
+            params: {
+                access_token: accessToken,
+                type: 'image'
+            },
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        });
+        
+        return response.data;
+    } catch (error) {
+        console.error('Error uploading image:', error);
+        throw error;
     }
   }
 }
