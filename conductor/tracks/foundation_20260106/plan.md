@@ -1,6 +1,6 @@
 # Track Plan: Project Foundation & Core WeChat Integration
 
-## Phase 1: Project Initialization & Scaffolding
+## Phase 1: Project Initialization & Scaffolding [checkpoint: 9da637a]
 
 - [x] Task: Initialize project with npm and install core dependencies (Vite, Vitest, Axios, Obsidian API) e018dc5
 - [x] Task: Configure TypeScript and Vite for Obsidian plugin development c145834
