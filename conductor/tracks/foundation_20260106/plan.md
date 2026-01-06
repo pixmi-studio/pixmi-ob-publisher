@@ -22,7 +22,7 @@
 - [x] Task: Implement 'Test Connection' functionality in settings bdffb83
 - [x] Task: Write tests for Connection Test logic bdffb83
 - [x] Task: Implement image upload service to WeChat Media Library 8b5cc26
-- [ ] Task: Write tests for image upload service
+- [x] Task: Write tests for image upload service 8b5cc26
 - [ ] Task: Conductor - User Manual Verification 'Phase 3: WeChat API Client Development' (Protocol in workflow.md)
 
 ## Phase 4: Markdown Processing & Publishing Flow
