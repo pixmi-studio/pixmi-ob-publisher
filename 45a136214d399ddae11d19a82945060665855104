@@ -1,0 +1,3 @@
+Task: Create basic plugin entry point
+Changes: Created main.ts, manifest.json, tests/main.test.ts, __mocks__/obsidian.js.
+Why: Core plugin logic and Obsidian integration.
