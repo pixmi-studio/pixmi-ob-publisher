@@ -1,0 +1,3 @@
+Task: Initialize project with npm and install core dependencies
+Changes: Created package.json and package-lock.json. Installed axios, vite, vitest, typescript, obsidian, etc.
+Why: Foundation setup.
