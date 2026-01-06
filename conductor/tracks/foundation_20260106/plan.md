@@ -19,7 +19,7 @@
 
 - [x] Task: Implement WeChat API client for Access Token retrieval with caching 053b161
 - [x] Task: Write tests for Access Token service (mocking WeChat API) 053b161
-- [ ] Task: Implement 'Test Connection' functionality in settings
+- [x] Task: Implement 'Test Connection' functionality in settings bdffb83
 - [ ] Task: Write tests for Connection Test logic
 - [ ] Task: Implement image upload service to WeChat Media Library
 - [ ] Task: Write tests for image upload service
