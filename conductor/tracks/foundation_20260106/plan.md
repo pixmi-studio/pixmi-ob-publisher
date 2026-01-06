@@ -9,7 +9,7 @@
 
 ## Phase 2: Configuration & Credential Management
 
-- [ ] Task: Define settings interface and default settings
+- [x] Task: Define settings interface and default settings d41d662
 - [ ] Task: Implement Settings Tab UI with AppID and AppSecret fields
 - [ ] Task: Implement secure storage and retrieval of settings
 - [ ] Task: Write tests for settings management
