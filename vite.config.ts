@@ -4,7 +4,7 @@ import path from 'path';
 export default defineConfig({
   build: {
     lib: {
-      entry: path.resolve(__dirname, 'main.ts'),
+      entry: path.resolve(__dirname, 'src/main.ts'),
       name: 'PixmiObPublisher',
       fileName: () => 'main.js',
       formats: ['cjs'],
@@ -17,8 +17,8 @@ export default defineConfig({
         },
       },
     },
-    outDir: '.',
-    emptyOutDir: false,
+    outDir: 'dist',
+    emptyOutDir: true,
     sourcemap: 'inline',
   },
 });

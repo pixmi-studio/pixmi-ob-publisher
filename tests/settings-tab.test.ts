@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { PixmiSettingTab } from '../settings-tab';
+import { PixmiSettingTab } from '../src/settings-tab';
 // @ts-ignore
 import { getCreatedSettings, clearCreatedSettings } from '../__mocks__/obsidian';
 

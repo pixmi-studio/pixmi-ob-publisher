@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { DEFAULT_SETTINGS } from '../settings';
+import { DEFAULT_SETTINGS } from '../src/settings';
 
 describe('Settings', () => {
   it('should have default settings', () => {

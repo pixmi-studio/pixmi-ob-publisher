@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { Plugin } from 'obsidian';
-import PixmiObPublisher from '../main';
+import PixmiObPublisher from '../src/main';
 
 // Mock Obsidian Plugin class
 vi.mock('obsidian', () => {
