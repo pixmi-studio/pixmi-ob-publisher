@@ -1,0 +1,10 @@
+Task: Create GitHub Action workflow for automatic release on push to master
+Summary: Created GitHub Action workflow.
+- Created .github/workflows/release.yml.
+- Configured to run on push to master.
+- Detects version from package.json.
+- Creates tag if missing.
+- Builds plugin and creates GitHub Release with assets.
+Files:
+- .github/workflows/release.yml
+Why: To automate the release process.
