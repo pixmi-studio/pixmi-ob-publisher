@@ -42,7 +42,7 @@
     [
       "@semantic-release/exec",
       {
-        "prepareCmd": "node scripts/update-manifests.js ${nextRelease.version}"
+        "prepareCmd": "node scripts/update-manifests.js ${nextRelease.version} && node scripts/package.js"
       }
     ],
     [
@@ -63,7 +63,8 @@
       {
         "assets": [
           { "path": "dist/main.js", "label": "main.js" },
-          { "path": "manifest.json", "label": "manifest.json" }
+          { "path": "manifest.json", "label": "manifest.json" },
+          { "path": "pixmi-ob-publisher.zip", "label": "pixmi-ob-publisher.zip" }
         ]
       }
     ]
