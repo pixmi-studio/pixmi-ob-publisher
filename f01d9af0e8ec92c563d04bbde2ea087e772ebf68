@@ -1,0 +1,11 @@
+Task: Implement core publishing logic: Upload images -> Replace URLs -> Create WeChat Draft
+Summary: Implemented the Publisher class which orchestrates the publishing flow.
+- Extracts images from Markdown.
+- Uploads images to WeChat API.
+- Replaces local image paths with remote URLs in the content.
+- Creates a draft on WeChat.
+- Validates that at least one image exists to serve as the thumbnail.
+Files:
+- src/publisher.ts
+- tests/publisher.test.ts
+Why: To enable users to publish their Obsidian notes directly to WeChat with images.
