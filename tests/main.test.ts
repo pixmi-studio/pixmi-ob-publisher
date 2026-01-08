@@ -2,6 +2,10 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { Plugin } from 'obsidian';
 import PixmiObPublisher from '../src/main';
 
+const mocks = vi.hoisted(() => ({
+    noticeSpy: vi.fn()
+}));
+
 // Mock Obsidian Plugin class
 vi.mock('obsidian', () => {
   return {
@@ -37,7 +41,9 @@ vi.mock('obsidian', () => {
         }
     },
     Notice: class Notice {
-        constructor(message: string) {}
+        constructor(message: string) {
+            mocks.noticeSpy(message);
+        }
     },
     MarkdownView: class MarkdownView {},
     TFile: class TFile {}
@@ -49,6 +55,7 @@ describe('PixmiObPublisher', () => {
 
   beforeEach(() => {
     plugin = new PixmiObPublisher({} as any, {} as any);
+    mocks.noticeSpy.mockClear();
   });
 
   it('should be defined', () => {
@@ -151,18 +158,15 @@ describe('PixmiObPublisher', () => {
         '# Content', 
         expect.any(Function)
     );
+    expect(mocks.noticeSpy).toHaveBeenCalledWith(expect.stringContaining('Successfully published'));
   });
 
   it('should show notice if no active view', async () => {
     plugin.app.workspace = {
         getActiveViewOfType: vi.fn().mockReturnValue(null)
     };
-    // Spy on Notice - wait, Notice is a class. 
-    // We can spy on the mock implementation if we could access it, 
-    // or checks side effects. But our mock is simple class.
-    // Let's just ensure it doesn't crash and returns.
     await plugin.publishCurrentNote();
-    // Ideally we verify Notice was instantiated.
+    expect(mocks.noticeSpy).toHaveBeenCalledWith('No active Markdown view.');
   });
 
   it('should handle publishing error', async () => {
@@ -179,6 +183,7 @@ describe('PixmiObPublisher', () => {
     await plugin.publishCurrentNote();
 
     expect(consoleSpy).toHaveBeenCalledWith('Publishing failed:', expect.any(Error));
+    expect(mocks.noticeSpy).toHaveBeenCalledWith(expect.stringContaining('Publishing failed: Publish failed'));
   });
 
   it('should check callback correctly', async () => {
