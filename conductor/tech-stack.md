@@ -12,6 +12,12 @@
 - **Bundler:** Vite
     - Chosen for its exceptional speed and modern developer experience, ensuring fast builds and HMR during development.
 
+## CI/CD & Release
+- **CI Platform:** GitHub Actions
+    - Automates the entire build, test, and release lifecycle.
+- **Release Automation:** semantic-release
+    - Handles automated versioning, changelog generation, and GitHub Release creation based on commit history.
+
 ## Testing & Quality Assurance
 - **Test Runner:** Vitest
     - A Vite-native unit testing framework that is extremely fast and integrates seamlessly with our build tool.

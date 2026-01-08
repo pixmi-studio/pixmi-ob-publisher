@@ -23,7 +23,9 @@
 ## Open Source & Community
 - **High-Quality Standards:** Aim to be a "gold standard" open-source project on GitHub, showcasing clean code and professional maintenance.
 - **Transparent & Trustworthy:** Maintain a clear and open codebase to ensure user data (API keys, content) is handled securely.
+- **Automated Lifecycle:** Employs industry-standard CI/CD practices for automated testing and releases, ensuring stability and professional version management.
 - **Comprehensive Documentation:** Provide a rich documentation suite including:
     - Detailed User Guides with visual aids (GIFs/Screenshots).
     - Technical documentation for potential contributors.
     - A transparent project roadmap and clear contribution guidelines.
+- **Verified by Community:** Successfully submitted to the Obsidian Community Plugins directory to ensure accessibility and trust for the wider Obsidian community.
