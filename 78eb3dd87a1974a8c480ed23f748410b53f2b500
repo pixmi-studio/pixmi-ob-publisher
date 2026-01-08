@@ -1,0 +1,7 @@
+Task: Implement user feedback (notifications) for success/failure of publishing
+Summary: Verified notification implementation with tests.
+- Updated main.test.ts to spy on Notice class.
+- Verified success and failure messages in tests.
+Files:
+- tests/main.test.ts
+Why: To ensure users receive appropriate feedback during the publishing process.
