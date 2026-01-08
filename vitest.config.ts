@@ -3,7 +3,7 @@ import path from 'path';
 
 export default defineConfig({
   test: {
-    environment: 'node',
+    environment: 'jsdom',
     alias: {
       obsidian: path.resolve(__dirname, '__mocks__/obsidian.js')
     },
@@ -18,4 +18,7 @@ export default defineConfig({
         }
     }
   },
+  resolve: {
+    extensions: ['.ts', '.js']
+  }
 });
