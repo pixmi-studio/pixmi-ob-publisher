@@ -55,6 +55,13 @@ jobs:
       - name: Build Plugin
         run: npm run build
 
+      - name: Package Plugin
+        run: |
+          mkdir pixmi-ob-publisher
+          cp dist/main.js pixmi-ob-publisher/main.js
+          cp manifest.json pixmi-ob-publisher/manifest.json
+          zip -r pixmi-ob-publisher.zip pixmi-ob-publisher
+
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
@@ -63,7 +70,8 @@ jobs:
           draft: false
           prerelease: false
           files: |
-            dist/main.js
-            manifest.json
+            pixmi-ob-publisher.zip
+            pixmi-ob-publisher/main.js
+            pixmi-ob-publisher/manifest.json
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
