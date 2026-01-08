@@ -32,6 +32,6 @@
 - [x] Task: Implement core publishing logic: Upload images -> Replace URLs -> Create WeChat Draft f01d9af
 - [x] Task: Write integration tests for the publishing flow (mocking all external APIs) 390d733
 - [x] Task: Add a ribbon icon or command to trigger publishing for the active note 2e9f896
-- [ ] Task: Implement user feedback (notifications) for success/failure of publishing
+- [x] Task: Implement user feedback (notifications) for success/failure of publishing 78eb3dd
 - [ ] Task: Conductor - User Manual Verification 'Phase 4: Markdown Processing & Publishing Flow' (Protocol in workflow.md)
 
