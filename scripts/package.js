@@ -12,13 +12,23 @@ if (fs.existsSync(folderName)) {
 fs.mkdirSync(folderName);
 
 // 2. 复制产物
-const assets = ['dist/main.js', 'manifest.json'];
-assets.forEach(file => {
-    if (fs.existsSync(file)) {
-        fs.copyFileSync(file, path.join(folderName, path.basename(file)));
-        console.log(`Copied ${file} to ${folderName}/`);
-    }
-});
+// 复制整个 dist 目录的内容
+if (fs.existsSync('dist')) {
+    const distFiles = fs.readdirSync('dist');
+    distFiles.forEach(file => {
+        const srcPath = path.join('dist', file);
+        if (fs.statSync(srcPath).isFile()) {
+            fs.copyFileSync(srcPath, path.join(folderName, file));
+            console.log(`Copied dist/${file} to ${folderName}/`);
+        }
+    });
+}
+
+// 复制 manifest.json (Obsidian 插件必需)
+if (fs.existsSync('manifest.json')) {
+    fs.copyFileSync('manifest.json', path.join(folderName, 'manifest.json'));
+    console.log(`Copied manifest.json to ${folderName}/`);
+}
 
 // 3. 执行压缩 (使用系统 zip 命令)
 try {
