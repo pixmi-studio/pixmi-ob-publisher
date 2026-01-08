@@ -1,3 +1,11 @@
+# [1.2.0](https://github.com/pixmi-studio/pixmi-ob-publisher/compare/v1.1.0...v1.2.0) (2026-01-08)
+
+
+### Features
+
+* **release:** make packaging script robust to handle all dist assets ([002b5b2](https://github.com/pixmi-studio/pixmi-ob-publisher/commit/002b5b21e30b47a9cca2b73c514fc4e41d550d87))
+* **release:** package plugin files into a zip for manual installation ([5089d61](https://github.com/pixmi-studio/pixmi-ob-publisher/commit/5089d61bec624acde2eed81d829aba9eeb6687eb))
+
 # [1.1.0](https://github.com/pixmi-studio/pixmi-ob-publisher/compare/v1.0.12...v1.1.0) (2026-01-08)
 
 
