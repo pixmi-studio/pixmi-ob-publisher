@@ -8,9 +8,9 @@
 
 ## Phase 2: Submission Process
 
-- [ ] Task: Fork `obsidianmd/obsidian-releases` repository
-- [ ] Task: Add plugin entry to `community-plugins.json`
-- [ ] Task: Create Pull Request to `obsidianmd/obsidian-releases`
+- [x] Task: Fork `obsidianmd/obsidian-releases` repository 820d3eb
+- [x] Task: Add plugin entry to `community-plugins.json` e611d7c
+- [x] Task: Create Pull Request to `obsidianmd/obsidian-releases` 9c6f752
 
 ## Phase 3: Review & Maintenance
 
