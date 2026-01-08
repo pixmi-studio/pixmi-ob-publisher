@@ -1,7 +1,7 @@
 # Pixmi Obsidian WeChat Publisher
 
-[![GitHub release (latest by date)](https://img.shields.io/github/v/release/pixmi-studio/pixmi-ob-publisher)](https://github.com/pixmi-studio/pixmi-ob-publisher/releases)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![GitHub release (latest by date)](https://img.shields.io/github/v/release/pixmi-studio/pixmi-ob-publisher?style=flat-square)](https://github.com/pixmi-studio/pixmi-ob-publisher/releases)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](https://opensource.org/licenses/MIT)
 
 An Obsidian plugin that allows you to publish your Markdown notes directly to your WeChat Official Account (公众号) draft box.
 
@@ -14,13 +14,15 @@ An Obsidian plugin that allows you to publish your Markdown notes directly to yo
 
 ## Installation
 
-### From Obsidian (Recommended)
+### From Obsidian Community Plugins (Coming Soon)
 
-1. Open **Settings** > **Community plugins**.
+_We are currently in the process of submitting this plugin to the official Obsidian directory._
+
+1. Once approved, open **Settings** > **Community plugins**.
 2. Click **Browse** and search for "Pixmi WeChat Publisher".
 3. Click **Install**, then **Enable**.
 
-### Manual Installation
+### Manual Installation (Current Method)
 
 1. Download the latest release (`main.js`, `manifest.json`) from the [Releases](https://github.com/pixmi-studio/pixmi-ob-publisher/releases) page.
 2. Create a folder named `pixmi-ob-publisher` in your vault's `.obsidian/plugins/` directory.
