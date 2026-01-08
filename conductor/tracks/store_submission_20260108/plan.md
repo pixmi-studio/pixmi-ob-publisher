@@ -4,7 +4,7 @@
 
 - [x] Task: Remove unnecessary console logs and debug statements b210f9f
 - [x] Task: Ensure all error messages are user-friendly notices f38b01d
-- [ ] Task: Final check of README.md for clarity and correct links
+- [x] Task: Final check of README.md for clarity and correct links b3b909c
 
 ## Phase 2: Submission Process
 
