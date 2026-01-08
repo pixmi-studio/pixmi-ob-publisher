@@ -9,14 +9,14 @@
 - [x] Task: 实现自动更新 `versions.json` (Obsidian 插件版本历史)
 - [x] Task: Conductor - User Manual Verification 'Phase 1: Infrastructure & Versioning Logic' (Protocol in workflow.md)
 
-## Phase 2: GitHub Actions Workflow
+## Phase 2: GitHub Actions Workflow [checkpoint: c8bc2a3]
 配置 GitHub Actions 实现全自动发布流。
 
 - [x] Task: 创建 `.github/workflows/release.yml` 基础配置，监听 `release` 分支
 - [x] Task: 配置构建步骤，确保在 Action 环境中生成插件产物 (`main.js`, `manifest.json`)
 - [x] Task: 配置发布步骤，自动创建 GitHub Release 并上传附件
 - [x] Task: 配置 Changelog 自动生成逻辑
-- [ ] Task: Conductor - User Manual Verification 'Phase 2: GitHub Actions Workflow' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 2: GitHub Actions Workflow' (Protocol in workflow.md)
 
 ## Phase 3: Dual-Branch Synchronization
 实现发布后的双分支同步机制。
