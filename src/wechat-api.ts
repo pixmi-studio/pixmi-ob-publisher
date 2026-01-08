@@ -32,6 +32,14 @@ interface AddDraftResponse {
   errmsg?: string;
 }
 
+interface UploadTempMediaResponse {
+  type: 'image' | 'video' | 'voice' | 'thumb';
+  media_id: string;
+  created_at: number; // Unix timestamp
+  errcode?: number;
+  errmsg?: string;
+}
+
 export class WeChatApiClient {
   private appId: string;
   private appSecret: string;
@@ -135,6 +143,54 @@ export class WeChatApiClient {
     } catch (error) {
         this.logger?.log(`Error uploading image: ${error}`, 'ERROR');
         throw error;
+    }
+  }
+
+  async uploadTempMedia(buffer: ArrayBuffer | Buffer, type: 'image' | 'video' | 'voice' | 'thumb'): Promise<string> {
+    const accessToken = await this.getAccessToken();
+    const url = this.getUrl('/cgi-bin/media/upload');
+
+    const boundary = '----ObsidianBoundary' + Math.random().toString(36).substring(2);
+    // Determine content type based on media type
+    let contentType = 'application/octet-stream';
+    if (type === 'image' || type === 'thumb') contentType = 'image/jpeg'; // Assuming common image types
+    else if (type === 'video') contentType = 'video/mp4';
+    else if (type === 'voice') contentType = 'audio/amr'; // Common voice format
+
+    // Filename can be generic for temp media, or derive from original if available
+    const filename = `temp_media.${type === 'image' || type === 'thumb' ? 'jpg' : (type === 'video' ? 'mp4' : 'amr')}`;
+
+    const header = `--${boundary}\r\nContent-Disposition: form-data; name="media"; filename="${filename}"\r\nContent-Type: ${contentType}\r\n\r\n`;
+    const footer = `\r\n--${boundary}--\r\n`;
+    
+    const headerUint8 = new TextEncoder().encode(header);
+    const footerUint8 = new TextEncoder().encode(footer);
+    const contentUint8 = new Uint8Array(buffer);
+    
+    const totalLength = headerUint8.length + contentUint8.length + footerUint8.length;
+    const body = new Uint8Array(totalLength);
+    body.set(headerUint8, 0);
+    body.set(contentUint8, headerUint8.length);
+    body.set(footerUint8, headerUint8.length + contentUint8.length);
+
+    try {
+      const response = await requestUrl({
+        url: `${url}?access_token=${accessToken}&type=${type}`,
+        method: 'POST',
+        headers: {
+          'Content-Type': `multipart/form-data; boundary=${boundary}`
+        },
+        body: body.buffer
+      });
+      
+      const data = response.json as UploadTempMediaResponse;
+      if (data.errcode) {
+        throw new Error(`WeChat Error: ${data.errcode} ${data.errmsg}`);
+      }
+      return data.media_id;
+    } catch (error) {
+      this.logger?.log(`Error uploading temporary media (${type}): ${error}`, 'ERROR');
+      throw error;
     }
   }
 

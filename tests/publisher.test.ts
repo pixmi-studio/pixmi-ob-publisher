@@ -16,7 +16,8 @@ describe('Publisher', () => {
   beforeEach(() => {
     mockApiClient = {
       uploadImage: vi.fn(),
-      createDraft: vi.fn()
+      createDraft: vi.fn(),
+      uploadTempMedia: vi.fn().mockResolvedValue('temp-media-id')
     };
     mockParser = {
       extractImages: vi.fn(),
@@ -55,12 +56,13 @@ describe('Publisher', () => {
     expect(mockParser.extractImages).toHaveBeenCalledWith(markdown);
     expect(imageReader).toHaveBeenCalledWith('local.png');
     expect(mockApiClient.uploadImage).toHaveBeenCalledWith(expect.any(Buffer), 'local.png');
+    expect(mockApiClient.uploadTempMedia).toHaveBeenCalledWith(expect.any(Buffer), 'thumb');
     expect(mockParser.renderWithReplacements).toHaveBeenCalledWith(markdown, expect.any(Map));
     expect(mockApiClient.createDraft).toHaveBeenCalledWith(expect.arrayContaining([
         expect.objectContaining({
             title: title,
             content: processedHtml,
-            thumb_media_id: 'media-id' // Assuming first image is thumb
+            thumb_media_id: 'temp-media-id' // Now expects temp-media-id
         })
     ]));
     expect(result).toBe('draft-media-id');
@@ -93,6 +95,27 @@ describe('Publisher', () => {
 
     await expect(publisher.publish('Title', markdown, imageReader))
       .rejects
-      .toThrow('A thumbnail image is required to publish to WeChat.');
+      .toThrow('A thumbnail image is required to publish to WeChat. Please include at least one image in your article or specify one in the frontmatter (e.g., thumb: image.jpg).');
+  });
+
+  it('should use provided thumbnailPath', async () => {
+    const markdown = 'No images in content.';
+    const thumbnailPath = 'thumb.png';
+    mockParser.extractImages.mockReturnValue([]);
+    mockApiClient.uploadImage.mockResolvedValue({ url: 'http://remote.jpg', media_id: 'thumb-media-id' });
+    mockParser.renderWithReplacements.mockReturnValue('<p>No images</p>');
+    mockApiClient.createDraft.mockResolvedValue('draft-id');
+    const imageReader = vi.fn().mockResolvedValue(Buffer.from('data'));
+
+    const result = await publisher.publish('Title', markdown, imageReader, thumbnailPath);
+
+    expect(imageReader).toHaveBeenCalledWith(thumbnailPath);
+    expect(mockApiClient.uploadTempMedia).toHaveBeenCalledWith(expect.any(Buffer), 'thumb');
+    expect(mockApiClient.createDraft).toHaveBeenCalledWith(expect.arrayContaining([
+        expect.objectContaining({
+            thumb_media_id: 'temp-media-id' // Now expects temp-media-id
+        })
+    ]));
+    expect(result).toBe('draft-id');
   });
 });

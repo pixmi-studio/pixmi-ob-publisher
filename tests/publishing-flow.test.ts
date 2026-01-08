@@ -18,7 +18,8 @@ describe('Publishing Flow Integration', () => {
 
     mockApiClient = {
       uploadImage: vi.fn(),
-      createDraft: vi.fn()
+      createDraft: vi.fn(),
+      uploadTempMedia: vi.fn().mockResolvedValue('temp-media-id-flow')
     };
     
     realParser = new MarkdownParser();
@@ -43,8 +44,10 @@ describe('Publishing Flow Integration', () => {
 
     const result = await publisher.publish(title, markdown, imageReader);
 
-    // Verify Image Upload
+    // Verify Image Upload (permanent for content)
     expect(mockApiClient.uploadImage).toHaveBeenCalledWith(expect.any(Buffer), 'test.png');
+    // Verify Temporary Media Upload (for thumbnail)
+    expect(mockApiClient.uploadTempMedia).toHaveBeenCalledWith(expect.any(Buffer), 'thumb');
 
     // Verify Draft Content
     // markdown-it usually wraps images in <p> if they are in their own paragraph
@@ -54,7 +57,7 @@ describe('Publishing Flow Integration', () => {
         expect.objectContaining({
             title: title,
             content: expectedContent,
-            thumb_media_id: 'media-123'
+            thumb_media_id: 'temp-media-id-flow' // Now expects temp-media-id-flow
         })
     ]));
 

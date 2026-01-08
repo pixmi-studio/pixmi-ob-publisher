@@ -9,7 +9,7 @@ export class Publisher {
     private parser: MarkdownParser
   ) {}
 
-  async publish(title: string, markdown: string, imageReader: ImageReader): Promise<string> {
+  async publish(title: string, markdown: string, imageReader: ImageReader, thumbnailPath?: string): Promise<string> {
     // 1. Extract images
     const images = this.parser.extractImages(markdown);
     
@@ -17,9 +17,26 @@ export class Publisher {
     const urlMap = new Map<string, string>();
     let thumbMediaId = '';
 
+    // If thumbnailPath is provided, upload it first and set it as thumbMediaId
+    if (thumbnailPath) {
+        try {
+            const buffer = await imageReader(thumbnailPath);
+            // Filename is not needed for uploadTempMedia
+            const mediaId = await this.apiClient.uploadTempMedia(buffer, 'thumb');
+            thumbMediaId = mediaId;
+            // Also add to urlMap in case it's used in content too
+            urlMap.set(thumbnailPath, result.url);
+        } catch (error) {
+            console.error(`Failed to upload thumbnail ${thumbnailPath}:`, error);
+        }
+    }
+
     for (const imagePath of images) {
         // Skip remote images for now, or handle them differently
         if (imagePath.startsWith('http')) continue;
+
+        // Skip if already uploaded as thumbnail
+        if (urlMap.has(imagePath)) continue;
 
         try {
             const buffer = await imageReader(imagePath);
@@ -29,9 +46,11 @@ export class Publisher {
             
             urlMap.set(imagePath, result.url);
             
-            // Use the first image as the thumbnail
+            // Use the first image as the thumbnail if not already set via thumbnailPath
             if (!thumbMediaId) {
-                thumbMediaId = result.media_id;
+                // If this image is to be used as thumbnail, upload it as temporary 'thumb'
+                const mediaId = await this.apiClient.uploadTempMedia(buffer, 'thumb');
+                thumbMediaId = mediaId;
             }
         } catch (error) {
             console.error(`Failed to upload image ${imagePath}:`, error);
@@ -50,7 +69,7 @@ export class Publisher {
     // Let's assume for now we must have one.
     
     if (!thumbMediaId) {
-        throw new Error('A thumbnail image is required to publish to WeChat.');
+        throw new Error('A thumbnail image is required to publish to WeChat. Please include at least one image in your article or specify one in the frontmatter (e.g., thumb: image.jpg).');
     }
 
     const article: WeChatArticle = {
