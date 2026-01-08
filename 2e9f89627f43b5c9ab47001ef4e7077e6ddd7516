@@ -1,0 +1,10 @@
+Task: Add a ribbon icon or command to trigger publishing for the active note
+Summary: Added UI entry points for publishing.
+- Added ribbon icon (paper-plane).
+- Added 'Publish to WeChat' command.
+- Implemented publishCurrentNote logic to connect UI to Publisher.
+- Added tests for UI registration and publishing flow integration.
+Files:
+- src/main.ts
+- tests/main.test.ts
+Why: To allow users to trigger publishing from the Obsidian interface.
