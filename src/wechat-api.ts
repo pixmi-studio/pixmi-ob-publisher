@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { LogManager } from './logger';
 
 interface AccessTokenResponse {
   access_token: string;
@@ -30,10 +31,12 @@ export class WeChatApiClient {
   private appSecret: string;
   private accessToken: string = '';
   private tokenExpiration: number = 0;
+  private logger: LogManager | undefined;
 
-  constructor(appId: string, appSecret: string) {
+  constructor(appId: string, appSecret: string, logger?: LogManager) {
     this.appId = appId;
     this.appSecret = appSecret;
+    this.logger = logger;
   }
 
   async getAccessToken(): Promise<string> {
@@ -49,18 +52,20 @@ export class WeChatApiClient {
     };
 
     try {
+      this.logger?.log(`Requesting access token for appId: ${this.appId}`);
       const response = await axios.get<AccessTokenResponse>(url, { params });
       
       if (response.data && response.data.access_token) {
         this.accessToken = response.data.access_token;
         // Set expiration 5 minutes before actual expiration to be safe
         this.tokenExpiration = Date.now() + (response.data.expires_in * 1000) - 300000;
+        this.logger?.log('Access token retrieved successfully');
         return this.accessToken;
       } else {
-        throw new Error('Failed to retrieve access token');
+        throw new Error(`Failed to retrieve access token. Response: ${JSON.stringify(response.data)}`);
       }
     } catch (error) {
-      console.error('Error fetching access token:', error);
+      this.logger?.log(`Error fetching access token: ${error}`, 'ERROR');
       throw error;
     }
   }
@@ -86,7 +91,7 @@ export class WeChatApiClient {
         
         return response.data;
     } catch (error) {
-        console.error('Error uploading image:', error);
+        this.logger?.log(`Error uploading image: ${error}`, 'ERROR');
         throw error;
     }
   }
@@ -102,7 +107,7 @@ export class WeChatApiClient {
       
       return response.data.media_id;
     } catch (error) {
-      console.error('Error creating draft:', error);
+      this.logger?.log(`Error creating draft: ${error}`, 'ERROR');
       throw error;
     }
   }

@@ -1,4 +1,4 @@
-import { App, PluginSettingTab, Setting, Notice } from 'obsidian';
+import { App, PluginSettingTab, Setting, Notice, Modal, TextAreaComponent, ButtonComponent } from 'obsidian';
 import PixmiObPublisher from './main';
 
 export class PixmiSettingTab extends PluginSettingTab {
@@ -50,12 +50,88 @@ export class PixmiSettingTab extends PluginSettingTab {
           .setCta()
           .onClick(async () => {
             try {
+              this.plugin.logger.log('Testing connection...');
               await this.plugin.apiClient.getAccessToken();
               new Notice('Connection successful!');
+              this.plugin.logger.log('Connection test successful');
             } catch (error) {
-              new Notice(`Connection failed: ${error}`);
+              const errorMessage = error instanceof Error ? error.message : String(error);
+              new Notice(`Connection failed: ${errorMessage}`);
+              this.plugin.logger.log(`Connection test failed: ${errorMessage}`, 'ERROR');
             }
           })
       );
+
+    containerEl.createEl('h3', { text: 'Troubleshooting' });
+
+    new Setting(containerEl)
+      .setName('Plugin Logs')
+      .setDesc('View and copy plugin logs for debugging')
+      .addButton((button) =>
+        button
+          .setButtonText('Show Logs')
+          .onClick(async () => {
+            const logs = await this.plugin.logger.getLogContent();
+            new LogModal(this.app, logs, this.plugin).open();
+          })
+      );
   }
+}
+
+class LogModal extends Modal {
+    private logs: string;
+    private plugin: PixmiObPublisher;
+
+    constructor(app: App, logs: string, plugin: PixmiObPublisher) {
+        super(app);
+        this.logs = logs;
+        this.plugin = plugin;
+    }
+
+    onOpen() {
+        const { contentEl } = this;
+        contentEl.empty();
+        contentEl.createEl('h2', { text: 'Pixmi Publisher Logs' });
+
+        const textArea = new TextAreaComponent(contentEl)
+            .setValue(this.logs)
+            .setDisabled(true);
+        
+        textArea.inputEl.style.width = '100%';
+        textArea.inputEl.style.height = '300px';
+        textArea.inputEl.style.fontFamily = 'monospace';
+
+        const buttonContainer = contentEl.createDiv();
+        buttonContainer.style.marginTop = '10px';
+        buttonContainer.style.display = 'flex';
+        buttonContainer.style.gap = '10px';
+        buttonContainer.style.justifyContent = 'flex-end';
+
+        new ButtonComponent(buttonContainer)
+            .setButtonText('Copy to Clipboard')
+            .onClick(() => {
+                navigator.clipboard.writeText(this.logs);
+                new Notice('Logs copied to clipboard');
+            });
+
+        new ButtonComponent(buttonContainer)
+            .setButtonText('Clear Logs')
+            .setWarning()
+            .onClick(async () => {
+                await this.plugin.logger.clearLogs();
+                this.close();
+                new Notice('Logs cleared');
+            });
+            
+        new ButtonComponent(buttonContainer)
+            .setButtonText('Close')
+            .onClick(() => {
+                this.close();
+            });
+    }
+
+    onClose() {
+        const { contentEl } = this;
+        contentEl.empty();
+    }
 }

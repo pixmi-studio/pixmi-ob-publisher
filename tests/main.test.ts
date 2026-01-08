@@ -3,7 +3,8 @@ import { Plugin } from 'obsidian';
 import PixmiObPublisher from '../src/main';
 
 const mocks = vi.hoisted(() => ({
-    noticeSpy: vi.fn()
+    noticeSpy: vi.fn(),
+    logSpy: vi.fn()
 }));
 
 // Mock Obsidian Plugin class
@@ -45,9 +46,37 @@ vi.mock('obsidian', () => {
             mocks.noticeSpy(message);
         }
     },
+    Modal: class Modal {
+        constructor(app: any) {}
+        open() {}
+        close() {}
+    },
+    TextAreaComponent: class TextAreaComponent {
+        constructor(containerEl: any) {}
+        setValue() { return this; }
+        setDisabled() { return this; }
+    },
+    ButtonComponent: class ButtonComponent {
+        constructor(containerEl: any) {}
+        setButtonText() { return this; }
+        setWarning() { return this; }
+        onClick() { return this; }
+    },
     MarkdownView: class MarkdownView {},
     TFile: class TFile {}
   };
+});
+
+// Mock LogManager
+vi.mock('../src/logger', () => {
+    return {
+        LogManager: class {
+            constructor() {}
+            log(msg: string, level: string) { mocks.logSpy(msg, level); }
+            getLogContent() { return Promise.resolve(''); }
+            clearLogs() { return Promise.resolve(); }
+        }
+    };
 });
 
 describe('PixmiObPublisher', () => {
@@ -56,6 +85,7 @@ describe('PixmiObPublisher', () => {
   beforeEach(() => {
     plugin = new PixmiObPublisher({} as any, {} as any);
     mocks.noticeSpy.mockClear();
+    mocks.logSpy.mockClear();
   });
 
   it('should be defined', () => {
@@ -91,6 +121,7 @@ describe('PixmiObPublisher', () => {
     await plugin.onload();
     expect(loadSettingsSpy).toHaveBeenCalled();
     expect(addSettingTabSpy).toHaveBeenCalled();
+    expect(mocks.logSpy).toHaveBeenCalledWith('PixmiObPublisher loaded', undefined);
   });
 
   it('should add ribbon icon on onload', async () => {
@@ -116,16 +147,14 @@ describe('PixmiObPublisher', () => {
     plugin.settings.appId = 'updated-app-id';
     await plugin.saveSettings();
     
-    // Check if api client was updated (we can't easily check the internal state, 
-    // but we can check if it exists and maybe we can mock it to verify the constructor call if needed.
-    // For now, just ensuring the line is hit is enough for coverage if logic is correct).
+    // Check if api client was updated
     expect(plugin.apiClient).toBeDefined();
   });
 
-  it('should log on onunload', () => {
-    const consoleSpy = vi.spyOn(console, 'log');
+  it('should log on onunload', async () => {
+    await plugin.onload(); // Need onload to init logger
     plugin.onunload();
-    expect(consoleSpy).toHaveBeenCalledWith('PixmiObPublisher unloaded');
+    expect(mocks.logSpy).toHaveBeenCalledWith('PixmiObPublisher unloaded', undefined);
   });
 
   it('should publish current note', async () => {
@@ -159,6 +188,7 @@ describe('PixmiObPublisher', () => {
         expect.any(Function)
     );
     expect(mocks.noticeSpy).toHaveBeenCalledWith(expect.stringContaining('Successfully published'));
+    expect(mocks.logSpy).toHaveBeenCalledWith(expect.stringContaining('Successfully published draft'), undefined);
   });
 
   it('should show notice if no active view', async () => {
@@ -178,11 +208,9 @@ describe('PixmiObPublisher', () => {
     const mockView = { file: mockFile, getViewData: () => '# Content' };
     plugin.app.workspace = { getActiveViewOfType: vi.fn().mockReturnValue(mockView) };
     
-    const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
-
     await plugin.publishCurrentNote();
 
-    expect(consoleSpy).toHaveBeenCalledWith('Publishing failed:', expect.any(Error));
+    expect(mocks.logSpy).toHaveBeenCalledWith(expect.stringContaining('Publishing failed:'), 'ERROR');
     expect(mocks.noticeSpy).toHaveBeenCalledWith(expect.stringContaining('Publishing failed: Publish failed'));
   });
 

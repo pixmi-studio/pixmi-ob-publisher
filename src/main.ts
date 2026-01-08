@@ -4,11 +4,13 @@ import { PixmiSettingTab } from './settings-tab';
 import { WeChatApiClient } from './wechat-api';
 import { Publisher } from './publisher';
 import { MarkdownParser } from './markdown-parser';
+import { LogManager } from './logger';
 
 export default class PixmiObPublisher extends Plugin {
   settings: PixmiSettings;
   apiClient: WeChatApiClient;
   publisher: Publisher;
+  logger: LogManager;
 
   constructor(app: App, manifest: PluginManifest) {
     super(app, manifest);
@@ -18,7 +20,8 @@ export default class PixmiObPublisher extends Plugin {
   async onload() {
     await this.loadSettings();
 
-    this.apiClient = new WeChatApiClient(this.settings.appId, this.settings.appSecret);
+    this.logger = new LogManager(this.app, this.manifest);
+    this.apiClient = new WeChatApiClient(this.settings.appId, this.settings.appSecret, this.logger);
     this.publisher = new Publisher(this.apiClient, new MarkdownParser());
 
     this.addSettingTab(new PixmiSettingTab(this.app, this));
@@ -42,7 +45,7 @@ export default class PixmiObPublisher extends Plugin {
         }
     });
 
-    console.log('PixmiObPublisher loaded');
+    this.logger.log('PixmiObPublisher loaded');
   }
 
   async publishCurrentNote() {
@@ -62,6 +65,7 @@ export default class PixmiObPublisher extends Plugin {
     const title = activeFile.basename;
 
     new Notice(`Publishing: ${title}...`);
+    this.logger.log(`Starting publication for: ${title}`);
 
     try {
         const draftId = await this.publisher.publish(title, markdown, async (path: string) => {
@@ -73,14 +77,17 @@ export default class PixmiObPublisher extends Plugin {
         });
         
         new Notice(`Successfully published! Draft ID: ${draftId}`);
+        this.logger.log(`Successfully published draft: ${draftId}`);
     } catch (error) {
-        console.error('Publishing failed:', error);
+        this.logger.log(`Publishing failed: ${error}`, 'ERROR');
         new Notice(`Publishing failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
 
   onunload() {
-    console.log('PixmiObPublisher unloaded');
+    if (this.logger) {
+        this.logger.log('PixmiObPublisher unloaded');
+    }
   }
 
   async loadSettings() {
@@ -91,7 +98,7 @@ export default class PixmiObPublisher extends Plugin {
     await this.saveData(this.settings);
     // Update API client when settings change
     if (this.apiClient) {
-        this.apiClient = new WeChatApiClient(this.settings.appId, this.settings.appSecret);
+        this.apiClient = new WeChatApiClient(this.settings.appId, this.settings.appSecret, this.logger);
         // Re-instantiate publisher to use new client
         this.publisher = new Publisher(this.apiClient, new MarkdownParser());
     }

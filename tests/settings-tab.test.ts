@@ -25,6 +25,11 @@ describe('PixmiSettingTab', () => {
       saveSettings: vi.fn().mockResolvedValue(undefined),
       apiClient: {
         getAccessToken: vi.fn()
+      },
+      logger: {
+        log: vi.fn(),
+        getLogContent: vi.fn(),
+        clearLogs: vi.fn()
       }
     };
     tab = new PixmiSettingTab({} as any, plugin);
@@ -87,6 +92,6 @@ describe('PixmiSettingTab', () => {
     await testBtn.onClickCb();
     
     expect(plugin.apiClient.getAccessToken).toHaveBeenCalled();
-    expect(Notice).toHaveBeenCalledWith('Connection failed: Error: Auth failed');
+    expect(Notice).toHaveBeenCalledWith('Connection failed: Auth failed');
   });
 });

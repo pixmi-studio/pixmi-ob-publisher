@@ -11,6 +11,8 @@ module.exports = {
         saveData() { return Promise.resolve(); }
         loadData() { return Promise.resolve({}); }
         addSettingTab() {}
+        addRibbonIcon() {}
+        addCommand() {}
     },
     PluginSettingTab: class PluginSettingTab {
         constructor(app, plugin) {
@@ -52,6 +54,36 @@ module.exports = {
              return this;
         }
     },
+    Modal: class Modal {
+        constructor(app) {
+            this.app = app;
+            this.contentEl = document.createElement('div');
+        }
+        open() { this.onOpen(); }
+        close() { this.onClose(); }
+        onOpen() {}
+        onClose() {}
+    },
+    TextAreaComponent: class TextAreaComponent {
+        constructor(containerEl) {
+            this.inputEl = document.createElement('textarea');
+            containerEl.appendChild(this.inputEl);
+        }
+        setValue() { return this; }
+        setDisabled() { return this; }
+    },
+    ButtonComponent: class ButtonComponent {
+        constructor(containerEl) {
+            this.buttonEl = document.createElement('button');
+            containerEl.appendChild(this.buttonEl);
+        }
+        setButtonText() { return this; }
+        setWarning() { return this; }
+        onClick(cb) { this.onClickCb = cb; return this; }
+    },
+    Notice: class Notice {
+        constructor(message) {}
+    },
     getCreatedSettings: () => createdSettings,
     clearCreatedSettings: () => { createdSettings.length = 0; }
 };
@@ -65,6 +97,11 @@ if (typeof HTMLElement !== 'undefined') {
         const el = document.createElement(tag);
         if (options && options.text) el.innerText = options.text;
         if (options && options.cls) el.className = options.cls;
+        this.appendChild(el);
+        return el;
+    };
+    HTMLElement.prototype.createDiv = function() {
+        const el = document.createElement('div');
         this.appendChild(el);
         return el;
     };
