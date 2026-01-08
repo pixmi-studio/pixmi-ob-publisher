@@ -11,7 +11,7 @@
 ## Phase 2: UI & Switching Logic
 *实现用户交互界面，允许用户切换主题并自动同步到文档配置。*
 
-- [ ] Task: Create `ThemeSwitcher` logic to detect and update `pixmi-theme` in Frontmatter (TDD)
+- [x] Task: Create `ThemeSwitcher` logic to detect and update `pixmi-theme` in Frontmatter (TDD) 0cbc77a
 - [ ] Task: Add "Switch WeChat Theme" command to the Command Palette
 - [ ] Task: Implement a Status Bar or Ribbon icon to show and change the current theme
 - [ ] Task: Conductor - User Manual Verification 'UI & Switching Logic' (Protocol in workflow.md)
