@@ -1,0 +1,7 @@
+{
+    "id": "pixmi-ob-publisher",
+    "name": "Pixmi Obsidian WeChat Publisher",
+    "author": "Pixmi Studio",
+    "description": "Publish Obsidian notes to WeChat Official Account draft box.",
+    "repo": "pixmi-studio/pixmi-ob-publisher"
+}
