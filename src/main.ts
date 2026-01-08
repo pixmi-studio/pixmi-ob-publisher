@@ -76,7 +76,7 @@ export default class PixmiObPublisher extends Plugin {
         const draftId = await this.publisher.publish(title, markdown, async (path: string) => {
             const file = this.app.metadataCache.getFirstLinkpathDest(path, activeFile.path);
             if (!file) {
-                throw new Error(`Image not found: ${path}`);
+                throw new Error(`Image not found: ${path}. Please ensure the image exists in your vault.`);
             }
             return await this.app.vault.readBinary(file);
         }, thumbnailPath);
@@ -85,7 +85,16 @@ export default class PixmiObPublisher extends Plugin {
         this.logger.log(`Successfully published draft: ${draftId}`);
     } catch (error) {
         this.logger.log(`Publishing failed: ${error}`, 'ERROR');
-        new Notice(`Publishing failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+        let errorMessage = 'Unknown error';
+        if (error instanceof Error) {
+            errorMessage = error.message;
+            if (errorMessage.includes('40001') || errorMessage.includes('invalid credential')) {
+                errorMessage = 'Invalid AppID or AppSecret. Please check your settings.';
+            } else if (errorMessage.includes('40164')) {
+                errorMessage = 'IP not whitelisted. Please add your IP to WeChat Official Account whitelist.';
+            }
+        }
+        new Notice(`Publishing failed: ${errorMessage}`);
     }
   }
 

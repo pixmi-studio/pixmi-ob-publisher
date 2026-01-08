@@ -228,6 +228,32 @@ describe('PixmiObPublisher', () => {
     expect(mocks.noticeSpy).toHaveBeenCalledWith(expect.stringContaining('Publishing failed: Publish failed'));
   });
 
+  it('should show user-friendly message for IP whitelist error', async () => {
+    await plugin.onload();
+    plugin.publisher.publish = vi.fn().mockRejectedValue(new Error('errcode: 40164, IP not in whitelist'));
+    
+    const mockFile = { basename: 'Test Note', path: 'test.md' };
+    const mockView = { file: mockFile, getViewData: () => '# Content' };
+    plugin.app.workspace = { getActiveViewOfType: vi.fn().mockReturnValue(mockView) };
+    
+    await plugin.publishCurrentNote();
+
+    expect(mocks.noticeSpy).toHaveBeenCalledWith(expect.stringContaining('IP not whitelisted'));
+  });
+
+  it('should show user-friendly message for invalid credentials', async () => {
+    await plugin.onload();
+    plugin.publisher.publish = vi.fn().mockRejectedValue(new Error('errcode: 40001, invalid credential'));
+    
+    const mockFile = { basename: 'Test Note', path: 'test.md' };
+    const mockView = { file: mockFile, getViewData: () => '# Content' };
+    plugin.app.workspace = { getActiveViewOfType: vi.fn().mockReturnValue(mockView) };
+    
+    await plugin.publishCurrentNote();
+
+    expect(mocks.noticeSpy).toHaveBeenCalledWith(expect.stringContaining('Invalid AppID or AppSecret'));
+  });
+
   it('should check callback correctly', async () => {
       // Access the registered command
       const addCommandSpy = vi.spyOn(plugin, 'addCommand');
