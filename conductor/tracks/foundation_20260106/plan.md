@@ -35,7 +35,7 @@
 - [x] Task: Implement user feedback (notifications) for success/failure of publishing 78eb3dd
 - [ ] Task: Conductor - User Manual Verification 'Phase 4: Markdown Processing & Publishing Flow' (Protocol in workflow.md)
 
-## Phase 5: Release Automation [checkpoint: 06c88ae]
+## Phase 5: Release Automation [checkpoint: 2658ac0]
 
 - [x] Task: Create GitHub Action workflow for automatic release on push to master 42939a4
 
