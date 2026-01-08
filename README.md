@@ -35,7 +35,7 @@ Before publishing, you need to configure your WeChat Official Account credential
 
 1. Go to your [WeChat Official Account Platform](https://mp.weixin.qq.com/).
 2. Navigate to **Settings and Development** > **Basic Configuration**.
-3. Locate your **AppID** and **AppSecret**.
+3. Locate your **AppID** and **AppSecret**. (For instructions, see [this guide](https://developers.weixin.qq.com/doc/oplatform/developers/dev/appid.html)).
 4. In Obsidian, go to **Settings** > **Pixmi WeChat Publisher**.
 5. Enter your AppID and AppSecret.
 6. (Optional) Whitelist your IP address in the WeChat platform settings if required.
