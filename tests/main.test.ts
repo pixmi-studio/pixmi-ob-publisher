@@ -83,7 +83,19 @@ describe('PixmiObPublisher', () => {
   let plugin: PixmiObPublisher;
 
   beforeEach(() => {
-    plugin = new PixmiObPublisher({} as any, {} as any);
+    const mockApp = {
+        workspace: {
+            getActiveViewOfType: vi.fn()
+        },
+        metadataCache: {
+            getFirstLinkpathDest: vi.fn(),
+            getFileCache: vi.fn().mockReturnValue({ frontmatter: {} })
+        },
+        vault: {
+            readBinary: vi.fn()
+        }
+    };
+    plugin = new PixmiObPublisher(mockApp as any, {} as any);
     mocks.noticeSpy.mockClear();
     mocks.logSpy.mockClear();
   });
@@ -174,7 +186,8 @@ describe('PixmiObPublisher', () => {
         getActiveViewOfType: vi.fn().mockReturnValue(mockView)
     };
     plugin.app.metadataCache = {
-        getFirstLinkpathDest: vi.fn().mockReturnValue({})
+        getFirstLinkpathDest: vi.fn().mockReturnValue({}),
+        getFileCache: vi.fn().mockReturnValue({ frontmatter: {} })
     };
     plugin.app.vault = {
         readBinary: vi.fn().mockResolvedValue(new ArrayBuffer(0))
@@ -185,7 +198,8 @@ describe('PixmiObPublisher', () => {
     expect(plugin.publisher.publish).toHaveBeenCalledWith(
         'Test Note', 
         '# Content', 
-        expect.any(Function)
+        expect.any(Function),
+        undefined
     );
     expect(mocks.noticeSpy).toHaveBeenCalledWith(expect.stringContaining('Successfully published'));
     expect(mocks.logSpy).toHaveBeenCalledWith(expect.stringContaining('Successfully published draft'), undefined);
@@ -251,7 +265,8 @@ describe('PixmiObPublisher', () => {
     // Mock metadataCache to find the file
     const mockImageFile = { path: 'test.png' };
     plugin.app.metadataCache = {
-        getFirstLinkpathDest: vi.fn().mockReturnValue(mockImageFile)
+        getFirstLinkpathDest: vi.fn().mockReturnValue(mockImageFile),
+        getFileCache: vi.fn().mockReturnValue({ frontmatter: {} })
     };
     
     // Mock vault

@@ -62,4 +62,24 @@ describe('MarkdownParser', () => {
     const images = parser.extractImages(markdown);
     expect(images).toHaveLength(0); // Since '' is falsy in the check
   });
+
+  it('should extract obsidian wikilink images', () => {
+    const markdown = '![[image.png]]\n![[another.jpg|100]]';
+    const images = parser.extractImages(markdown);
+    expect(images).toHaveLength(2);
+    expect(images).toContain('image.png');
+    expect(images).toContain('another.jpg');
+  });
+
+  it('should replace obsidian wikilink images with remote urls', () => {
+    const markdown = '![[local.png]] and ![[local.png|alias]]';
+    const urlMap = new Map<string, string>();
+    urlMap.set('local.png', 'http://wechat.com/remote.jpg');
+    
+    const html = parser.renderWithReplacements(markdown, urlMap);
+    // Should replace both occurrences with <img> tags
+    expect(html).toContain('<img src="http://wechat.com/remote.jpg">');
+    const matches = html.match(/<img src="http:\/\/wechat\.com\/remote\.jpg">/g);
+    expect(matches).toHaveLength(2);
+  });
 });

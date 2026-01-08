@@ -17,15 +17,15 @@ export class Publisher {
     const urlMap = new Map<string, string>();
     let thumbMediaId = '';
 
-    // If thumbnailPath is provided, upload it first and set it as thumbMediaId
+    // If thumbnailPath is provided, upload it first as a permanent material and set it as thumbMediaId
     if (thumbnailPath) {
         try {
             const buffer = await imageReader(thumbnailPath);
-            // Filename is not needed for uploadTempMedia
-            const mediaId = await this.apiClient.uploadTempMedia(buffer, 'thumb');
-            thumbMediaId = mediaId;
-            // Also add to urlMap in case it's used in content too
-            urlMap.set(thumbnailPath, result.url);
+            const filename = thumbnailPath.split('/').pop() || 'thumb.jpg';
+            // Use type 'image' for thumbnail to avoid 64KB limit. 
+            // Draft Box API accepts permanent image media_id as thumb_media_id.
+            const result = await this.apiClient.uploadMaterial(buffer, filename, 'image');
+            thumbMediaId = result.media_id;
         } catch (error) {
             console.error(`Failed to upload thumbnail ${thumbnailPath}:`, error);
         }
@@ -35,27 +35,25 @@ export class Publisher {
         // Skip remote images for now, or handle them differently
         if (imagePath.startsWith('http')) continue;
 
-        // Skip if already uploaded as thumbnail
+        // Skip if already uploaded for content
         if (urlMap.has(imagePath)) continue;
 
         try {
             const buffer = await imageReader(imagePath);
-            // We need a filename. Let's use the path basename or default
             const filename = imagePath.split('/').pop() || 'image.jpg';
-            const result = await this.apiClient.uploadImage(buffer, filename);
             
-            urlMap.set(imagePath, result.url);
+            // Upload for content (using uploadimg API which returns a URL and doesn't count towards material limit)
+            const url = await this.apiClient.uploadImageForContent(buffer, filename);
+            urlMap.set(imagePath, url);
             
             // Use the first image as the thumbnail if not already set via thumbnailPath
             if (!thumbMediaId) {
-                // If this image is to be used as thumbnail, upload it as temporary 'thumb'
-                const mediaId = await this.apiClient.uploadTempMedia(buffer, 'thumb');
-                thumbMediaId = mediaId;
+                // Must be a permanent material for Draft Box
+                const result = await this.apiClient.uploadMaterial(buffer, filename, 'image');
+                thumbMediaId = result.media_id;
             }
         } catch (error) {
             console.error(`Failed to upload image ${imagePath}:`, error);
-            // Optionally continue or throw? 
-            // For MVP, let's continue but maybe the image won't show.
         }
     }
 

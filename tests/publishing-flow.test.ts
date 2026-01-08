@@ -17,9 +17,9 @@ describe('Publishing Flow Integration', () => {
     vi.clearAllMocks();
 
     mockApiClient = {
-      uploadImage: vi.fn(),
+      uploadMaterial: vi.fn(),
+      uploadImageForContent: vi.fn(),
       createDraft: vi.fn(),
-      uploadTempMedia: vi.fn().mockResolvedValue('temp-media-id-flow')
     };
     
     realParser = new MarkdownParser();
@@ -31,8 +31,9 @@ describe('Publishing Flow Integration', () => {
     const title = 'Integration Test';
     
     // Mock image upload to return a remote URL
-    mockApiClient.uploadImage.mockResolvedValue({ 
-        url: 'http://remote.com/test.jpg', 
+    mockApiClient.uploadImageForContent.mockResolvedValue('http://remote.com/test.jpg');
+    mockApiClient.uploadMaterial.mockResolvedValue({ 
+        url: 'http://permanent.com/test.jpg', 
         media_id: 'media-123' 
     });
     
@@ -44,10 +45,10 @@ describe('Publishing Flow Integration', () => {
 
     const result = await publisher.publish(title, markdown, imageReader);
 
-    // Verify Image Upload (permanent for content)
-    expect(mockApiClient.uploadImage).toHaveBeenCalledWith(expect.any(Buffer), 'test.png');
-    // Verify Temporary Media Upload (for thumbnail)
-    expect(mockApiClient.uploadTempMedia).toHaveBeenCalledWith(expect.any(Buffer), 'thumb');
+    // Verify Image Upload (for content)
+    expect(mockApiClient.uploadImageForContent).toHaveBeenCalledWith(expect.any(Buffer), 'test.png');
+    // Verify Material Upload (for thumbnail)
+    expect(mockApiClient.uploadMaterial).toHaveBeenCalledWith(expect.any(Buffer), 'test.png', 'image');
 
     // Verify Draft Content
     // markdown-it usually wraps images in <p> if they are in their own paragraph
@@ -57,7 +58,7 @@ describe('Publishing Flow Integration', () => {
         expect.objectContaining({
             title: title,
             content: expectedContent,
-            thumb_media_id: 'temp-media-id-flow' // Now expects temp-media-id-flow
+            thumb_media_id: 'media-123'
         })
     ]));
 

@@ -1,6 +1,9 @@
 name: Release Obsidian Plugin
 
 on:
+  push:
+    branches:
+      - master
   workflow_dispatch:
 
 jobs:
@@ -59,7 +62,7 @@ jobs:
         run: |
           mkdir pixmi-ob-publisher
           cp dist/main.js pixmi-ob-publisher/main.js
-          cp manifest.json pixmi-ob-publisher/manifest.json
+          cp src/manifest.json pixmi-ob-publisher/manifest.json
           zip -r pixmi-ob-publisher.zip pixmi-ob-publisher
 
       - name: Create Release

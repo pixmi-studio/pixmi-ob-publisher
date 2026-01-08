@@ -15,9 +15,9 @@ describe('Publisher', () => {
 
   beforeEach(() => {
     mockApiClient = {
-      uploadImage: vi.fn(),
+      uploadMaterial: vi.fn(),
+      uploadImageForContent: vi.fn(),
       createDraft: vi.fn(),
-      uploadTempMedia: vi.fn().mockResolvedValue('temp-media-id')
     };
     mockParser = {
       extractImages: vi.fn(),
@@ -43,7 +43,8 @@ describe('Publisher', () => {
     const processedHtml = '<img src="http://remote.jpg">';
     
     mockParser.extractImages.mockReturnValue(['local.png']);
-    mockApiClient.uploadImage.mockResolvedValue({ url: 'http://remote.jpg', media_id: 'media-id' });
+    mockApiClient.uploadImageForContent.mockResolvedValue('http://remote.jpg');
+    mockApiClient.uploadMaterial.mockResolvedValue({ media_id: 'media-id', url: 'http://permanent.jpg' });
     mockParser.renderWithReplacements.mockReturnValue(processedHtml);
     mockApiClient.createDraft.mockResolvedValue('draft-media-id');
 
@@ -55,14 +56,14 @@ describe('Publisher', () => {
 
     expect(mockParser.extractImages).toHaveBeenCalledWith(markdown);
     expect(imageReader).toHaveBeenCalledWith('local.png');
-    expect(mockApiClient.uploadImage).toHaveBeenCalledWith(expect.any(Buffer), 'local.png');
-    expect(mockApiClient.uploadTempMedia).toHaveBeenCalledWith(expect.any(Buffer), 'thumb');
+    expect(mockApiClient.uploadImageForContent).toHaveBeenCalledWith(expect.any(Buffer), 'local.png');
+    expect(mockApiClient.uploadMaterial).toHaveBeenCalledWith(expect.any(Buffer), 'local.png', 'image');
     expect(mockParser.renderWithReplacements).toHaveBeenCalledWith(markdown, expect.any(Map));
     expect(mockApiClient.createDraft).toHaveBeenCalledWith(expect.arrayContaining([
         expect.objectContaining({
             title: title,
             content: processedHtml,
-            thumb_media_id: 'temp-media-id' // Now expects temp-media-id
+            thumb_media_id: 'media-id'
         })
     ]));
     expect(result).toBe('draft-media-id');
@@ -72,10 +73,11 @@ describe('Publisher', () => {
     const markdown = '![Fail](fail.png) ![Success](success.png)';
     mockParser.extractImages.mockReturnValue(['fail.png', 'success.png']);
     
-    mockApiClient.uploadImage.mockImplementation(async (buffer: any, filename: string) => {
+    mockApiClient.uploadImageForContent.mockImplementation(async (buffer: any, filename: string) => {
         if (filename === 'fail.png') throw new Error('Upload error');
-        return { url: 'http://remote.jpg', media_id: 'media-id' };
+        return 'http://remote.jpg';
     });
+    mockApiClient.uploadMaterial.mockResolvedValue({ media_id: 'media-id', url: 'http://permanent.jpg' });
 
     mockParser.renderWithReplacements.mockReturnValue('<img src="fail.png"> <img src="http://remote.jpg">');
     mockApiClient.createDraft.mockResolvedValue('draft-id');
@@ -83,7 +85,7 @@ describe('Publisher', () => {
 
     const result = await publisher.publish('Title', markdown, imageReader);
 
-    expect(mockApiClient.uploadImage).toHaveBeenCalledTimes(2);
+    expect(mockApiClient.uploadImageForContent).toHaveBeenCalledTimes(2);
     expect(mockApiClient.createDraft).toHaveBeenCalled();
     expect(result).toBe('draft-id');
   });
@@ -102,7 +104,7 @@ describe('Publisher', () => {
     const markdown = 'No images in content.';
     const thumbnailPath = 'thumb.png';
     mockParser.extractImages.mockReturnValue([]);
-    mockApiClient.uploadImage.mockResolvedValue({ url: 'http://remote.jpg', media_id: 'thumb-media-id' });
+    mockApiClient.uploadMaterial.mockResolvedValue({ media_id: 'thumb-media-id', url: 'http://permanent.jpg' });
     mockParser.renderWithReplacements.mockReturnValue('<p>No images</p>');
     mockApiClient.createDraft.mockResolvedValue('draft-id');
     const imageReader = vi.fn().mockResolvedValue(Buffer.from('data'));
@@ -110,10 +112,10 @@ describe('Publisher', () => {
     const result = await publisher.publish('Title', markdown, imageReader, thumbnailPath);
 
     expect(imageReader).toHaveBeenCalledWith(thumbnailPath);
-    expect(mockApiClient.uploadTempMedia).toHaveBeenCalledWith(expect.any(Buffer), 'thumb');
+    expect(mockApiClient.uploadMaterial).toHaveBeenCalledWith(expect.any(Buffer), 'thumb.png', 'image');
     expect(mockApiClient.createDraft).toHaveBeenCalledWith(expect.arrayContaining([
         expect.objectContaining({
-            thumb_media_id: 'temp-media-id' // Now expects temp-media-id
+            thumb_media_id: 'thumb-media-id'
         })
     ]));
     expect(result).toBe('draft-id');

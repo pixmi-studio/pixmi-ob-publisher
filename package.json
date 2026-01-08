@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite build --watch",
     "build": "vite build",
-    "version": "node -e \"const fs = require('fs'); const m = JSON.parse(fs.readFileSync('manifest.json', 'utf8')); m.version = require('./package.json').version; fs.writeFileSync('manifest.json', JSON.stringify(m, null, 2));\" && git add manifest.json",
+    "copy": "npm run build && node scripts/copy-build.js \"/Users/shengu/Library/Mobile Documents/iCloud~md~obsidian/Documents/Migo/.obsidian/plugins/pixmi-ob-publisher\"",
+    "version": "node -e \"const fs = require('fs'); const m = JSON.parse(fs.readFileSync('src/manifest.json', 'utf8')); m.version = require('./package.json').version; fs.writeFileSync('src/manifest.json', JSON.stringify(m, null, 2));\" && git add src/manifest.json",
     "test": "vitest run",
     "test:watch": "vitest",
     "coverage": "vitest run --coverage"

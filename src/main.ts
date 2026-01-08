@@ -63,6 +63,11 @@ export default class PixmiObPublisher extends Plugin {
 
     const markdown = activeView.getViewData();
     const title = activeFile.basename;
+    
+    // Extract thumbnail from frontmatter
+    const fileCache = this.app.metadataCache.getFileCache(activeFile);
+    const frontmatter = fileCache?.frontmatter;
+    const thumbnailPath = frontmatter?.thumb || frontmatter?.thumbnail;
 
     new Notice(`Publishing: ${title}...`);
     this.logger.log(`Starting publication for: ${title}`);
@@ -74,7 +79,7 @@ export default class PixmiObPublisher extends Plugin {
                 throw new Error(`Image not found: ${path}`);
             }
             return await this.app.vault.readBinary(file);
-        });
+        }, thumbnailPath);
         
         new Notice(`Successfully published! Draft ID: ${draftId}`);
         this.logger.log(`Successfully published draft: ${draftId}`);

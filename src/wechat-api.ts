@@ -96,20 +96,51 @@ export class WeChatApiClient {
     }
   }
 
-  async uploadImage(buffer: ArrayBuffer | Buffer, filename: string): Promise<UploadMaterialResponse> {
+  async uploadMaterial(buffer: ArrayBuffer | Buffer, filename: string, type: 'image' | 'video' | 'voice' | 'thumb' = 'image'): Promise<UploadMaterialResponse> {
     const accessToken = await this.getAccessToken();
     const url = this.getUrl('/cgi-bin/material/add_material');
     
-    // requestUrl doesn't support FormData directly as easily as axios for multipart
-    // But we can construct the body manually or use a simpler approach if the proxy supports it.
-    // However, for standard WeChat API, it's multipart/form-data.
+    const boundary = '----ObsidianBoundary' + Math.random().toString(36).substring(2);
+    let contentType = 'image/png';
+    if (type === 'thumb') contentType = 'image/jpeg';
     
-    // Note: requestUrl in Obsidian handles some complexity, but multipart can be tricky.
-    // For now, let's use a boundary-based manual construction if needed, 
-    // or keep using axios ONLY for the image upload if requestUrl is too restrictive,
-    // but the user's issue was with the token request (GET).
+    const header = `--${boundary}\r\nContent-Disposition: form-data; name="media"; filename="${filename}"\r\nContent-Type: ${contentType}\r\n\r\n`;
+    const footer = `\r\n--${boundary}--\r\n`;
     
-    // Actually, let's try to implement it with requestUrl for consistency and CORS bypassing.
+    const headerUint8 = new TextEncoder().encode(header);
+    const footerUint8 = new TextEncoder().encode(footer);
+    const contentUint8 = new Uint8Array(buffer);
+    
+    const totalLength = headerUint8.length + contentUint8.length + footerUint8.length;
+    const body = new Uint8Array(totalLength);
+    body.set(headerUint8, 0);
+    body.set(contentUint8, headerUint8.length);
+    body.set(footerUint8, headerUint8.length + contentUint8.length);
+
+    try {
+        const response = await requestUrl({
+            url: `${url}?access_token=${accessToken}&type=${type}`,
+            method: 'POST',
+            headers: {
+                'Content-Type': `multipart/form-data; boundary=${boundary}`
+            },
+            body: body.buffer
+        });
+        
+        const data = response.json as UploadMaterialResponse;
+        if (data.errcode) {
+            throw new Error(`WeChat Error: ${data.errcode} ${data.errmsg}`);
+        }
+        return data;
+    } catch (error) {
+        this.logger?.log(`Error uploading material (${type}): ${error}`, 'ERROR');
+        throw error;
+    }
+  }
+
+  async uploadImageForContent(buffer: ArrayBuffer | Buffer, filename: string): Promise<string> {
+    const accessToken = await this.getAccessToken();
+    const url = this.getUrl('/cgi-bin/media/uploadimg');
     
     const boundary = '----ObsidianBoundary' + Math.random().toString(36).substring(2);
     const header = `--${boundary}\r\nContent-Disposition: form-data; name="media"; filename="${filename}"\r\nContent-Type: image/png\r\n\r\n`;
@@ -127,7 +158,7 @@ export class WeChatApiClient {
 
     try {
         const response = await requestUrl({
-            url: `${url}?access_token=${accessToken}&type=image`,
+            url: `${url}?access_token=${accessToken}`,
             method: 'POST',
             headers: {
                 'Content-Type': `multipart/form-data; boundary=${boundary}`
@@ -135,13 +166,14 @@ export class WeChatApiClient {
             body: body.buffer
         });
         
-        const data = response.json as UploadMaterialResponse;
+        // uploadimg returns { url: "..." }
+        const data = response.json as { url: string, errcode?: number, errmsg?: string };
         if (data.errcode) {
             throw new Error(`WeChat Error: ${data.errcode} ${data.errmsg}`);
         }
-        return data;
+        return data.url;
     } catch (error) {
-        this.logger?.log(`Error uploading image: ${error}`, 'ERROR');
+        this.logger?.log(`Error uploading image for content: ${error}`, 'ERROR');
         throw error;
     }
   }

@@ -95,7 +95,7 @@ describe('WeChatApiClient', () => {
     await expect(client.getAccessToken()).rejects.toThrow('Network error');
   });
 
-  it('should upload image', async () => {
+  it('should upload material', async () => {
     const mockToken = 'mock-access-token';
     const mockMediaId = 'mock-media-id';
     const mockUrl = 'http://mock-url.com/image.jpg';
@@ -112,7 +112,7 @@ describe('WeChatApiClient', () => {
       }
     });
 
-    const result = await client.uploadImage(mockBuffer, 'image.jpg');
+    const result = await client.uploadMaterial(mockBuffer, 'image.jpg', 'image');
     
     expect(result.media_id).toBe(mockMediaId);
     expect(result.url).toBe(mockUrl);
@@ -123,6 +123,31 @@ describe('WeChatApiClient', () => {
         headers: expect.objectContaining({
             'Content-Type': expect.stringContaining('multipart/form-data')
         })
+      })
+    );
+  });
+
+  it('should upload image for content', async () => {
+    const mockToken = 'mock-access-token';
+    const mockUrl = 'http://mock-url.com/content-image.jpg';
+    const mockBuffer = Buffer.from('mock-image-data');
+    
+    client.getAccessToken = vi.fn().mockResolvedValue(mockToken);
+    
+    (requestUrl as any).mockResolvedValue({
+      status: 200,
+      json: {
+        url: mockUrl
+      }
+    });
+
+    const url = await client.uploadImageForContent(mockBuffer, 'image.jpg');
+    
+    expect(url).toBe(mockUrl);
+    expect(requestUrl).toHaveBeenCalledWith(
+      expect.objectContaining({
+        url: expect.stringContaining('https://api.weixin.qq.com/cgi-bin/media/uploadimg'),
+        method: 'POST'
       })
     );
   });
