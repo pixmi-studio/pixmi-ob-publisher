@@ -1,3 +1,10 @@
+# [1.3.0](https://github.com/pixmi-studio/pixmi-ob-publisher/compare/v1.2.0...v1.3.0) (2026-01-08)
+
+
+### Features
+
+* **release:** only upload zip archive to github release ([7af17eb](https://github.com/pixmi-studio/pixmi-ob-publisher/commit/7af17eb0e6b504068cb911ab02ae791ca3326733))
+
 # [1.2.0](https://github.com/pixmi-studio/pixmi-ob-publisher/compare/v1.1.0...v1.2.0) (2026-01-08)
 
 
