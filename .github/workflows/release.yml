@@ -69,9 +69,6 @@ jobs:
           name: Release v${{ steps.versioning.outputs.VERSION }}
           draft: false
           prerelease: false
-          files: |
-            pixmi-ob-publisher.zip
-            pixmi-ob-publisher/main.js
-            pixmi-ob-publisher/manifest.json
+          files: pixmi-ob-publisher.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
