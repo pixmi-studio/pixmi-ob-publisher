@@ -1,0 +1,8 @@
+{
+  "track_id": "automated_release_20260109",
+  "type": "feat",
+  "status": "new",
+  "created_at": "2026-01-09T10:00:00Z",
+  "updated_at": "2026-01-09T10:00:00Z",
+  "description": "优化 release 发布流程，设计全自动发布流并实现 release 与 master 分支同步"
+}
