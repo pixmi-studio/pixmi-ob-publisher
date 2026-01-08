@@ -24,7 +24,7 @@ _We are currently in the process of submitting this plugin to the official Obsid
 
 ### Manual Installation (Current Method)
 
-1. Download the latest release (`main.js`, `manifest.json`) from the [Releases](https://github.com/pixmi-studio/pixmi-ob-publisher/releases) page.
+1. Download the `main.js` and `manifest.json` files from the latest release on the [Releases](https://github.com/pixmi-studio/pixmi-ob-publisher/releases) page.
 2. Create a folder named `pixmi-ob-publisher` in your vault's `.obsidian/plugins/` directory.
 3. Copy the downloaded files into that folder.
 4. Reload Obsidian and enable the plugin in **Settings** > **Community plugins**.
