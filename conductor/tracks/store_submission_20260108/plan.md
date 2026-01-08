@@ -6,7 +6,7 @@
 - [x] Task: Ensure all error messages are user-friendly notices f38b01d
 - [x] Task: Final check of README.md for clarity and correct links b3b909c
 
-## Phase 2: Submission Process
+## Phase 2: Submission Process [checkpoint: 93b932a]
 
 - [x] Task: Fork `obsidianmd/obsidian-releases` repository 820d3eb
 - [x] Task: Add plugin entry to `community-plugins.json` e611d7c
