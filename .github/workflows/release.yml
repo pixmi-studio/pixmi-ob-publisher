@@ -14,6 +14,8 @@ jobs:
   release:
     name: Release
     runs-on: ubuntu-latest
+    outputs:
+      new_release_published: ${{ steps.semantic.outputs.new_release_published }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -36,6 +38,40 @@ jobs:
         run: npm run build
 
       - name: Release
+        id: semantic
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: npx semantic-release
+
+  sync-back:
+    name: Sync Back to Master
+    needs: [release]
+    runs-on: ubuntu-latest
+    # Optional: Only sync if a new release was actually published
+    # if: needs.release.outputs.new_release_published == 'true'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Sync Master with Release
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          
+          git fetch origin master
+          git checkout master
+          
+          echo "Attempting to merge latest release changes into master..."
+          # Pull the latest changes from release (including the version bump from the previous job)
+          git fetch origin release
+          
+          if git merge origin/release --no-ff -X theirs -m "chore(sync): merge release back to master [skip ci]"; then
+            echo "Merge successful, pushing to master..."
+            git push origin master
+          else
+            echo "Merge failed, check for conflicts manually."
+            exit 1
+          fi
