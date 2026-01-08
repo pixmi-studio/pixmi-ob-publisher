@@ -14,5 +14,5 @@
 
 ## Phase 3: Review & Maintenance
 
-- [ ] Task: Address any feedback from the Obsidian review team
-- [ ] Task: Verify plugin availability in the store once merged
+- [x] Task: Address any feedback from the Obsidian review team 203a7ba
+- [x] Task: Verify plugin availability in the store once merged b54685f
