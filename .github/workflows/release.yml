@@ -19,46 +19,49 @@ jobs:
         with:
           node-version: '22'
 
-      - name: Get Version
-        id: version
-        run: |
-          VERSION=$(node -p "require('./package.json').version")
-          echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
-          echo "Detected version: $VERSION"
-
-      - name: Check if Tag Exists
-        id: check_tag
-        run: |
-          if git rev-parse "v${{ steps.version.outputs.VERSION }}" >/dev/null 2>&1; then
-            echo "TAG_EXISTS=true" >> $GITHUB_OUTPUT
-            echo "Tag v${{ steps.version.outputs.VERSION }} already exists."
-          else
-            echo "TAG_EXISTS=false" >> $GITHUB_OUTPUT
-            echo "Tag v${{ steps.version.outputs.VERSION }} does not exist. Proceeding with release."
-          fi
-
-      - name: Create Tag
-        if: steps.check_tag.outputs.TAG_EXISTS == 'false'
+      - name: Configure Git
         run: |
           git config --global user.name "GitHub Action"
           git config --global user.email "action@github.com"
-          git tag -a "v${{ steps.version.outputs.VERSION }}" -m "Release v${{ steps.version.outputs.VERSION }}"
-          git push origin "v${{ steps.version.outputs.VERSION }}"
+
+      - name: Handle Versioning
+        id: versioning
+        run: |
+          CURRENT_VERSION=$(node -p "require('./package.json').version")
+          echo "Current version in package.json: $CURRENT_VERSION"
+          
+          # Check if tag exists remotely
+          if git ls-remote --exit-code --tags origin "v$CURRENT_VERSION" >/dev/null 2>&1; then
+            echo "Tag v$CURRENT_VERSION exists. Bumping patch version..."
+            npm version patch -m "chore(release): bump version to %s [skip ci]"
+            
+            NEW_VERSION=$(node -p "require('./package.json').version")
+            echo "New version: $NEW_VERSION"
+            echo "VERSION=$NEW_VERSION" >> $GITHUB_OUTPUT
+            
+            # Push the commit and the new tag
+            git push origin master
+            git push origin "v$NEW_VERSION"
+          else
+            echo "Tag v$CURRENT_VERSION does not exist. Using current version."
+            echo "VERSION=$CURRENT_VERSION" >> $GITHUB_OUTPUT
+            
+            # Create and push tag for current version
+            git tag -a "v$CURRENT_VERSION" -m "Release v$CURRENT_VERSION"
+            git push origin "v$CURRENT_VERSION"
+          fi
 
       - name: Install Dependencies
-        if: steps.check_tag.outputs.TAG_EXISTS == 'false'
         run: npm install
 
       - name: Build Plugin
-        if: steps.check_tag.outputs.TAG_EXISTS == 'false'
         run: npm run build
 
       - name: Create Release
-        if: steps.check_tag.outputs.TAG_EXISTS == 'false'
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: v${{ steps.version.outputs.VERSION }}
-          name: Release v${{ steps.version.outputs.VERSION }}
+          tag_name: v${{ steps.versioning.outputs.VERSION }}
+          name: Release v${{ steps.versioning.outputs.VERSION }}
           draft: false
           prerelease: false
           files: |
