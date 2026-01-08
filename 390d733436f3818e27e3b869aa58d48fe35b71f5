@@ -1,0 +1,9 @@
+Task: Write integration tests for the publishing flow (mocking all external APIs)
+Summary: Added integration tests to verify the publishing flow.
+- Created tests/publishing-flow.test.ts.
+- Verified that Publisher correctly uses MarkdownParser.
+- Mocked WeChatApiClient to simulate network calls.
+- Verified correct parameter passing and content generation.
+Files:
+- tests/publishing-flow.test.ts
+Why: To ensure the components work together correctly before integration into the UI.
