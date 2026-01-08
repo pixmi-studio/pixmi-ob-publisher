@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite build --watch",
     "build": "vite build",
-    "version": "node -e \"const fs = require('fs'); const m = JSON.parse(fs.readFileSync('manifest.json', 'utf8')); m.version = require('./package.json').version; fs.writeFileSync('manifest.json', JSON.stringify(m, null, 2)); git add manifest.json\"",
+    "version": "node -e \"const fs = require('fs'); const m = JSON.parse(fs.readFileSync('manifest.json', 'utf8')); m.version = require('./package.json').version; fs.writeFileSync('manifest.json', JSON.stringify(m, null, 2));\" && git add manifest.json",
     "test": "vitest run",
     "test:watch": "vitest",
     "coverage": "vitest run --coverage"
