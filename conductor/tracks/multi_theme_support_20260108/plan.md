@@ -1,11 +1,11 @@
 # Implementation Plan: Multi-Theme Support and Preview System
 
-## Phase 1: Theme Management Foundation
+## Phase 1: Theme Management Foundation [checkpoint: eb62983]
 *建立主题的基础架构，包括数据结构、加载逻辑和本地目录监控。*
 
 - [x] Task: Define `Theme` interfaces and metadata structures (TDD) ef8d553
 - [x] Task: Implement `ThemeManager` to load built-in themes from the plugin bundle 448f096
-- [ ] Task: Implement local directory monitoring (`.obsidian/pixmi-themes/`) to load custom CSS files
+- [x] Task: Implement local directory monitoring (`.obsidian/pixmi-themes/`) to load custom CSS files 123e7eb
 - [ ] Task: Conductor - User Manual Verification 'Theme Management Foundation' (Protocol in workflow.md)
 
 ## Phase 2: UI & Switching Logic
