@@ -29,3 +29,44 @@ export interface IThemeManager {
     getAllThemes(): Theme[];
     loadThemes(): Promise<void>;
 }
+
+export class ThemeManager implements IThemeManager {
+    private themes: Map<string, Theme> = new Map();
+
+    async loadThemes(): Promise<void> {
+        this.loadBuiltinThemes();
+    }
+
+    private loadBuiltinThemes(): void {
+        const builtinThemes: Theme[] = [
+            {
+                id: 'minimalist',
+                name: 'Minimalist',
+                css: '/* Minimalist Theme Placeholder */\n.pixmi-preview-container { font-family: sans-serif; }',
+                type: 'builtin'
+            },
+            {
+                id: 'technical',
+                name: 'Technical',
+                css: '/* Technical Theme Placeholder */\n.pixmi-preview-container { font-family: monospace; }',
+                type: 'builtin'
+            },
+            {
+                id: 'modern-magazine',
+                name: 'Modern Magazine',
+                css: '/* Modern Magazine Theme Placeholder */\n.pixmi-preview-container { line-height: 1.8; }',
+                type: 'builtin'
+            }
+        ];
+
+        builtinThemes.forEach(theme => this.themes.set(theme.id, theme));
+    }
+
+    getTheme(id: string): Theme | undefined {
+        return this.themes.get(id);
+    }
+
+    getAllThemes(): Theme[] {
+        return Array.from(this.themes.values());
+    }
+}
