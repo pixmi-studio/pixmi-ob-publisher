@@ -39,5 +39,5 @@
 
 - [x] Task: Create GitHub Action workflow for automatic release on push to master 42939a4
 - [x] Task: Fix release artifacts location (dist/) and update README installation instructions ce3aa96
-- [~] Task: Package release artifacts into a ZIP file (pixmi-ob-publisher.zip) with folder structure for easy installation
+- [x] Task: Package release artifacts into a ZIP file (pixmi-ob-publisher.zip) with folder structure for easy installation e807b99
 
