@@ -1,7 +1,11 @@
 # Pixmi Obsidian WeChat Publisher
 
+[English] | [简体中文](./README_zh.md)
+
 [![GitHub release (latest by date)](https://img.shields.io/github/v/release/pixmi-studio/pixmi-ob-publisher?style=flat-square)](https://github.com/pixmi-studio/pixmi-ob-publisher/releases)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](https://opensource.org/licenses/MIT)
+[![Buy Me A Coffee](https://img.shields.io/badge/buy%20me%20a%20coffee-donate-yellow.svg?style=flat-square)](https://www.buymeacoffee.com/pixmistudio)
+[![GitHub stars](https://img.shields.io/github/stars/pixmi-studio/pixmi-ob-publisher?style=flat-square)](https://github.com/pixmi-studio/pixmi-ob-publisher/stargazers)
 
 An Obsidian plugin that allows you to publish your Markdown notes directly to your WeChat Official Account (公众号) draft box.
 
@@ -10,6 +14,7 @@ An Obsidian plugin that allows you to publish your Markdown notes directly to yo
 - **Direct Publishing**: Push your active note to WeChat drafts with a single click.
 - **Image Handling**: Automatically processes and uploads local images referenced in your notes to WeChat.
 - **Markdown Support**: Converts Obsidian Markdown to a format compatible with WeChat's editor.
+- **Proxy Support**: Bypasses WeChat IP whitelist restrictions using a custom API proxy.
 - **Seamless Integration**: Use the ribbon icon or command palette for quick access.
 
 ## Installation
@@ -35,10 +40,10 @@ Before publishing, you need to configure your WeChat Official Account credential
 
 1. Go to your [WeChat Official Account Platform](https://mp.weixin.qq.com/).
 2. Navigate to **Settings and Development** > **Basic Configuration**.
-3. Locate your **AppID** and **AppSecret**. (For instructions, see [this guide](https://developers.weixin.qq.com/doc/oplatform/developers/dev/appid.html)).
+3. Locate your **AppID** and **AppSecret**.
 4. In Obsidian, go to **Settings** > **Pixmi WeChat Publisher**.
 5. Enter your AppID and AppSecret.
-6. (Optional) Whitelist your IP address in the WeChat platform settings if required.
+6. (Optional) If you face network issues or IP whitelist restrictions, configure an **API Proxy URL**.
 
 ## Usage
 
@@ -64,7 +69,13 @@ npm run test
 
 ## Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+Contributions are welcome! Please see our [Contributing Guidelines](CONTRIBUTING.md) for more details on how to get started.
+
+## Support
+
+If you find this plugin helpful, please consider giving it a star!
+
+[![Star History Chart](https://api.star-history.com/svg?repos=pixmi-studio/pixmi-ob-publisher&type=Date)](https://star-history.com/#pixmi-studio/pixmi-ob-publisher&Date)
 
 ## License
 

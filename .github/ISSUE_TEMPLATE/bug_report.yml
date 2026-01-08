@@ -1,0 +1,41 @@
+name: Bug Report / Bug 报告
+description: Create a report to help us improve / 创建报告帮助我们改进
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        English follow Chinese / 英文请见中文下方
+  - type: textarea
+    id: description
+    attributes:
+      label: Description / 问题描述
+      description: A clear and concise description of what the bug is. / 清晰简洁地描述问题。
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to Reproduce / 复现步骤
+      description: How did you encounter this bug? / 你是如何遇到这个问题的？
+      placeholder: |
+        1. Go to '...'
+        2. Click on '....'
+        3. See error
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behavior / 预期行为
+      description: What you expected to happen. / 你预期会发生什么。
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs / 插件日志
+      description: Please paste logs from the plugin settings tab (Troubleshooting > Show Logs). / 请贴入插件设置页面的日志（疑难解答 > 显示日志）。
+  - type: textarea
+    id: context
+    attributes:
+      label: Context / 上下文
+      description: Obsidian version, OS, etc. / Obsidian 版本、操作系统等。

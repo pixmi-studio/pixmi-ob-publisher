@@ -1,0 +1,18 @@
+name: Feature Request / 功能建议
+description: Suggest an idea for this project / 为本项目提议一个想法
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: idea
+    attributes:
+      label: Description of the Idea / 想法描述
+      description: A clear and concise description of what you want to happen. / 对你希望实现的功能进行清晰简洁的描述。
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: Why is this needed? / 为什么需要这个功能？
+      description: Explain the use case for this feature. / 说明该功能的使用场景。
+    validations:
+      required: true
