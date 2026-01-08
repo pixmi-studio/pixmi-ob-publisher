@@ -42,6 +42,22 @@ export class PixmiSettingTab extends PluginSettingTab {
       );
 
     new Setting(containerEl)
+      .setName('API Proxy URL')
+      .setDesc('Optional: Use a proxy to bypass WeChat IP whitelist (e.g., https://your-proxy.com). Leave empty to use direct connection.')
+      .addText((text) =>
+        text
+          .setPlaceholder('https://your-proxy.com')
+          .setValue(this.plugin.settings.proxyUrl)
+          .onChange(async (value) => {
+            this.plugin.settings.proxyUrl = value.trim();
+            if (this.plugin.settings.proxyUrl && !this.plugin.settings.proxyUrl.endsWith('/')) {
+                // We don't necessarily need to add a slash here, depends on implementation in apiClient
+            }
+            await this.plugin.saveSettings();
+          })
+      );
+
+    new Setting(containerEl)
       .setName('Test Connection')
       .setDesc('Test if your AppID and AppSecret are correct')
       .addButton((button) =>

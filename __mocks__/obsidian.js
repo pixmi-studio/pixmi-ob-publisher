@@ -84,6 +84,13 @@ module.exports = {
     Notice: class Notice {
         constructor(message) {}
     },
+    requestUrl: async () => {
+        return {
+            status: 200,
+            json: {},
+            arrayBuffer: new ArrayBuffer(0)
+        };
+    },
     getCreatedSettings: () => createdSettings,
     clearCreatedSettings: () => { createdSettings.length = 0; }
 };

@@ -21,7 +21,7 @@ export default class PixmiObPublisher extends Plugin {
     await this.loadSettings();
 
     this.logger = new LogManager(this.app, this.manifest);
-    this.apiClient = new WeChatApiClient(this.settings.appId, this.settings.appSecret, this.logger);
+    this.apiClient = new WeChatApiClient(this.settings.appId, this.settings.appSecret, this.settings.proxyUrl, this.logger);
     this.publisher = new Publisher(this.apiClient, new MarkdownParser());
 
     this.addSettingTab(new PixmiSettingTab(this.app, this));
@@ -98,7 +98,7 @@ export default class PixmiObPublisher extends Plugin {
     await this.saveData(this.settings);
     // Update API client when settings change
     if (this.apiClient) {
-        this.apiClient = new WeChatApiClient(this.settings.appId, this.settings.appSecret, this.logger);
+        this.apiClient = new WeChatApiClient(this.settings.appId, this.settings.appSecret, this.settings.proxyUrl, this.logger);
         // Re-instantiate publisher to use new client
         this.publisher = new Publisher(this.apiClient, new MarkdownParser());
     }

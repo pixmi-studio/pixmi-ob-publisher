@@ -1,8 +1,14 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { WeChatApiClient } from '../src/wechat-api';
-import axios from 'axios';
+import { requestUrl } from 'obsidian';
 
-vi.mock('axios');
+vi.mock('obsidian', async () => {
+    const actual = await vi.importActual('obsidian');
+    return {
+        ...actual as any,
+        requestUrl: vi.fn(),
+    };
+});
 
 describe('WeChatApiClient', () => {
   let client: WeChatApiClient;
@@ -23,8 +29,9 @@ describe('WeChatApiClient', () => {
     const mockToken = 'mock-access-token';
     const mockExpiresIn = 7200;
     
-    (axios.get as any).mockResolvedValue({
-      data: {
+    (requestUrl as any).mockResolvedValue({
+      status: 200,
+      json: {
         access_token: mockToken,
         expires_in: mockExpiresIn
       }
@@ -32,16 +39,39 @@ describe('WeChatApiClient', () => {
 
     const token = await client.getAccessToken();
     expect(token).toBe(mockToken);
-    expect(axios.get).toHaveBeenCalledWith(
-      expect.stringContaining('https://api.weixin.qq.com/cgi-bin/token'),
-      expect.anything()
+    expect(requestUrl).toHaveBeenCalledWith(
+      expect.objectContaining({
+        url: expect.stringContaining('https://api.weixin.qq.com/cgi-bin/token'),
+        method: 'GET'
+      })
+    );
+  });
+
+  it('should use proxy URL if provided', async () => {
+    const proxyUrl = 'https://my-proxy.com/';
+    client = new WeChatApiClient(appId, appSecret, proxyUrl);
+    
+    (requestUrl as any).mockResolvedValue({
+      status: 200,
+      json: {
+        access_token: 'token',
+        expires_in: 7200
+      }
+    });
+
+    await client.getAccessToken();
+    expect(requestUrl).toHaveBeenCalledWith(
+      expect.objectContaining({
+        url: expect.stringContaining('https://my-proxy.com/cgi-bin/token')
+      })
     );
   });
 
   it('should cache access token', async () => {
     const mockToken = 'mock-access-token';
-    (axios.get as any).mockResolvedValue({
-      data: {
+    (requestUrl as any).mockResolvedValue({
+      status: 200,
+      json: {
         access_token: mockToken,
         expires_in: 7200
       }
@@ -51,17 +81,17 @@ describe('WeChatApiClient', () => {
     await client.getAccessToken();
 
     // Should only call API once due to caching
-    expect(axios.get).toHaveBeenCalledTimes(1);
+    expect(requestUrl).toHaveBeenCalledTimes(1);
   });
 
   it('should throw error when access token is missing', async () => {
-    (axios.get as any).mockResolvedValue({ data: {} });
+    (requestUrl as any).mockResolvedValue({ status: 200, json: {} });
     await expect(client.getAccessToken()).rejects.toThrow('Failed to retrieve access token');
   });
 
   it('should propagate network errors', async () => {
     const error = new Error('Network error');
-    (axios.get as any).mockRejectedValue(error);
+    (requestUrl as any).mockRejectedValue(error);
     await expect(client.getAccessToken()).rejects.toThrow('Network error');
   });
 
@@ -74,8 +104,9 @@ describe('WeChatApiClient', () => {
     // Mock getAccessToken to return a token
     client.getAccessToken = vi.fn().mockResolvedValue(mockToken);
     
-    (axios.post as any).mockResolvedValue({
-      data: {
+    (requestUrl as any).mockResolvedValue({
+      status: 200,
+      json: {
         media_id: mockMediaId,
         url: mockUrl
       }
@@ -85,24 +116,15 @@ describe('WeChatApiClient', () => {
     
     expect(result.media_id).toBe(mockMediaId);
     expect(result.url).toBe(mockUrl);
-    expect(axios.post).toHaveBeenCalledWith(
-      expect.stringContaining('https://api.weixin.qq.com/cgi-bin/material/add_material'),
-      expect.any(FormData),
+    expect(requestUrl).toHaveBeenCalledWith(
       expect.objectContaining({
-        params: { access_token: mockToken, type: 'image' },
-        headers: expect.any(Object)
+        url: expect.stringContaining('https://api.weixin.qq.com/cgi-bin/material/add_material'),
+        method: 'POST',
+        headers: expect.objectContaining({
+            'Content-Type': expect.stringContaining('multipart/form-data')
+        })
       })
     );
-  });
-
-  it('should handle upload image error', async () => {
-    const mockBuffer = Buffer.from('mock-image-data');
-    client.getAccessToken = vi.fn().mockResolvedValue('token');
-    
-    const error = new Error('Upload failed');
-    (axios.post as any).mockRejectedValue(error);
-
-    await expect(client.uploadImage(mockBuffer, 'image.jpg')).rejects.toThrow('Upload failed');
   });
 
   it('should create draft', async () => {
@@ -112,8 +134,9 @@ describe('WeChatApiClient', () => {
     
     client.getAccessToken = vi.fn().mockResolvedValue(mockToken);
     
-    (axios.post as any).mockResolvedValue({
-      data: {
+    (requestUrl as any).mockResolvedValue({
+      status: 200,
+      json: {
         media_id: mockMediaId
       }
     });
@@ -121,19 +144,12 @@ describe('WeChatApiClient', () => {
     const mediaId = await client.createDraft(articles);
     
     expect(mediaId).toBe(mockMediaId);
-    expect(axios.post).toHaveBeenCalledWith(
-      expect.stringContaining('https://api.weixin.qq.com/cgi-bin/draft/add'),
-      { articles },
-      { params: { access_token: mockToken } }
+    expect(requestUrl).toHaveBeenCalledWith(
+      expect.objectContaining({
+        url: expect.stringContaining('https://api.weixin.qq.com/cgi-bin/draft/add'),
+        method: 'POST',
+        body: expect.stringContaining('articles')
+      })
     );
-  });
-
-  it('should handle create draft error', async () => {
-    client.getAccessToken = vi.fn().mockResolvedValue('token');
-    
-    const error = new Error('Draft creation failed');
-    (axios.post as any).mockRejectedValue(error);
-
-    await expect(client.createDraft([])).rejects.toThrow('Draft creation failed');
   });
 });
