@@ -1,0 +1,38 @@
+name: Sync Back to Master
+
+on:
+  push:
+    branches:
+      - release
+
+permissions:
+  contents: write
+
+jobs:
+  sync-back:
+    name: Sync Back
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Sync Master with Release
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          
+          git fetch origin master
+          git checkout master
+          
+          echo "Attempting to merge release into master..."
+          # Use 'theirs' strategy option to prefer release branch changes in case of conflicts (e.g. version numbers)
+          if git merge origin/release --no-ff -X theirs -m "chore(sync): merge release back to master [skip ci]"; then
+            echo "Merge successful, pushing to master..."
+            git push origin master
+          else
+            echo "Merge failed, check for conflicts manually."
+            exit 1
+          fi
