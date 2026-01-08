@@ -7,7 +7,7 @@
     "dev": "vite build --watch",
     "build": "vite build",
     "copy": "npm run build && node scripts/copy-build.js \"/Users/shengu/Library/Mobile Documents/iCloud~md~obsidian/Documents/Migo/.obsidian/plugins/pixmi-ob-publisher\"",
-    "version": "node -e \"const fs = require('fs'); const m = JSON.parse(fs.readFileSync('src/manifest.json', 'utf8')); m.version = require('./package.json').version; fs.writeFileSync('src/manifest.json', JSON.stringify(m, null, 2));\" && git add src/manifest.json",
+    "version": "node scripts/update-manifests.js $(npm pkg get version | sed 's/\"//g') && git add manifest.json src/manifest.json versions.json",
     "test": "vitest run",
     "test:watch": "vitest",
     "coverage": "vitest run --coverage"
@@ -27,6 +27,12 @@
     "markdown-it": "^14.1.0"
   },
   "devDependencies": {
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/commit-analyzer": "^13.0.1",
+    "@semantic-release/exec": "^7.1.0",
+    "@semantic-release/git": "^10.0.1",
+    "@semantic-release/github": "^12.0.2",
+    "@semantic-release/release-notes-generator": "^14.1.0",
     "@types/markdown-it": "^14.1.2",
     "@types/node": "^25.0.3",
     "@vitest/coverage-v8": "^4.0.16",
@@ -34,6 +40,7 @@
     "jsdom": "^27.4.0",
     "obsidian": "^1.11.0",
     "prettier": "^3.7.4",
+    "semantic-release": "^25.0.2",
     "tslib": "^2.8.1",
     "typescript": "^5.9.3",
     "vite": "^7.3.0",

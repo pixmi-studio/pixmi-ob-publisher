@@ -3,10 +3,10 @@
 ## Phase 1: Infrastructure & Versioning Logic
 设计并实现自动版本递增和文件同步的核心逻辑。
 
-- [ ] Task: 调研并集成语义化版本管理工具 (如 semantic-release) `[target: package.json]`
-- [ ] Task: 编写测试验证版本更新逻辑（确保非规范提交默认升级 Patch）
-- [ ] Task: 实现自动同步版本号至 `package.json`, `manifest.json`, `src/manifest.json`
-- [ ] Task: 实现自动更新 `versions.json` (Obsidian 插件版本历史)
+- [x] Task: 调研并集成语义化版本管理工具 (如 semantic-release) `[target: package.json]`
+- [x] Task: 编写测试验证版本更新逻辑（确保非规范提交默认升级 Patch）
+- [x] Task: 实现自动同步版本号至 `package.json`, `manifest.json`, `src/manifest.json`
+- [x] Task: 实现自动更新 `versions.json` (Obsidian 插件版本历史)
 - [ ] Task: Conductor - User Manual Verification 'Phase 1: Infrastructure & Versioning Logic' (Protocol in workflow.md)
 
 ## Phase 2: GitHub Actions Workflow
