@@ -4,7 +4,7 @@
 *建立主题的基础架构，包括数据结构、加载逻辑和本地目录监控。*
 
 - [x] Task: Define `Theme` interfaces and metadata structures (TDD) ef8d553
-- [ ] Task: Implement `ThemeManager` to load built-in themes from the plugin bundle
+- [x] Task: Implement `ThemeManager` to load built-in themes from the plugin bundle 448f096
 - [ ] Task: Implement local directory monitoring (`.obsidian/pixmi-themes/`) to load custom CSS files
 - [ ] Task: Conductor - User Manual Verification 'Theme Management Foundation' (Protocol in workflow.md)
 
