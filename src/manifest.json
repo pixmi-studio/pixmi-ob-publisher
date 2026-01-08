@@ -1,7 +1,7 @@
 {
   "id": "pixmi-ob-publisher",
   "name": "Pixmi Obsidian WeChat Publisher",
-  "version": "1.0.11",
+  "version": "1.0.12",
   "minAppVersion": "0.15.0",
   "description": "Publish Obsidian notes to WeChat Official Account draft box.",
   "author": "Pixmi Studio",
