@@ -26,11 +26,9 @@ export class LogManager {
         await this.app.vault.adapter.write(path, logEntry);
       }
       
-      // Also log to console for development
+      // Also log to console for development errors
       if (level === 'ERROR') {
         console.error(message);
-      } else {
-        console.log(message);
       }
     } catch (error) {
       console.error('Failed to write to log file:', error);
