@@ -1,6 +1,6 @@
 # Track Plan: Community Store Submission
 
-## Phase 1: Pre-submission Cleanup
+## Phase 1: Pre-submission Cleanup [checkpoint: 55ea614]
 
 - [x] Task: Remove unnecessary console logs and debug statements b210f9f
 - [x] Task: Ensure all error messages are user-friendly notices f38b01d
