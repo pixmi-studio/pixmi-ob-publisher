@@ -114,13 +114,16 @@ export default class PixmiObPublisher extends Plugin {
     const markdown = activeView.getViewData();
     const title = activeFile.basename;
     
-    // Extract thumbnail from frontmatter
+    // Extract info from frontmatter
     const fileCache = this.app.metadataCache.getFileCache(activeFile);
     const frontmatter = fileCache?.frontmatter;
     const thumbnailPath = frontmatter?.thumb || frontmatter?.thumbnail;
+    const themeId = frontmatter?.['pixmi-theme'] || 'default';
+    const theme = this.themeManager.getTheme(themeId);
+    const themeCss = theme ? theme.css : '';
 
     new Notice(`Publishing: ${title}...`);
-    this.logger.log(`Starting publication for: ${title}`);
+    this.logger.log(`Starting publication for: ${title} with theme: ${themeId}`);
 
     try {
         const draftId = await this.publisher.publish(title, markdown, async (path: string) => {
@@ -129,7 +132,7 @@ export default class PixmiObPublisher extends Plugin {
                 throw new Error(`Image not found: ${path}. Please ensure the image exists in your vault.`);
             }
             return await this.app.vault.readBinary(file);
-        }, thumbnailPath);
+        }, thumbnailPath, themeCss);
         
         new Notice(`Successfully published! Draft ID: ${draftId}`);
         this.logger.log(`Successfully published draft: ${draftId}`);

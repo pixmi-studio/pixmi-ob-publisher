@@ -120,4 +120,24 @@ describe('Publisher', () => {
     ]));
     expect(result).toBe('draft-id');
   });
+
+  it('should apply CSS during publishing if provided', async () => {
+    const markdown = '# Hello';
+    const css = 'h1 { color: red; }';
+    const title = 'Title';
+    
+    mockParser.extractImages.mockReturnValue(['thumb.png']);
+    mockApiClient.uploadMaterial.mockResolvedValue({ media_id: 'media-id' });
+    mockParser.renderWithReplacements.mockReturnValue('<h1>Hello</h1>');
+    mockApiClient.createDraft.mockResolvedValue('draft-id');
+    const imageReader = vi.fn().mockResolvedValue(Buffer.from('data'));
+
+    await publisher.publish(title, markdown, imageReader, undefined, css);
+
+    expect(mockApiClient.createDraft).toHaveBeenCalledWith(expect.arrayContaining([
+        expect.objectContaining({
+            content: expect.stringContaining('style="color: red;"')
+        })
+    ]));
+  });
 });

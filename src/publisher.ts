@@ -1,15 +1,20 @@
 import { WeChatApiClient, WeChatArticle } from './wechat-api';
 import { MarkdownParser } from './markdown-parser';
+import { CssConverter } from './css-converter';
 
 export type ImageReader = (path: string) => Promise<ArrayBuffer>;
 
 export class Publisher {
+  private cssConverter: CssConverter;
+
   constructor(
     private apiClient: WeChatApiClient,
     private parser: MarkdownParser
-  ) {}
+  ) {
+    this.cssConverter = new CssConverter();
+  }
 
-  async publish(title: string, markdown: string, imageReader: ImageReader, thumbnailPath?: string): Promise<string> {
+  async publish(title: string, markdown: string, imageReader: ImageReader, thumbnailPath?: string, css?: string): Promise<string> {
     // 1. Extract images
     const images = this.parser.extractImages(markdown);
     
@@ -58,7 +63,12 @@ export class Publisher {
     }
 
     // 3. Replace URLs and render HTML
-    const content = this.parser.renderWithReplacements(markdown, urlMap);
+    let content = this.parser.renderWithReplacements(markdown, urlMap);
+
+    // Apply CSS if provided
+    if (css) {
+        content = this.cssConverter.convert(content, css);
+    }
 
     // 4. Create Draft
     // If no image found, we might need a default thumbMediaId or handle error.

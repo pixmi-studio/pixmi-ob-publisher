@@ -223,7 +223,8 @@ describe('PixmiObPublisher', () => {
         'Test Note', 
         '# Content', 
         expect.any(Function),
-        undefined
+        undefined,
+        ''
     );
     expect(mocks.noticeSpy).toHaveBeenCalledWith(expect.stringContaining('Successfully published'));
     expect(mocks.logSpy).toHaveBeenCalledWith(expect.stringContaining('Successfully published draft'), undefined);
