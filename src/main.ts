@@ -1,16 +1,20 @@
-import { App, Plugin, PluginManifest, Notice, MarkdownView, TFile } from 'obsidian';
+import { App, Plugin, PluginManifest, Notice, MarkdownView, TFile, FuzzySuggestModal } from 'obsidian';
 import { PixmiSettings, DEFAULT_SETTINGS } from './settings';
 import { PixmiSettingTab } from './settings-tab';
 import { WeChatApiClient } from './wechat-api';
 import { Publisher } from './publisher';
 import { MarkdownParser } from './markdown-parser';
 import { LogManager } from './logger';
+import { ThemeManager, Theme } from './themes';
+import { ThemeSwitcher } from './theme-switcher';
 
 export default class PixmiObPublisher extends Plugin {
   settings: PixmiSettings;
   apiClient: WeChatApiClient;
   publisher: Publisher;
   logger: LogManager;
+  themeManager: ThemeManager;
+  themeSwitcher: ThemeSwitcher;
 
   constructor(app: App, manifest: PluginManifest) {
     super(app, manifest);
@@ -23,6 +27,10 @@ export default class PixmiObPublisher extends Plugin {
     this.logger = new LogManager(this.app, this.manifest);
     this.apiClient = new WeChatApiClient(this.settings.appId, this.settings.appSecret, this.settings.proxyUrl, this.logger);
     this.publisher = new Publisher(this.apiClient, new MarkdownParser());
+    this.themeManager = new ThemeManager(this.app);
+    this.themeSwitcher = new ThemeSwitcher(this.app);
+
+    await this.themeManager.loadThemes();
 
     this.addSettingTab(new PixmiSettingTab(this.app, this));
 
@@ -38,6 +46,24 @@ export default class PixmiObPublisher extends Plugin {
             if (markdownView) {
                 if (!checking) {
                     this.publishCurrentNote();
+                }
+                return true;
+            }
+            return false;
+        }
+    });
+
+    this.addCommand({
+        id: 'switch-wechat-theme',
+        name: 'Switch WeChat Theme',
+        checkCallback: (checking: boolean) => {
+            const markdownView = this.app.workspace.getActiveViewOfType(MarkdownView);
+            if (markdownView) {
+                if (!checking) {
+                    new ThemeSuggester(this.app, this.themeManager, async (theme) => {
+                        await this.themeSwitcher.setTheme(markdownView.file!, theme.id);
+                        new Notice(`Theme switched to: ${theme.name}`);
+                    }).open();
                 }
                 return true;
             }
@@ -117,4 +143,27 @@ export default class PixmiObPublisher extends Plugin {
         this.publisher = new Publisher(this.apiClient, new MarkdownParser());
     }
   }
+}
+
+class ThemeSuggester extends FuzzySuggestModal<Theme> {
+    private themeManager: ThemeManager;
+    private onSelect: (theme: Theme) => void;
+
+    constructor(app: App, themeManager: ThemeManager, onSelect: (theme: Theme) => void) {
+        super(app);
+        this.themeManager = themeManager;
+        this.onSelect = onSelect;
+    }
+
+    getItems(): Theme[] {
+        return this.themeManager.getAllThemes();
+    }
+
+    getItemText(theme: Theme): string {
+        return theme.name;
+    }
+
+    onChooseItem(theme: Theme, evt: MouseEvent | KeyboardEvent): void {
+        this.onSelect(theme);
+    }
 }

@@ -41,29 +41,21 @@ vi.mock('obsidian', () => {
              return this;
         }
     },
-    Notice: class Notice {
-        constructor(message: string) {
-            mocks.noticeSpy(message);
-        }
+    Notice: mocks.noticeSpy,
+    MarkdownView: class {},
+    Modal: class {
+      app: any;
+      constructor(app: any) { this.app = app; }
+      open() {}
+      close() {}
     },
-    Modal: class Modal {
-        constructor(app: any) {}
-        open() {}
-        close() {}
+    FuzzySuggestModal: class {
+      app: any;
+      constructor(app: any) { this.app = app; }
+      open() {}
+      close() {}
     },
-    TextAreaComponent: class TextAreaComponent {
-        constructor(containerEl: any) {}
-        setValue() { return this; }
-        setDisabled() { return this; }
-    },
-    ButtonComponent: class ButtonComponent {
-        constructor(containerEl: any) {}
-        setButtonText() { return this; }
-        setWarning() { return this; }
-        onClick() { return this; }
-    },
-    MarkdownView: class MarkdownView {},
-    TFile: class TFile {}
+    TFile: class {}
   };
 });
 
@@ -81,19 +73,29 @@ vi.mock('../src/logger', () => {
 
 describe('PixmiObPublisher', () => {
   let plugin: PixmiObPublisher;
+  let mockApp: any;
 
   beforeEach(() => {
-    const mockApp = {
-        workspace: {
-            getActiveViewOfType: vi.fn()
-        },
-        metadataCache: {
-            getFirstLinkpathDest: vi.fn(),
-            getFileCache: vi.fn().mockReturnValue({ frontmatter: {} })
-        },
-        vault: {
-            readBinary: vi.fn()
+    mockApp = {
+      vault: {
+        readBinary: vi.fn(),
+        adapter: {
+          exists: vi.fn().mockResolvedValue(true),
+          list: vi.fn().mockResolvedValue({ files: [], folders: [] }),
+          mkdir: vi.fn().mockResolvedValue(undefined),
+          read: vi.fn().mockResolvedValue('')
         }
+      },
+      workspace: {
+        getActiveViewOfType: vi.fn()
+      },
+      metadataCache: {
+        getFileCache: vi.fn(),
+        getFirstLinkpathDest: vi.fn()
+      },
+      fileManager: {
+        processFrontMatter: vi.fn()
+      }
     };
     plugin = new PixmiObPublisher(mockApp as any, {} as any);
     mocks.noticeSpy.mockClear();
