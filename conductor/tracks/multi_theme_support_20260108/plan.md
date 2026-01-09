@@ -13,7 +13,7 @@
 
 - [x] Task: Create `ThemeSwitcher` logic to detect and update `pixmi-theme` in Frontmatter (TDD) 0cbc77a
 - [x] Task: Add "Switch WeChat Theme" command to the Command Palette f2b9dca
-- [ ] Task: Implement a Status Bar or Ribbon icon to show and change the current theme
+- [x] Task: Implement a Status Bar or Ribbon icon to show and change the current theme 0438776
 - [ ] Task: Conductor - User Manual Verification 'UI & Switching Logic' (Protocol in workflow.md)
 
 ## Phase 3: Native Preview Integration
