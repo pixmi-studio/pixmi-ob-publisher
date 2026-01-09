@@ -15,6 +15,7 @@ export default class PixmiObPublisher extends Plugin {
   logger: LogManager;
   themeManager: ThemeManager;
   themeSwitcher: ThemeSwitcher;
+  statusBarItem: HTMLElement;
 
   constructor(app: App, manifest: PluginManifest) {
     super(app, manifest);
@@ -31,6 +32,21 @@ export default class PixmiObPublisher extends Plugin {
     this.themeSwitcher = new ThemeSwitcher(this.app);
 
     await this.themeManager.loadThemes();
+
+    this.statusBarItem = this.addStatusBarItem();
+    this.updateStatusBar();
+
+    this.registerEvent(
+        this.app.workspace.on('active-leaf-change', () => this.updateStatusBar())
+    );
+    this.registerEvent(
+        this.app.metadataCache.on('changed', (file) => {
+            const activeView = this.app.workspace.getActiveViewOfType(MarkdownView);
+            if (activeView && activeView.file === file) {
+                this.updateStatusBar();
+            }
+        })
+    );
 
     this.addSettingTab(new PixmiSettingTab(this.app, this));
 
@@ -132,6 +148,27 @@ export default class PixmiObPublisher extends Plugin {
 
   async loadSettings() {
     this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
+  }
+
+  updateStatusBar() {
+    const activeView = this.app.workspace.getActiveViewOfType(MarkdownView);
+    if (!activeView || !activeView.file) {
+        this.statusBarItem.setText('');
+        return;
+    }
+
+    const themeId = this.themeSwitcher.getTheme(activeView.file);
+    const theme = themeId ? this.themeManager.getTheme(themeId) : null;
+    const themeName = theme ? theme.name : 'Default';
+
+    this.statusBarItem.setText(`WeChat Theme: ${themeName}`);
+    this.statusBarItem.onclick = () => {
+        new ThemeSuggester(this.app, this.themeManager, async (theme) => {
+            await this.themeSwitcher.setTheme(activeView.file!, theme.id);
+            this.updateStatusBar();
+            new Notice(`Theme switched to: ${theme.name}`);
+        }).open();
+    };
   }
 
   async saveSettings() {

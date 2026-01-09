@@ -19,19 +19,20 @@ vi.mock('obsidian', () => {
       }
       onload() {}
       onunload() {}
-      loadData() { return Promise.resolve({}); }
       saveData() { return Promise.resolve(); }
+      loadData() { return Promise.resolve({}); }
       addSettingTab() {}
       addRibbonIcon() {}
       addCommand() {}
+      addStatusBarItem() { 
+        return { 
+          setText: vi.fn(),
+          onclick: vi.fn()
+        };
+      }
+      registerEvent() {}
     },
-    PluginSettingTab: class PluginSettingTab {
-        constructor(app: any, plugin: any) {
-            this.app = app;
-            this.plugin = plugin;
-        }
-        display() {}
-    },
+    PluginSettingTab: class {},
     Setting: class Setting {
         constructor(containerEl: any) {
         }
@@ -87,11 +88,13 @@ describe('PixmiObPublisher', () => {
         }
       },
       workspace: {
-        getActiveViewOfType: vi.fn()
+        getActiveViewOfType: vi.fn(),
+        on: vi.fn()
       },
       metadataCache: {
         getFileCache: vi.fn(),
-        getFirstLinkpathDest: vi.fn()
+        getFirstLinkpathDest: vi.fn(),
+        on: vi.fn()
       },
       fileManager: {
         processFrontMatter: vi.fn()
