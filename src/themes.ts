@@ -50,6 +50,18 @@ export class ThemeManager implements IThemeManager {
     private loadBuiltinThemes(): void {
         const builtinThemes: Theme[] = [
             {
+                id: 'original',
+                name: 'Original',
+                css: '',
+                type: 'builtin'
+            },
+            {
+                id: 'default',
+                name: 'Default',
+                css: '', // Default theme might rely on base styles or empty
+                type: 'builtin'
+            },
+            {
                 id: 'minimalist',
                 name: 'Minimalist',
                 css: '/* Minimalist Theme Placeholder */\n.pixmi-preview-container { font-family: sans-serif; }',

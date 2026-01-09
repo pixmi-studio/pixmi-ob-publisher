@@ -164,7 +164,7 @@ export default class PixmiObPublisher extends Plugin {
     this.statusBarItem.empty();
     this.statusBarItem.addClass('mod-clickable');
     setIcon(this.statusBarItem, 'palette');
-    this.statusBarItem.createSpan({ text: ` ${themeName}` });
+    this.statusBarItem.createSpan({ text: `  ${themeName}` });
     
     this.statusBarItem.onclick = () => {
         new ThemeSuggester(this.app, this.themeManager, async (theme) => {

@@ -27,7 +27,10 @@ vi.mock('obsidian', () => {
       addStatusBarItem() { 
         return { 
           setText: vi.fn(),
-          onclick: vi.fn()
+          onclick: vi.fn(),
+          empty: vi.fn(),
+          addClass: vi.fn(),
+          createSpan: vi.fn()
         };
       }
       registerEvent() {}
@@ -56,7 +59,8 @@ vi.mock('obsidian', () => {
       open() {}
       close() {}
     },
-    TFile: class {}
+    TFile: class {},
+    setIcon: vi.fn()
   };
 });
 
