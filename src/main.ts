@@ -1,4 +1,4 @@
-import { App, Plugin, PluginManifest, Notice, MarkdownView, TFile, FuzzySuggestModal } from 'obsidian';
+import { App, Plugin, PluginManifest, Notice, MarkdownView, TFile, FuzzySuggestModal, setIcon } from 'obsidian';
 import { PixmiSettings, DEFAULT_SETTINGS } from './settings';
 import { PixmiSettingTab } from './settings-tab';
 import { WeChatApiClient } from './wechat-api';
@@ -153,7 +153,7 @@ export default class PixmiObPublisher extends Plugin {
   updateStatusBar() {
     const activeView = this.app.workspace.getActiveViewOfType(MarkdownView);
     if (!activeView || !activeView.file) {
-        this.statusBarItem.setText('');
+        this.statusBarItem.empty();
         return;
     }
 
@@ -161,7 +161,11 @@ export default class PixmiObPublisher extends Plugin {
     const theme = themeId ? this.themeManager.getTheme(themeId) : null;
     const themeName = theme ? theme.name : 'Default';
 
-    this.statusBarItem.setText(`WeChat Theme: ${themeName}`);
+    this.statusBarItem.empty();
+    this.statusBarItem.addClass('mod-clickable');
+    setIcon(this.statusBarItem, 'palette');
+    this.statusBarItem.createSpan({ text: ` ${themeName}` });
+    
     this.statusBarItem.onclick = () => {
         new ThemeSuggester(this.app, this.themeManager, async (theme) => {
             await this.themeSwitcher.setTheme(activeView.file!, theme.id);
