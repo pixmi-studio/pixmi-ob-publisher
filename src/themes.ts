@@ -50,12 +50,6 @@ export class ThemeManager implements IThemeManager {
     private loadBuiltinThemes(): void {
         const builtinThemes: Theme[] = [
             {
-                id: 'original',
-                name: 'Original',
-                css: '',
-                type: 'builtin'
-            },
-            {
                 id: 'default',
                 name: 'Default',
                 css: '', // Default theme might rely on base styles or empty
