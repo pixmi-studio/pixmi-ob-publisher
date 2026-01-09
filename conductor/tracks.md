@@ -6,7 +6,8 @@ This file tracks all major tracks for the project. Each track has its own detail
 
 ## [x] Track: Community Store Submission
 *Link: [./conductor/tracks/store_submission_20260108/](./conductor/tracks/store_submission_20260108/)*
+
 ---
 
-## [x] Track: 优化 release 发布流程，设计全自动发布流并实现 release 与 master 分支同步
-*Link: [./conductor/tracks/automated_release_20260109/](./conductor/tracks/automated_release_20260109/)*
+## [~] Track: Multi-Theme Support and Preview System
+*Link: [./conductor/tracks/multi_theme_support_20260108/](./conductor/tracks/multi_theme_support_20260108/)*
