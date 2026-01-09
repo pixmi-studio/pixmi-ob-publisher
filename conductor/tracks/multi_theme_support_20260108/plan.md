@@ -19,10 +19,10 @@
 ## Phase 3: Native Preview Integration
 *将主题样式注入到 Obsidian 的原生预览中，并确保样式隔离。*
 
-- [ ] Task: Implement `StyleInjector` to dynamically apply CSS to the Markdown preview container
-- [ ] Task: Implement CSS scoping logic to ensure themes only affect content, not Obsidian UI (TDD)
-- [ ] Task: Add event listeners to refresh styles when the active file or Frontmatter changes
-- [ ] Task: Conductor - User Manual Verification 'Native Preview Integration' (Protocol in workflow.md)
+- [x] Task: Implement `StyleInjector` to dynamically apply CSS to the Markdown preview container 28aae98
+- [x] Task: Implement CSS scoping logic to ensure themes only affect content, not Obsidian UI (TDD) 79a6df2
+- [~] Task: Add event listeners to refresh styles when the active file or Frontmatter changes
+- [x] Task: Conductor - User Manual Verification 'Native Preview Integration' (Protocol in workflow.md) b1fc0c4
 
 ## Phase 4: Publishing Integration (Inline CSS)
 *实现发布时的样式转换逻辑，确保微信文章与预览一致。*
