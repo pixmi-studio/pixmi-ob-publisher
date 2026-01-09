@@ -8,7 +8,7 @@
 - [x] Task: Implement local directory monitoring (`.obsidian/pixmi-themes/`) to load custom CSS files 123e7eb
 - [ ] Task: Conductor - User Manual Verification 'Theme Management Foundation' (Protocol in workflow.md)
 
-## Phase 2: UI & Switching Logic
+## Phase 2: UI & Switching Logic [checkpoint: c99e118]
 *实现用户交互界面，允许用户切换主题并自动同步到文档配置。*
 
 - [x] Task: Create `ThemeSwitcher` logic to detect and update `pixmi-theme` in Frontmatter (TDD) 0cbc77a
