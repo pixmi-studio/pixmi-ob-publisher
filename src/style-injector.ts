@@ -22,7 +22,9 @@ export class StyleInjector {
             document.head.appendChild(styleEl);
         }
 
-        const scopedCss = this.scopeCss(css, '.pixmi-preview-container');
+        // Increase specificity to override Obsidian themes
+        // Using .markdown-preview-view.pixmi-preview-container is stronger than just .pixmi-preview-container
+        const scopedCss = this.scopeCss(css, '.markdown-preview-view.pixmi-preview-container');
         styleEl.textContent = `/* Pixmi Theme: ${themeId} */\n${scopedCss}`;
     }
 

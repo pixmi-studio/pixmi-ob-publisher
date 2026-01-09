@@ -46,7 +46,7 @@ describe('StyleInjector', () => {
 
         injector.inject('test-style', '.test { color: blue; }');
 
-        expect(mockStyleEl.textContent).toContain('.pixmi-preview-container .test');
+        expect(mockStyleEl.textContent).toContain('.markdown-preview-view.pixmi-preview-container .test');
         expect(mockStyleEl.textContent).toContain('{ color: blue; }');
     });
 
@@ -60,9 +60,9 @@ describe('StyleInjector', () => {
         const rawCss = 'h1 { color: red; } .my-class { margin: 10px; }';
         injector.inject('test-style', rawCss);
 
-        expect(mockStyleEl.textContent).toContain('.pixmi-preview-container h1');
+        expect(mockStyleEl.textContent).toContain('.markdown-preview-view.pixmi-preview-container h1');
         expect(mockStyleEl.textContent).toContain('{ color: red; }');
-        expect(mockStyleEl.textContent).toContain('.pixmi-preview-container .my-class');
+        expect(mockStyleEl.textContent).toContain('.markdown-preview-view.pixmi-preview-container .my-class');
         expect(mockStyleEl.textContent).toContain('{ margin: 10px; }');
     });
 });

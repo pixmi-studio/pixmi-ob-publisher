@@ -58,19 +58,45 @@ export class ThemeManager implements IThemeManager {
             {
                 id: 'minimalist',
                 name: 'Minimalist',
-                css: '/* Minimalist Theme Placeholder */\n.pixmi-preview-container { font-family: sans-serif; }',
+                css: `
+                    .pixmi-preview-container { 
+                        font-family: "PingFang SC", "Hiragino Sans GB", sans-serif !important; 
+                        color: #333 !important; 
+                        line-height: 1.6 !important;
+                        background-color: #fff !important; /* Force white background for preview consistency */
+                        padding: 20px !important;
+                    }
+                    .pixmi-preview-container h1 { 
+                        border-bottom: 2px solid #eee !important; 
+                        padding-bottom: 10px !important; 
+                        color: #000 !important; 
+                    }
+                    .pixmi-preview-container img { 
+                        border-radius: 12px !important; 
+                        box-shadow: 0 4px 12px rgba(0,0,0,0.1) !important; 
+                        max-width: 100% !important;
+                    }
+                `,
                 type: 'builtin'
             },
             {
                 id: 'technical',
                 name: 'Technical',
-                css: '/* Technical Theme Placeholder */\n.pixmi-preview-container { font-family: monospace; }',
+                css: `
+                    .pixmi-preview-container { font-family: "Fira Code", monospace; color: #24292e; }
+                    .pixmi-preview-container code { background-color: #f6f8fa; padding: 2px 4px; border-radius: 3px; }
+                    .pixmi-preview-container h1, .pixmi-preview-container h2 { color: #0366d6; }
+                `,
                 type: 'builtin'
             },
             {
                 id: 'modern-magazine',
                 name: 'Modern Magazine',
-                css: '/* Modern Magazine Theme Placeholder */\n.pixmi-preview-container { line-height: 1.8; }',
+                css: `
+                    .pixmi-preview-container { line-height: 2; letter-spacing: 0.5px; color: #444; }
+                    .pixmi-preview-container h1 { text-align: center; font-variant: small-caps; margin-top: 40px; }
+                    .pixmi-preview-container p { margin-bottom: 1.5em; }
+                `,
                 type: 'builtin'
             }
         ];

@@ -40,11 +40,14 @@ export class MarkdownParser {
   }
 
   renderWithReplacements(markdown: string, urlMap: Map<string, string>): string {
+    // Remove frontmatter
+    const contentWithoutFrontmatter = markdown.replace(/^---\n[\s\S]*?\n---\n/, '');
+
     // A better approach would be to write a custom markdown-it plugin or rule,
     // but for simplicity and control over replacements before rendering:
     
     // Let's use a token stream approach for safety for standard markdown images.
-    const tokens = this.md.parse(markdown, {});
+    const tokens = this.md.parse(contentWithoutFrontmatter, {});
     
     tokens.forEach(token => {
       if (token.type === 'inline') {
