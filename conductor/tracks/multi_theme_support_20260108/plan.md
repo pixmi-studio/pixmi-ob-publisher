@@ -16,7 +16,7 @@
 - [x] Task: Implement a Status Bar or Ribbon icon to show and change the current theme 0438776
 - [x] Task: Conductor - User Manual Verification 'UI & Switching Logic' (Protocol in workflow.md) 79a6df2
 
-## Phase 3: Native Preview Integration
+## Phase 3: Native Preview Integration [checkpoint: 61ac867]
 *将主题样式注入到 Obsidian 的原生预览中，并确保样式隔离。*
 
 - [x] Task: Implement `StyleInjector` to dynamically apply CSS to the Markdown preview container 28aae98
