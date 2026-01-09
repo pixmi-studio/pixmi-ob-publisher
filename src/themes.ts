@@ -59,22 +59,59 @@ export class ThemeManager implements IThemeManager {
                 id: 'minimalist',
                 name: 'Minimalist',
                 css: `
-                    .pixmi-preview-container { 
-                        font-family: "PingFang SC", "Hiragino Sans GB", sans-serif !important; 
-                        color: #333 !important; 
-                        line-height: 1.6 !important;
-                        background-color: #fff !important; /* Force white background for preview consistency */
-                        padding: 20px !important;
+                    /* Base Reset & Typography */
+                    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol" !important;
+                    color: #333 !important; 
+                    line-height: 1.75 !important;
+                    background-color: #fff !important; 
+                    padding: 20px !important;
+                    font-size: 16px !important;
+                    text-align: left !important;
+
+                    /* Block Elements */
+                    p { margin: 0 0 1.5em 0 !important; text-align: justify !important; }
+                    
+                    h1, h2, h3, h4, h5, h6 {
+                        color: #111 !important;
+                        font-weight: 700 !important;
+                        line-height: 1.3 !important;
+                        margin-top: 2em !important;
+                        margin-bottom: 1em !important;
                     }
-                    .pixmi-preview-container h1 { 
-                        border-bottom: 2px solid #eee !important; 
-                        padding-bottom: 10px !important; 
-                        color: #000 !important; 
+
+                    h1 { font-size: 24px !important; border-bottom: 1px solid #eee !important; padding-bottom: 0.5em !important; }
+                    h2 { font-size: 20px !important; border-bottom: 1px solid #eee !important; padding-bottom: 0.3em !important; }
+                    h3 { font-size: 18px !important; }
+
+                    ul, ol { padding-left: 2em !important; margin-bottom: 1.5em !important; }
+                    li { margin-bottom: 0.5em !important; }
+
+                    blockquote {
+                        border-left: 4px solid #ddd !important;
+                        padding-left: 1em !important;
+                        color: #666 !important;
+                        margin: 0 0 1.5em 0 !important;
+                        font-style: italic !important;
                     }
-                    .pixmi-preview-container img { 
-                        border-radius: 12px !important; 
-                        box-shadow: 0 4px 12px rgba(0,0,0,0.1) !important; 
+
+                    img { 
+                        display: block !important;
+                        margin: 20px auto !important;
+                        border-radius: 8px !important; 
+                        box-shadow: 0 2px 8px rgba(0,0,0,0.05) !important; 
                         max-width: 100% !important;
+                        height: auto !important;
+                    }
+                    
+                    /* Inline Elements */
+                    strong { font-weight: 700 !important; color: #000 !important; }
+                    em { font-style: italic !important; }
+                    code {
+                        background-color: rgba(27,31,35,0.05) !important;
+                        padding: 0.2em 0.4em !important;
+                        border-radius: 3px !important;
+                        font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace !important;
+                        font-size: 85% !important;
                     }
                 `,
                 type: 'builtin'
@@ -83,19 +120,19 @@ export class ThemeManager implements IThemeManager {
                 id: 'technical',
                 name: 'Technical',
                 css: `
-                    .pixmi-preview-container { font-family: "Fira Code", monospace; color: #24292e; }
-                    .pixmi-preview-container code { background-color: #f6f8fa; padding: 2px 4px; border-radius: 3px; }
-                    .pixmi-preview-container h1, .pixmi-preview-container h2 { color: #0366d6; }
+                    .pixmi-preview-container { font-family: "Fira Code", monospace !important; color: #24292e !important; }
+                    .pixmi-preview-container code { background-color: #f6f8fa !important; padding: 2px 4px !important; border-radius: 3px !important; }
+                    .pixmi-preview-container h1, .pixmi-preview-container h2 { color: #0366d6 !important; }
                 `,
                 type: 'builtin'
             },
             {
-                id: 'modern-magazine',
+                id: 'modern',
                 name: 'Modern Magazine',
                 css: `
-                    .pixmi-preview-container { line-height: 2; letter-spacing: 0.5px; color: #444; }
-                    .pixmi-preview-container h1 { text-align: center; font-variant: small-caps; margin-top: 40px; }
-                    .pixmi-preview-container p { margin-bottom: 1.5em; }
+                    .pixmi-preview-container { line-height: 2 !important; letter-spacing: 0.5px !important; color: #444 !important; }
+                    .pixmi-preview-container h1 { text-align: center !important; font-variant: small-caps !important; margin-top: 40px !important; }
+                    .pixmi-preview-container p { margin-bottom: 1.5em !important; }
                 `,
                 type: 'builtin'
             }
