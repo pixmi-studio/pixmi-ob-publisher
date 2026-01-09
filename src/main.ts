@@ -7,6 +7,7 @@ import { MarkdownParser } from './markdown-parser';
 import { LogManager } from './logger';
 import { ThemeManager, Theme } from './themes';
 import { ThemeSwitcher } from './theme-switcher';
+import { StyleInjector } from './style-injector';
 
 export default class PixmiObPublisher extends Plugin {
   settings: PixmiSettings;
@@ -15,6 +16,7 @@ export default class PixmiObPublisher extends Plugin {
   logger: LogManager;
   themeManager: ThemeManager;
   themeSwitcher: ThemeSwitcher;
+  styleInjector: StyleInjector;
   statusBarItem: HTMLElement;
 
   constructor(app: App, manifest: PluginManifest) {
@@ -30,20 +32,26 @@ export default class PixmiObPublisher extends Plugin {
     this.publisher = new Publisher(this.apiClient, new MarkdownParser());
     this.themeManager = new ThemeManager(this.app);
     this.themeSwitcher = new ThemeSwitcher(this.app);
+    this.styleInjector = new StyleInjector(this.app);
 
     await this.themeManager.loadThemes();
 
     this.statusBarItem = this.addStatusBarItem();
     this.updateStatusBar();
+    this.refreshPreviewStyle();
 
     this.registerEvent(
-        this.app.workspace.on('active-leaf-change', () => this.updateStatusBar())
+        this.app.workspace.on('active-leaf-change', () => {
+            this.updateStatusBar();
+            this.refreshPreviewStyle();
+        })
     );
     this.registerEvent(
         this.app.metadataCache.on('changed', (file) => {
             const activeView = this.app.workspace.getActiveViewOfType(MarkdownView);
             if (activeView && activeView.file === file) {
                 this.updateStatusBar();
+                this.refreshPreviewStyle();
             }
         })
     );
@@ -170,9 +178,33 @@ export default class PixmiObPublisher extends Plugin {
         new ThemeSuggester(this.app, this.themeManager, async (theme) => {
             await this.themeSwitcher.setTheme(activeView.file!, theme.id);
             this.updateStatusBar();
+            this.refreshPreviewStyle();
             new Notice(`Theme switched to: ${theme.name}`);
         }).open();
     };
+  }
+
+  refreshPreviewStyle() {
+    const activeView = this.app.workspace.getActiveViewOfType(MarkdownView);
+    if (!activeView || !activeView.file) {
+        return;
+    }
+
+    const themeId = this.themeSwitcher.getTheme(activeView.file) || 'default';
+    const theme = this.themeManager.getTheme(themeId);
+    
+    if (theme) {
+        this.styleInjector.inject(theme.id, theme.css);
+        
+        // Find the preview container and add our scope class
+        // In Obsidian, the preview container is often inside .markdown-preview-view
+        const previewEl = (activeView as any).contentEl.querySelector('.markdown-preview-view');
+        if (previewEl) {
+            previewEl.addClass('pixmi-preview-container');
+        }
+    } else {
+        this.styleInjector.clear();
+    }
   }
 
   async saveSettings() {

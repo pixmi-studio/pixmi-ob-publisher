@@ -76,6 +76,21 @@ vi.mock('../src/logger', () => {
     };
 });
 
+import { ThemeManager, Theme } from './themes';
+import { ThemeSwitcher } from './theme-switcher';
+import { StyleInjector } from './style-injector';
+
+// Mock StyleInjector
+vi.mock('../src/style-injector', () => {
+    return {
+        StyleInjector: class {
+            constructor() {}
+            inject = vi.fn();
+            clear = vi.fn();
+        }
+    };
+});
+
 describe('PixmiObPublisher', () => {
   let plugin: PixmiObPublisher;
   let mockApp: any;
