@@ -67,7 +67,11 @@ export class Publisher {
 
     // Apply CSS if provided
     if (css) {
+        console.log('[Pixmi] Applying CSS to content...');
         content = this.cssConverter.convert(content, css);
+        console.log('[Pixmi] Content start after conversion:', content.substring(0, 100));
+    } else {
+        console.log('[Pixmi] No CSS provided, skipping conversion.');
     }
 
     // 4. Create Draft

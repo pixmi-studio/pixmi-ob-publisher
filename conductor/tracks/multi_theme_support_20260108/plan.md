@@ -27,8 +27,8 @@
 ## Phase 4: Publishing Integration (Inline CSS)
 *实现发布时的样式转换逻辑，确保微信文章与预览一致。*
 
-- [ ] Task: Implement a CSS-to-Inline-Style converter (TDD)
-- [ ] Task: Integrate the converter into the `Publisher` flow to apply the selected theme before sending to WeChat
+- [x] Task: Implement a CSS-to-Inline-Style converter (TDD) 28aae98
+- [~] Task: Integrate the converter into the `Publisher` flow to apply the selected theme before sending to WeChat
 - [ ] Task: Handle image and asset-specific styling during the conversion process
 - [ ] Task: Conductor - User Manual Verification 'Publishing Integration' (Protocol in workflow.md)
 

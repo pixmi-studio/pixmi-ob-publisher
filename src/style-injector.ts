@@ -22,24 +22,37 @@ export class StyleInjector {
             document.head.appendChild(styleEl);
         }
 
-        // Increase specificity to override Obsidian themes
-        // Using .markdown-preview-view.pixmi-preview-container is stronger than just .pixmi-preview-container
-        const scopedCss = this.scopeCss(css, '.markdown-preview-view.pixmi-preview-container');
+        // Just use the standard prefix. Since themes.ts already has .pixmi-preview-container,
+        // scopeCss will see it and keep it (if we fix the logic).
+        const scopedCss = this.scopeCss(css, '.pixmi-preview-container');
         styleEl.textContent = `/* Pixmi Theme: ${themeId} */\n${scopedCss}`;
     }
 
     /**
-     * Scopes CSS rules by prefixing selectors with a container class.
-     * Simple implementation: handles basic selectors.
+     * Scopes CSS rules. If the selector already has the scope, leave it.
      */
     private scopeCss(css: string, scope: string): string {
-        // This is a simple regex-based scoping. It might need refinement for complex CSS.
-        // It looks for sequences of characters that aren't inside braces and prefixes them.
         return css.replace(/([^\r\n,{}]+)(?=[^{}]*{)/g, (match) => {
             const trimmed = match.trim();
             if (!trimmed || trimmed.startsWith('@') || trimmed.startsWith(':root')) {
                 return match;
             }
+            
+            if (trimmed.includes(scope)) {
+                return trimmed;
+            }
+
+            // Handle root selectors
+            if (trimmed === 'body' || trimmed === '#write' || trimmed === 'html') {
+                return scope;
+            }
+            if (trimmed.startsWith('body ')) {
+                return scope + ' ' + trimmed.substring(5);
+            }
+            if (trimmed.startsWith('#write ')) {
+                return scope + ' ' + trimmed.substring(7);
+            }
+            
             return `${scope} ${trimmed}`;
         });
     }

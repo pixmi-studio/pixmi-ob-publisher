@@ -34,7 +34,7 @@ describe('ThemeManager', () => {
         const ids = themes.map(t => t.id);
         expect(ids).toContain('minimalist');
         expect(ids).toContain('technical');
-        expect(ids).toContain('modern-magazine');
+        expect(ids).toContain('modern');
     });
 
     it('should load custom themes from the specific directory', async () => {

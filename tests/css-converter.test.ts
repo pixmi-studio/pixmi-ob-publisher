@@ -32,4 +32,21 @@ describe('CssConverter', () => {
 
         expect(result).toContain('style="color: red; font-weight: bold;"');
     });
+
+    it('should apply body styles to the wrapper container', () => {
+        const html = '<p>Content</p>';
+        const css = 'body { font-family: sans-serif; color: #333; }';
+        const result = converter.convert(html, css);
+        
+        // The wrapper should inherit body styles because it acts as the body in WeChat
+        expect(result).toContain('style="font-family: sans-serif; color: #333;"');
+    });
+
+    it('should apply #write styles to the wrapper container (Typora compatibility)', () => {
+        const html = '<p>Content</p>';
+        const css = '#write { max-width: 800px; }';
+        const result = converter.convert(html, css);
+
+        expect(result).toContain('style="max-width: 800px;"');
+    });
 });

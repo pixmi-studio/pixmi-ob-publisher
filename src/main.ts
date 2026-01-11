@@ -47,6 +47,11 @@ export default class PixmiObPublisher extends Plugin {
         })
     );
     this.registerEvent(
+        this.app.workspace.on('layout-change', () => {
+            this.refreshPreviewStyle();
+        })
+    );
+    this.registerEvent(
         this.app.metadataCache.on('changed', (file) => {
             const activeView = this.app.workspace.getActiveViewOfType(MarkdownView);
             if (activeView && activeView.file === file) {
@@ -121,6 +126,7 @@ export default class PixmiObPublisher extends Plugin {
     const themeId = frontmatter?.['pixmi-theme'] || 'default';
     const theme = this.themeManager.getTheme(themeId);
     const themeCss = theme ? theme.css : '';
+    console.log(`[Pixmi] Publishing with Theme: ${themeId}, CSS Length: ${themeCss.length}`);
 
     new Notice(`Publishing: ${title}...`);
     this.logger.log(`Starting publication for: ${title} with theme: ${themeId}`);
@@ -198,15 +204,24 @@ export default class PixmiObPublisher extends Plugin {
     
     if (theme) {
         this.styleInjector.inject(theme.id, theme.css);
-        
-        // Find the preview container and add our scope class
-        // In Obsidian, the preview container is often inside .markdown-preview-view
-        const previewEl = (activeView as any).contentEl.querySelector('.markdown-preview-view');
-        if (previewEl) {
-            previewEl.addClass('pixmi-preview-container');
-        }
     } else {
         this.styleInjector.clear();
+    }
+
+    // Apply class to the container element which is more stable
+    const containerEl = activeView.containerEl;
+    if (containerEl) {
+        if (!containerEl.classList.contains('pixmi-preview-container')) {
+            containerEl.addClass('pixmi-preview-container');
+        }
+    }
+
+    // Also try the preview view specifically if it exists
+    const previewEl = activeView.contentEl.querySelector('.markdown-preview-view');
+    if (previewEl) {
+        if (!previewEl.classList.contains('pixmi-preview-container')) {
+            previewEl.addClass('pixmi-preview-container');
+        }
     }
   }
 
