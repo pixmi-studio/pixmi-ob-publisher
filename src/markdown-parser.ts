@@ -7,7 +7,8 @@ export class MarkdownParser {
     this.md = new MarkdownIt({
       html: true,
       linkify: true,
-      typographer: true
+      typographer: true,
+      breaks: true // Enable GFM-style line breaks
     });
   }
 

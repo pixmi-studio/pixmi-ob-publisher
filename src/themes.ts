@@ -587,7 +587,7 @@ blockquote {
     line-height: 1.8;
     text-indent: 0;
     border-left: 6px solid #e0e0e0;
-    background-color: #f9f9f9;
+    background-color: #f9f2f4;
     color: #888;
 }
 
@@ -670,6 +670,163 @@ ul p {
 li {
     margin-bottom: 0.75em;
     margin-top: 0.75em;
+}
+                `,
+                type: 'builtin'
+            },
+            {
+                id: 'medium-geek',
+                name: 'Medium Geek',
+                css: `
+/* --- Medium + GitHub Style (Optimized) --- */
+
+/* 强制正文容器使用无衬线字体 */
+.wechat-container,
+.markdown-preview-view,
+.markdown-source-view.mod-cm6,
+body, p, div {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif !important;
+  color: rgb(51, 51, 51);
+}
+
+/* 仅针对代码元素强制使用等宽字体 */
+code, pre, .cm-inline-code, .cm-code, .cm-math {
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", "Menlo", "Consolas", monospace !important;
+}
+
+/* 列表容器 - 恢复标准缩进防止编号切割 */
+ul, ol {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+  padding-left: 2em; /* 恢复为 2em */
+}
+
+/* 列表项 - 这里的颜色影响序号/圆点 */
+li {
+  line-height: 1.7 !important; 
+  margin-bottom: 0.4em; 
+  color: rgb(140, 140, 140); /* 序号和圆点颜色变淡 */
+  font-weight: 400 !important;
+}
+
+/* 消除列表内段落的叠加边距 */
+li > p {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  padding: 0 !important;
+  line-height: inherit !important;
+}
+
+/* 嵌套列表更加紧凑且缩进更小 */
+li > ul, li > ol {
+  margin-top: 0.2em !important;
+  margin-bottom: 0.2em !important;
+  padding-left: 1.2em !important; /* 减少嵌套缩进 */
+}
+
+/* 行内代码 */
+code {
+  background-color: rgba(175, 184, 193, 0.2);
+  color: rgb(51, 51, 51);
+  font-size: 14px !important;
+  padding: 0.2em 0.4em;
+  border-radius: 6px;
+  margin: 0 0.1em;
+}
+
+/* 代码块容器 - 更淡的 GitHub 风格 */
+pre {
+  background-color: #f8f9fa; /* 更淡的背景 */
+  border: 1px solid #e1e4e8; /* 更淡的边框 */
+  border-radius: 6px;
+  padding: 16px;
+  margin: 1.2em 0;
+  overflow-x: auto;
+}
+
+/* 代码文字 */
+pre code {
+  color: rgb(31, 35, 40);
+  font-size: 14px !important;
+  line-height: 1.5 !important;
+  background: transparent !important;
+  padding: 0;
+  margin: 0;
+  border-radius: 0;
+  display: block !important;
+  white-space: pre !important;
+}
+
+/* 正文段落 */
+p {
+  line-height: 1.75;
+  margin-bottom: 1.5em;
+  margin-top: 0;
+  font-size: 16px !important;
+  text-align: justify;
+}
+
+/* 标题 */
+h1, h2, h3, h4, h5, h6 {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif !important;
+  color: rgb(26, 26, 26);
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+h1 { font-size: 32px !important; border-bottom: 1px solid #eaecef; padding-bottom: 0.3em; margin-top: 1.5em; margin-bottom: 1em; }
+h2 { font-size: 26px !important; border-bottom: 1px solid #eaecef; padding-bottom: 0.3em; margin-top: 2.2em; margin-bottom: 1em; }
+h3 { font-size: 22px !important; margin-top: 1.8em; margin-bottom: 0.8em; }
+h4 { font-size: 18px !important; font-weight: bold; margin-top: 1.5em; margin-bottom: 0.8em; }
+
+/* 引用 */
+blockquote {
+  border-left: 4px solid #d0d7de;
+  color: rgb(101, 109, 118);
+  padding-left: 1em;
+  margin: 1.5em 0;
+  font-style: normal;
+}
+
+/* 表格优化 */
+table {
+    font-size: 14px !important;
+    border-collapse: collapse;
+    width: 100%;
+    margin: 1.5em 0;
+    border: 1px solid #dfe2e5;
+}
+table th {
+    background-color: #f6f8fa; /* 表头加淡灰背景 */
+    font-weight: 600;
+    border: 1px solid #dfe2e5;
+    padding: 10px 13px;
+    text-align: left;
+}
+table td {
+    border: 1px solid #dfe2e5;
+    padding: 8px 13px;
+    line-height: 1.5;
+    color: rgb(51, 51, 51);
+}
+
+/* 图片 */
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 25px auto;
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+/* 分割线 */
+hr {
+    height: 1px;
+    padding: 0;
+    margin: 32px 0;
+    background-color: #e1e4e8;
+    border: 0;
 }
                 `,
                 type: 'builtin'

@@ -25,54 +25,46 @@ export class Publisher {
 
     // If thumbnailPath is provided, upload it first as a permanent material and set it as thumbMediaId
     if (thumbnailPath) {
-        try {
-            const buffer = await imageReader(thumbnailPath);
-            const filename = thumbnailPath.split('/').pop() || 'thumb.jpg';
-            // Use type 'image' for thumbnail to avoid 64KB limit. 
-            // Draft Box API accepts permanent image media_id as thumb_media_id.
-            const result = await this.apiClient.uploadMaterial(buffer, filename, 'image');
-            thumbMediaId = result.media_id;
-        } catch (error) {
-            console.error(`Failed to upload thumbnail ${thumbnailPath}:`, error);
-        }
+        const buffer = await imageReader(thumbnailPath);
+        const filename = thumbnailPath.split('/').pop() || 'thumb.jpg';
+        // Use type 'image' for thumbnail to avoid 64KB limit. 
+        // Draft Box API accepts permanent image media_id as thumb_media_id.
+        const result = await this.apiClient.uploadMaterial(buffer, filename, 'image');
+        thumbMediaId = result.media_id;
     }
 
     for (const imagePath of images) {
         // Skip if already uploaded for content
         if (urlMap.has(imagePath)) continue;
 
-        try {
-            let buffer: ArrayBuffer;
-            let filename: string;
+        let buffer: ArrayBuffer;
+        let filename: string;
 
-            if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
-                // Handle remote images
-                try {
-                    const response = await requestUrl({ url: imagePath, method: 'GET' });
-                    buffer = response.arrayBuffer;
-                    filename = 'remote_image.jpg'; // We could try to extract it from URL
-                } catch (e) {
-                    console.error(`Failed to fetch remote image ${imagePath}:`, e);
-                    continue;
-                }
-            } else {
-                // Handle local images
-                buffer = await imageReader(imagePath);
-                filename = imagePath.split('/').pop() || 'image.jpg';
+        if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
+            // Handle remote images
+            try {
+                const response = await requestUrl({ url: imagePath, method: 'GET' });
+                buffer = response.arrayBuffer;
+                filename = 'remote_image.jpg'; // We could try to extract it from URL
+            } catch (e) {
+                console.error(`Failed to fetch remote image ${imagePath}:`, e);
+                continue;
             }
-            
-            // Upload for content (using uploadimg API which returns a URL and doesn't count towards material limit)
-            const url = await this.apiClient.uploadImageForContent(buffer, filename);
-            urlMap.set(imagePath, url);
-            
-            // Use the first image as the thumbnail if not already set via thumbnailPath
-            if (!thumbMediaId) {
-                // Must be a permanent material for Draft Box
-                const result = await this.apiClient.uploadMaterial(buffer, filename, 'image');
-                thumbMediaId = result.media_id;
-            }
-        } catch (error) {
-            console.error(`Failed to upload image ${imagePath}:`, error);
+        } else {
+            // Handle local images
+            buffer = await imageReader(imagePath);
+            filename = imagePath.split('/').pop() || 'image.jpg';
+        }
+        
+        // Upload for content (using uploadimg API which returns a URL and doesn't count towards material limit)
+        const url = await this.apiClient.uploadImageForContent(buffer, filename);
+        urlMap.set(imagePath, url);
+        
+        // Use the first image as the thumbnail if not already set via thumbnailPath
+        if (!thumbMediaId) {
+            // Must be a permanent material for Draft Box
+            const result = await this.apiClient.uploadMaterial(buffer, filename, 'image');
+            thumbMediaId = result.media_id;
         }
     }
 
