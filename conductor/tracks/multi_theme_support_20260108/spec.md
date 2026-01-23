@@ -26,6 +26,14 @@
 ### 4. 发布转换逻辑
 - **内联化转换**：在用户点击“发布”时，插件将当前的 CSS 样式计算并转换为内联 `style` 属性，以适配微信公众平台的限制。
 - **一致性保证**：发布时的转换逻辑应严格遵循预览时的 CSS 规则，确保“所见即所得”。
+- **图片处理**：自动识别 Markdown 中的图片，调用微信接口上传并替换为微信专用 URL，防止防盗链问题。
+
+### 5. 微信兼容性约束 (WeChat Compatibility Constraints)
+- **纯内联样式 (Inline Styles Only)**：微信编辑器不支持外部 CSS 文件或 `<style>` 标签。所有样式必须通过工具转换为 HTML 标签的 `style="..."` 属性。
+- **图片防盗链 (Image Anti-hotlinking)**：外部图片（如 GitHub、Unsplash）直接链接会失效。必须先提取 URL，调用微信“上传图文消息内的图片获取URL”接口，并替换为 `http://mmbiz.qpic.cn/...` 链接。
+- **代码块换行 (Code Blocks)**：为防止代码挤成一行，必须显式添加 `white-space: pre-wrap;` 和 `word-break: break-all;` 到 `<code>` 标签或其父级。
+- **无伪元素 (No Pseudo-elements)**：内联样式不支持 `::before` 和 `::after`。所有装饰性元素（如列表前的点、引用符号）必须通过 `border`、`background` 或真实 DOM 元素实现。
+- **HTML 结构包裹**：所有内容外层应包裹 `<section class="wechat-container">` 以确保排版隔离。
 
 ## Non-Functional Requirements
 - **性能**：主题切换应在 100ms 内完成，不造成界面卡顿。
