@@ -1,3 +1,4 @@
+import { requestUrl } from 'obsidian';
 import { WeChatApiClient, WeChatArticle } from './wechat-api';
 import { MarkdownParser } from './markdown-parser';
 import { CssConverter } from './css-converter';
@@ -37,15 +38,28 @@ export class Publisher {
     }
 
     for (const imagePath of images) {
-        // Skip remote images for now, or handle them differently
-        if (imagePath.startsWith('http')) continue;
-
         // Skip if already uploaded for content
         if (urlMap.has(imagePath)) continue;
 
         try {
-            const buffer = await imageReader(imagePath);
-            const filename = imagePath.split('/').pop() || 'image.jpg';
+            let buffer: ArrayBuffer;
+            let filename: string;
+
+            if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
+                // Handle remote images
+                try {
+                    const response = await requestUrl({ url: imagePath, method: 'GET' });
+                    buffer = response.arrayBuffer;
+                    filename = 'remote_image.jpg'; // We could try to extract it from URL
+                } catch (e) {
+                    console.error(`Failed to fetch remote image ${imagePath}:`, e);
+                    continue;
+                }
+            } else {
+                // Handle local images
+                buffer = await imageReader(imagePath);
+                filename = imagePath.split('/').pop() || 'image.jpg';
+            }
             
             // Upload for content (using uploadimg API which returns a URL and doesn't count towards material limit)
             const url = await this.apiClient.uploadImageForContent(buffer, filename);

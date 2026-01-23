@@ -5,12 +5,10 @@ export class CssConverter {
      * @param css The CSS content.
      */
     convert(html: string, css: string): string {
-        if (!css.trim()) return html;
-
         const parser = new DOMParser();
         // Wrap content in a section with the container class. 
         // We use <section> as it's a common top-level element for WeChat articles.
-        const wrappedHtml = `<section class="pixmi-preview-container">${html}</section>`;
+        const wrappedHtml = `<section class="wechat-container">${html}</section>`;
         const doc = parser.parseFromString(wrappedHtml, 'text/html');
         
         const rules = this.parseCss(css);
@@ -35,7 +33,20 @@ export class CssConverter {
             img.setAttribute('style', this.mergeStyles(currentStyle, fix));
         });
 
-        const wrapper = doc.querySelector('.pixmi-preview-container') as HTMLElement;
+        // Force code block styles for WeChat
+        doc.querySelectorAll('pre').forEach(pre => {
+             const currentStyle = pre.getAttribute('style') || '';
+             const fix = 'white-space: pre-wrap; word-break: break-all;';
+             pre.setAttribute('style', this.mergeStyles(currentStyle, fix));
+        });
+
+        doc.querySelectorAll('code').forEach(code => {
+             const currentStyle = code.getAttribute('style') || '';
+             const fix = 'word-break: break-all;'; // Ensure inline code also breaks if too long
+             code.setAttribute('style', this.mergeStyles(currentStyle, fix));
+        });
+
+        const wrapper = doc.querySelector('.wechat-container') as HTMLElement;
         return wrapper ? wrapper.outerHTML : doc.body.innerHTML;
     }
 
@@ -60,11 +71,11 @@ export class CssConverter {
                 
                 // Map generic root selectors to our specific container
                 if (selector === 'body' || selector === '#write') {
-                    selector = '.pixmi-preview-container';
+                    selector = '.wechat-container';
                 } else if (selector.startsWith('body ')) {
-                    selector = '.pixmi-preview-container ' + selector.substring(5);
+                    selector = '.wechat-container ' + selector.substring(5);
                 } else if (selector.startsWith('#write ')) {
-                    selector = '.pixmi-preview-container ' + selector.substring(7);
+                    selector = '.wechat-container ' + selector.substring(7);
                 }
 
                 if (selector) {

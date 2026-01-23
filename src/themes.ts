@@ -144,7 +144,6 @@ h3:hover a.anchor,
 h4:hover a.anchor,
 h5:hover a.anchor,
 h6:hover a.anchor {
-    /*background: url("../../images/modules/styleguide/para.png") no-repeat 10px center;*/
     text-decoration: none;
 }
 h1 tt,
@@ -393,22 +392,6 @@ tt {
 	bottom: .375rem;
 }
 
-#write>h3.md-focus:before{
-	left: -1.5625rem;
-	top: .375rem;
-}
-#write>h4.md-focus:before{
-	left: -1.5625rem;
-	top: .285714286rem;
-}
-#write>h5.md-focus:before{
-	left: -1.5625rem;
-	top: .285714286rem;
-}
-#write>h6.md-focus:before{
-	left: -1.5625rem;
-	top: .285714286rem;
-}
 .md-image>.md-meta {
     border: 1px solid #ddd;
     border-radius: 3px;
@@ -441,10 +424,6 @@ tt {
     border-color: #FEFEFE #e5e5e5 #e5e5e5 #eee;
     border-style: solid;
     border-width: 1px;
-}
-
-#md-notification:before {
-    top: 10px;
 }
 
 /** focus mode */
@@ -493,7 +472,7 @@ header, .context-menu, .megamenu-content, footer{
                 id: 'modern',
                 name: 'Modern Magazine',
                 css: `
-/* Sspai Web Theme */
+/* Sspai Web Theme - WeChat Compatible */
 body {
     font-size: 15px;
     color: #333;
@@ -602,38 +581,14 @@ a:focus {
 blockquote {
     font-size: 1em;
     font-style: normal;
-    padding: 30px 38px;
+    padding: 15px 20px;
     margin: 0 0 15px;
     position: relative;
     line-height: 1.8;
     text-indent: 0;
-    border: none;
+    border-left: 6px solid #e0e0e0;
+    background-color: #f9f9f9;
     color: #888;
-}
-
-blockquote:before {
-    content: "“";
-    left: 12px;
-    top: 0;
-    color: #E0E0E0;
-    font-size: 4em;
-    font-family: Arial, serif;
-    line-height: 1em;
-    font-weight: 700;
-    position: absolute;
-}
-
-blockquote:after {
-    content: "”";
-    right: 12px;
-    bottom: -26px;
-    color: #E0E0E0;
-    font-size: 4em;
-    font-family: Arial, serif;
-    line-height: 1em;
-    font-weight: 700;
-    position: absolute;
-    bottom: -31px;
 }
 
 strong,
@@ -651,8 +606,6 @@ del {
     text-decoration: line-through;
 }
 
-/*code {font-size:90%;}*/
-/*pre {text-align:left; overflow-x: scroll; color: #257fa0; background: #f6f6f6; padding: 10pt 15pt; border-radius: 3px; border: solid 1px #e2e2e2;}*/
 pre {
     margin: 0 0 10px;
     font-size: 13px;
@@ -717,80 +670,6 @@ ul p {
 li {
     margin-bottom: 0.75em;
     margin-top: 0.75em;
-}
-
-ol#footnotes {
-    font-size: 0.95em;
-    padding-top: 1em;
-    margin-top: 1em;
-    margin-left: 0;
-    border-top: 1px solid #eaeaea;
-    counter-reset: footer-counter;
-    list-style: none;
-    color: #555;
-    padding-left: 5%;
-    margin: 20px 0;
-}
-
-ol#footnotes li {
-    margin-bottom: 10px;
-    margin-left: 16px;
-    font-weight: 400;
-    line-height: 2;
-    list-style-type: none;
-}
-
-ol#footnotes li:before {
-    content: counter(footer-counter) ". ";
-    counter-increment: footer-counter;
-    font-weight: 800;
-    font-size: .95em;
-}
-
-@keyframes highfade {
-    0% {
-        background-color: none;
-    }
-
-    20% {
-        background-color: yellow;
-    }
-
-    100% {
-        background-color: none;
-    }
-}
-
-@-webkit-keyframes highfade {
-    0% {
-        background-color: none;
-    }
-
-    20% {
-        background-color: yellow;
-    }
-
-    100% {
-        background-color: none;
-    }
-}
-
-a:target,
-ol#footnotes li:target,
-sup a:target {
-    animation-name: highfade;
-    animation-duration: 2s;
-    animation-iteration-count: 1;
-    animation-timing-function: ease-in-out;
-    -webkit-animation-name: highfade;
-    -webkit-animation-duration: 2s;
-    -webkit-animation-iteration-count: 1;
-    -webkit-animation-timing-function: ease-in-out;
-}
-
-a:target {
-    border: 0;
-    outline: 0;
 }
                 `,
                 type: 'builtin'
