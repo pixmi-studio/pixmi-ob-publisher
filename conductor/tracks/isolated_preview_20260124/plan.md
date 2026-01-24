@@ -8,7 +8,7 @@ This plan outlines the steps to replace the current integrated preview with an i
     - [ ] Identify and remove code in `style-injector.ts` and `main.ts` that applies WeChat-specific styles to Obsidian's native workspace.
     - [ ] Ensure `theme-switcher.ts` no longer affects the main app's DOM.
     - [ ] Verify Obsidian native preview is restored to its default look.
-- [ ] **Task: Create Preview Window Manager Service**
+- [x] **Task: Create Preview Window Manager Service** 6a20fc4
     - [ ] Create a new class/module to manage the lifecycle of the external preview window.
     - [ ] Implement a method to open a new window using `window.open` or the Obsidian `Window` API.
     - [ ] Ensure the window instance is tracked to prevent multiple openings.
