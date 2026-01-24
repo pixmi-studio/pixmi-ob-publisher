@@ -38,17 +38,17 @@ export default class PixmiObPublisher extends Plugin {
 
     this.statusBarItem = this.addStatusBarItem();
     this.updateStatusBar();
-    this.refreshPreviewStyle();
+    // this.refreshPreviewStyle(); // Removed legacy preview
 
     this.registerEvent(
         this.app.workspace.on('active-leaf-change', () => {
             this.updateStatusBar();
-            this.refreshPreviewStyle();
+            // this.refreshPreviewStyle(); // Removed legacy preview
         })
     );
     this.registerEvent(
         this.app.workspace.on('layout-change', () => {
-            this.refreshPreviewStyle();
+            // this.refreshPreviewStyle(); // Removed legacy preview
         })
     );
     this.registerEvent(
@@ -56,7 +56,7 @@ export default class PixmiObPublisher extends Plugin {
             const activeView = this.app.workspace.getActiveViewOfType(MarkdownView);
             if (activeView && activeView.file === file) {
                 this.updateStatusBar();
-                this.refreshPreviewStyle();
+                // this.refreshPreviewStyle(); // Removed legacy preview
             }
         })
     );
@@ -194,35 +194,8 @@ export default class PixmiObPublisher extends Plugin {
   }
 
   refreshPreviewStyle() {
-    const activeView = this.app.workspace.getActiveViewOfType(MarkdownView);
-    if (!activeView || !activeView.file) {
-        return;
-    }
-
-    const themeId = this.themeSwitcher.getTheme(activeView.file) || 'default';
-    const theme = this.themeManager.getTheme(themeId);
-    
-    if (theme) {
-        this.styleInjector.inject(theme.id, theme.css);
-    } else {
-        this.styleInjector.clear();
-    }
-
-    // Apply class to the container element which is more stable
-    const containerEl = activeView.containerEl;
-    if (containerEl) {
-        if (!containerEl.classList.contains('pixmi-preview-container')) {
-            containerEl.addClass('pixmi-preview-container');
-        }
-    }
-
-    // Also try the preview view specifically if it exists
-    const previewEl = activeView.contentEl.querySelector('.markdown-preview-view');
-    if (previewEl) {
-        if (!previewEl.classList.contains('pixmi-preview-container')) {
-            previewEl.addClass('pixmi-preview-container');
-        }
-    }
+    // Legacy preview style injection removed.
+    // Use the new isolated preview window instead.
   }
 
   async saveSettings() {
