@@ -4,7 +4,7 @@
 
 [![GitHub release (latest by date)](https://img.shields.io/github/v/release/pixmi-studio/pixmi-ob-publisher?style=flat-square)](https://github.com/pixmi-studio/pixmi-ob-publisher/releases)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](https://opensource.org/licenses/MIT)
-[![Buy Me A Coffee](https://img.shields.io/badge/buy%20me%20a%20coffee-donate-yellow.svg?style=flat-square)](https://www.buymeacoffee.com/pixmistudio)
+[![Buy Me A Coffee](https://img.shields.io/badge/buy%20me%20a%20coffee-donate-yellow.svg?style=flat-square)](https://afdian.com/a/pixmi-studio)
 [![GitHub stars](https://img.shields.io/github/stars/pixmi-studio/pixmi-ob-publisher?style=flat-square)](https://github.com/pixmi-studio/pixmi-ob-publisher/stargazers)
 
 An Obsidian plugin that allows you to publish your Markdown notes directly to your WeChat Official Account (公众号) draft box.
@@ -73,9 +73,14 @@ Contributions are welcome! Please see our [Contributing Guidelines](CONTRIBUTING
 
 ## Support
 
+<a href="https://afdian.com/a/pixmi-studio"><img width="142" src="https://pic1.afdiancdn.com/static/img/welcome/button-sponsorme.png" alt=""></a>
+
+
 If you find this plugin helpful, please consider giving it a star!
 
 [![Star History Chart](https://api.star-history.com/svg?repos=pixmi-studio/pixmi-ob-publisher&type=Date)](https://star-history.com/#pixmi-studio/pixmi-ob-publisher&Date)
+
+
 
 ## License
 

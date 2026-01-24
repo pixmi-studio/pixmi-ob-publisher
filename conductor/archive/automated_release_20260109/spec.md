@@ -17,10 +17,10 @@
     - 确保 `master` 分支始终持有最新的版本号和变更记录。
 
 ## Acceptance Criteria
-- [ ] 代码合并到 `release` 分支后，自动触发 Action。
-- [ ] 无论提交信息如何，都会产生一个新版本并创建 GitHub Release。
-- [ ] 发布成功后，`master` 分支能自动收到来自 `release` 分支的版本号更新提交。
-- [ ] `release` 和 `master` 的 `package.json` 版本号保持一致。
+- [x] 代码合并到 `release` 分支后，自动触发 Action。
+- [x] 无论提交信息如何，都会产生一个新版本并创建 GitHub Release。
+- [x] 发布成功后，`master` 分支能自动收到来自 `release` 分支的版本号更新提交。
+- [x] `release` 和 `master` 的 `package.json` 版本号保持一致。
 
 ## Out of Scope
 - 手动干预版本号。

@@ -1,16 +1,23 @@
-import { App, Plugin, PluginManifest, Notice, MarkdownView, TFile } from 'obsidian';
+import { App, Plugin, PluginManifest, Notice, MarkdownView, TFile, FuzzySuggestModal, setIcon } from 'obsidian';
 import { PixmiSettings, DEFAULT_SETTINGS } from './settings';
 import { PixmiSettingTab } from './settings-tab';
 import { WeChatApiClient } from './wechat-api';
 import { Publisher } from './publisher';
 import { MarkdownParser } from './markdown-parser';
 import { LogManager } from './logger';
+import { ThemeManager, Theme } from './themes';
+import { ThemeSwitcher } from './theme-switcher';
+import { StyleInjector } from './style-injector';
 
 export default class PixmiObPublisher extends Plugin {
   settings: PixmiSettings;
   apiClient: WeChatApiClient;
   publisher: Publisher;
   logger: LogManager;
+  themeManager: ThemeManager;
+  themeSwitcher: ThemeSwitcher;
+  styleInjector: StyleInjector;
+  statusBarItem: HTMLElement;
 
   constructor(app: App, manifest: PluginManifest) {
     super(app, manifest);
@@ -23,6 +30,36 @@ export default class PixmiObPublisher extends Plugin {
     this.logger = new LogManager(this.app, this.manifest);
     this.apiClient = new WeChatApiClient(this.settings.appId, this.settings.appSecret, this.settings.proxyUrl, this.logger);
     this.publisher = new Publisher(this.apiClient, new MarkdownParser());
+    this.themeManager = new ThemeManager(this.app);
+    this.themeSwitcher = new ThemeSwitcher(this.app);
+    this.styleInjector = new StyleInjector(this.app);
+
+    await this.themeManager.loadThemes();
+
+    this.statusBarItem = this.addStatusBarItem();
+    this.updateStatusBar();
+    this.refreshPreviewStyle();
+
+    this.registerEvent(
+        this.app.workspace.on('active-leaf-change', () => {
+            this.updateStatusBar();
+            this.refreshPreviewStyle();
+        })
+    );
+    this.registerEvent(
+        this.app.workspace.on('layout-change', () => {
+            this.refreshPreviewStyle();
+        })
+    );
+    this.registerEvent(
+        this.app.metadataCache.on('changed', (file) => {
+            const activeView = this.app.workspace.getActiveViewOfType(MarkdownView);
+            if (activeView && activeView.file === file) {
+                this.updateStatusBar();
+                this.refreshPreviewStyle();
+            }
+        })
+    );
 
     this.addSettingTab(new PixmiSettingTab(this.app, this));
 
@@ -38,6 +75,24 @@ export default class PixmiObPublisher extends Plugin {
             if (markdownView) {
                 if (!checking) {
                     this.publishCurrentNote();
+                }
+                return true;
+            }
+            return false;
+        }
+    });
+
+    this.addCommand({
+        id: 'switch-wechat-theme',
+        name: 'Switch WeChat Theme',
+        checkCallback: (checking: boolean) => {
+            const markdownView = this.app.workspace.getActiveViewOfType(MarkdownView);
+            if (markdownView) {
+                if (!checking) {
+                    new ThemeSuggester(this.app, this.themeManager, async (theme) => {
+                        await this.themeSwitcher.setTheme(markdownView.file!, theme.id);
+                        new Notice(`Theme switched to: ${theme.name}`);
+                    }).open();
                 }
                 return true;
             }
@@ -64,13 +119,17 @@ export default class PixmiObPublisher extends Plugin {
     const markdown = activeView.getViewData();
     const title = activeFile.basename;
     
-    // Extract thumbnail from frontmatter
+    // Extract info from frontmatter
     const fileCache = this.app.metadataCache.getFileCache(activeFile);
     const frontmatter = fileCache?.frontmatter;
     const thumbnailPath = frontmatter?.thumb || frontmatter?.thumbnail;
+    const themeId = frontmatter?.['pixmi-theme'] || 'default';
+    const theme = this.themeManager.getTheme(themeId);
+    const themeCss = theme ? theme.css : '';
+    console.log(`[Pixmi] Publishing with Theme: ${themeId}, CSS Length: ${themeCss.length}`);
 
     new Notice(`Publishing: ${title}...`);
-    this.logger.log(`Starting publication for: ${title}`);
+    this.logger.log(`Starting publication for: ${title} with theme: ${themeId}`);
 
     try {
         const draftId = await this.publisher.publish(title, markdown, async (path: string) => {
@@ -79,7 +138,7 @@ export default class PixmiObPublisher extends Plugin {
                 throw new Error(`Image not found: ${path}. Please ensure the image exists in your vault.`);
             }
             return await this.app.vault.readBinary(file);
-        }, thumbnailPath);
+        }, thumbnailPath, themeCss);
         
         new Notice(`Successfully published! Draft ID: ${draftId}`);
         this.logger.log(`Successfully published draft: ${draftId}`);
@@ -108,6 +167,64 @@ export default class PixmiObPublisher extends Plugin {
     this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
   }
 
+  updateStatusBar() {
+    const activeView = this.app.workspace.getActiveViewOfType(MarkdownView);
+    if (!activeView || !activeView.file) {
+        this.statusBarItem.empty();
+        return;
+    }
+
+    const themeId = this.themeSwitcher.getTheme(activeView.file);
+    const theme = themeId ? this.themeManager.getTheme(themeId) : null;
+    const themeName = theme ? theme.name : 'Default';
+
+    this.statusBarItem.empty();
+    this.statusBarItem.addClass('mod-clickable');
+    setIcon(this.statusBarItem, 'palette');
+    this.statusBarItem.createSpan({ text: `  ${themeName}` });
+    
+    this.statusBarItem.onclick = () => {
+        new ThemeSuggester(this.app, this.themeManager, async (theme) => {
+            await this.themeSwitcher.setTheme(activeView.file!, theme.id);
+            this.updateStatusBar();
+            this.refreshPreviewStyle();
+            new Notice(`Theme switched to: ${theme.name}`);
+        }).open();
+    };
+  }
+
+  refreshPreviewStyle() {
+    const activeView = this.app.workspace.getActiveViewOfType(MarkdownView);
+    if (!activeView || !activeView.file) {
+        return;
+    }
+
+    const themeId = this.themeSwitcher.getTheme(activeView.file) || 'default';
+    const theme = this.themeManager.getTheme(themeId);
+    
+    if (theme) {
+        this.styleInjector.inject(theme.id, theme.css);
+    } else {
+        this.styleInjector.clear();
+    }
+
+    // Apply class to the container element which is more stable
+    const containerEl = activeView.containerEl;
+    if (containerEl) {
+        if (!containerEl.classList.contains('pixmi-preview-container')) {
+            containerEl.addClass('pixmi-preview-container');
+        }
+    }
+
+    // Also try the preview view specifically if it exists
+    const previewEl = activeView.contentEl.querySelector('.markdown-preview-view');
+    if (previewEl) {
+        if (!previewEl.classList.contains('pixmi-preview-container')) {
+            previewEl.addClass('pixmi-preview-container');
+        }
+    }
+  }
+
   async saveSettings() {
     await this.saveData(this.settings);
     // Update API client when settings change
@@ -117,4 +234,27 @@ export default class PixmiObPublisher extends Plugin {
         this.publisher = new Publisher(this.apiClient, new MarkdownParser());
     }
   }
+}
+
+class ThemeSuggester extends FuzzySuggestModal<Theme> {
+    private themeManager: ThemeManager;
+    private onSelect: (theme: Theme) => void;
+
+    constructor(app: App, themeManager: ThemeManager, onSelect: (theme: Theme) => void) {
+        super(app);
+        this.themeManager = themeManager;
+        this.onSelect = onSelect;
+    }
+
+    getItems(): Theme[] {
+        return this.themeManager.getAllThemes();
+    }
+
+    getItemText(theme: Theme): string {
+        return theme.name;
+    }
+
+    onChooseItem(theme: Theme, evt: MouseEvent | KeyboardEvent): void {
+        this.onSelect(theme);
+    }
 }

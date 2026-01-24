@@ -1,0 +1,8 @@
+{
+  "track_id": "multi_theme_support_20260108",
+  "type": "feature",
+  "status": "new",
+  "created_at": "2026-01-08T10:00:00Z",
+  "updated_at": "2026-01-08T10:00:00Z",
+  "description": "为发布到平台的文档增加几种主题样式的选择，还需要能切换和预览主题,能直接用obsidian原生的预览是最好的，theme 要方便预览和用户自行扩展"
+}

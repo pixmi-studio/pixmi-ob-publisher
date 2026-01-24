@@ -64,6 +64,16 @@ module.exports = {
         onOpen() {}
         onClose() {}
     },
+    FuzzySuggestModal: class FuzzySuggestModal {
+        constructor(app) {
+            this.app = app;
+        }
+        open() {}
+        close() {}
+        getItems() { return []; }
+        getItemText(item) { return ''; }
+        onChooseItem(item, evt) {}
+    },
     TextAreaComponent: class TextAreaComponent {
         constructor(containerEl) {
             this.inputEl = document.createElement('textarea');

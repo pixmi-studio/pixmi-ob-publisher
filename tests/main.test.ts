@@ -19,19 +19,23 @@ vi.mock('obsidian', () => {
       }
       onload() {}
       onunload() {}
-      loadData() { return Promise.resolve({}); }
       saveData() { return Promise.resolve(); }
+      loadData() { return Promise.resolve({}); }
       addSettingTab() {}
       addRibbonIcon() {}
       addCommand() {}
+      addStatusBarItem() { 
+        return { 
+          setText: vi.fn(),
+          onclick: vi.fn(),
+          empty: vi.fn(),
+          addClass: vi.fn(),
+          createSpan: vi.fn()
+        };
+      }
+      registerEvent() {}
     },
-    PluginSettingTab: class PluginSettingTab {
-        constructor(app: any, plugin: any) {
-            this.app = app;
-            this.plugin = plugin;
-        }
-        display() {}
-    },
+    PluginSettingTab: class {},
     Setting: class Setting {
         constructor(containerEl: any) {
         }
@@ -41,29 +45,22 @@ vi.mock('obsidian', () => {
              return this;
         }
     },
-    Notice: class Notice {
-        constructor(message: string) {
-            mocks.noticeSpy(message);
-        }
+    Notice: mocks.noticeSpy,
+    MarkdownView: class {},
+    Modal: class {
+      app: any;
+      constructor(app: any) { this.app = app; }
+      open() {}
+      close() {}
     },
-    Modal: class Modal {
-        constructor(app: any) {}
-        open() {}
-        close() {}
+    FuzzySuggestModal: class {
+      app: any;
+      constructor(app: any) { this.app = app; }
+      open() {}
+      close() {}
     },
-    TextAreaComponent: class TextAreaComponent {
-        constructor(containerEl: any) {}
-        setValue() { return this; }
-        setDisabled() { return this; }
-    },
-    ButtonComponent: class ButtonComponent {
-        constructor(containerEl: any) {}
-        setButtonText() { return this; }
-        setWarning() { return this; }
-        onClick() { return this; }
-    },
-    MarkdownView: class MarkdownView {},
-    TFile: class TFile {}
+    TFile: class {},
+    setIcon: vi.fn()
   };
 });
 
@@ -79,21 +76,48 @@ vi.mock('../src/logger', () => {
     };
 });
 
+import { ThemeManager, Theme } from './themes';
+import { ThemeSwitcher } from './theme-switcher';
+import { StyleInjector } from './style-injector';
+
+// Mock StyleInjector
+vi.mock('../src/style-injector', () => {
+    return {
+        StyleInjector: class {
+            constructor() {}
+            inject = vi.fn();
+            clear = vi.fn();
+        }
+    };
+});
+
 describe('PixmiObPublisher', () => {
   let plugin: PixmiObPublisher;
+  let mockApp: any;
 
   beforeEach(() => {
-    const mockApp = {
-        workspace: {
-            getActiveViewOfType: vi.fn()
-        },
-        metadataCache: {
-            getFirstLinkpathDest: vi.fn(),
-            getFileCache: vi.fn().mockReturnValue({ frontmatter: {} })
-        },
-        vault: {
-            readBinary: vi.fn()
+    mockApp = {
+      vault: {
+        readBinary: vi.fn(),
+        adapter: {
+          exists: vi.fn().mockResolvedValue(true),
+          list: vi.fn().mockResolvedValue({ files: [], folders: [] }),
+          mkdir: vi.fn().mockResolvedValue(undefined),
+          read: vi.fn().mockResolvedValue('')
         }
+      },
+      workspace: {
+        getActiveViewOfType: vi.fn(),
+        on: vi.fn()
+      },
+      metadataCache: {
+        getFileCache: vi.fn(),
+        getFirstLinkpathDest: vi.fn(),
+        on: vi.fn()
+      },
+      fileManager: {
+        processFrontMatter: vi.fn()
+      }
     };
     plugin = new PixmiObPublisher(mockApp as any, {} as any);
     mocks.noticeSpy.mockClear();
@@ -199,7 +223,8 @@ describe('PixmiObPublisher', () => {
         'Test Note', 
         '# Content', 
         expect.any(Function),
-        undefined
+        undefined,
+        ''
     );
     expect(mocks.noticeSpy).toHaveBeenCalledWith(expect.stringContaining('Successfully published'));
     expect(mocks.logSpy).toHaveBeenCalledWith(expect.stringContaining('Successfully published draft'), undefined);

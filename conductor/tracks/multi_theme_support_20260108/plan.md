@@ -1,0 +1,51 @@
+# Implementation Plan: Multi-Theme Support and Preview System
+
+## Phase 1: Theme Management Foundation [checkpoint: eb62983]
+*建立主题的基础架构，包括数据结构、加载逻辑和本地目录监控。*
+
+- [x] Task: Define `Theme` interfaces and metadata structures (TDD) ef8d553
+- [x] Task: Implement `ThemeManager` to load built-in themes from the plugin bundle 448f096
+- [x] Task: Implement local directory monitoring (`.obsidian/pixmi-themes/`) to load custom CSS files 123e7eb
+- [x] Task: Conductor - User Manual Verification 'Theme Management Foundation' (Protocol in workflow.md) a3a5df2
+
+## Phase 2: UI & Switching Logic [checkpoint: c99e118]
+*实现用户交互界面，允许用户切换主题并自动同步到文档配置。*
+
+- [x] Task: Create `ThemeSwitcher` logic to detect and update `pixmi-theme` in Frontmatter (TDD) 0cbc77a
+- [x] Task: Add "Switch WeChat Theme" command to the Command Palette f2b9dca
+- [x] Task: Implement a Status Bar or Ribbon icon to show and change the current theme 0438776
+- [x] Task: Conductor - User Manual Verification 'UI & Switching Logic' (Protocol in workflow.md) 79a6df2
+
+## Phase 3: Native Preview Integration [checkpoint: 61ac867]
+*将主题样式注入到 Obsidian 的原生预览中，并确保样式隔离。*
+
+- [x] Task: Implement `StyleInjector` to dynamically apply CSS to the Markdown preview container 28aae98
+- [x] Task: Implement CSS scoping logic to ensure themes only affect content, not Obsidian UI (TDD) 79a6df2
+- [x] Task: Add event listeners to refresh styles when the active file or Frontmatter changes a3a5df2
+- [x] Task: Conductor - User Manual Verification 'Native Preview Integration' (Protocol in workflow.md) b1fc0c4
+
+## Phase 4: Publishing Integration (Inline CSS)
+*实现发布时的样式转换逻辑，确保微信文章与预览一致。*
+
+- [x] Task: Implement a CSS-to-Inline-Style converter (TDD) 28aae98
+- [x] Task: Integrate the converter into the `Publisher` flow to apply the selected theme before sending to WeChat a3a5df2
+- [x] Task: Handle image and asset-specific styling during the conversion process a3a5df2
+- [x] Task: Conductor - User Manual Verification 'Publishing Integration' (Protocol in workflow.md) a3a5df2
+
+## Phase 5: Built-in Themes & Final Polish
+*创建三个预设主题的 CSS 内容，并进行最后的整体测试。*
+
+- [x] Task: Design and implement the 'Minimalist' theme CSS a3a5df2
+- [x] Task: Design and implement the 'Technical' theme CSS (with Code Block/MathJax support) a3a5df2
+- [x] Task: Design and implement the 'Modern Magazine' theme CSS a3a5df2
+- [x] Task: Final end-to-end integration test of the entire theme-to-publish flow a3a5df2
+- [x] Task: Conductor - User Manual Verification 'Built-in Themes & Final Polish' (Protocol in workflow.md) a3a5df2
+
+## Phase 6: WeChat Compatibility & Rendering Fixes [checkpoint: d29452a]
+*解决微信平台特有的渲染限制（内联样式、图片防盗链、代码换行等）。*
+
+- [x] Task: Update `MarkdownParser` or `CssConverter` to wrap content in `<section class="wechat-container">` d29452a
+- [x] Task: Implement `ImageUploader` to upload external images to WeChat and replace URLs in HTML (TDD) d29452a
+- [x] Task: Refactor built-in themes to remove `::before`/`::after` pseudo-elements and use compatible CSS d29452a
+- [x] Task: Force `white-space: pre-wrap` and `word-break: break-all` for code blocks in `CssConverter` d29452a
+- [x] Task: Conductor - User Manual Verification 'WeChat Compatibility' (Protocol in workflow.md) d29452a
