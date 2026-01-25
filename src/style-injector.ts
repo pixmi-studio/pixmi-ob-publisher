@@ -12,14 +12,15 @@ export class StyleInjector {
      * Injects or updates a CSS style block in the document head.
      * @param themeId The unique ID of the theme.
      * @param css The CSS content to inject.
+     * @param targetDoc The target document to inject into (defaults to global document).
      */
-    inject(themeId: string, css: string): void {
-        let styleEl = document.getElementById(this.styleId) as HTMLStyleElement;
+    inject(themeId: string, css: string, targetDoc: Document = document): void {
+        let styleEl = targetDoc.getElementById(this.styleId) as HTMLStyleElement;
         
         if (!styleEl) {
-            styleEl = document.createElement('style');
+            styleEl = targetDoc.createElement('style');
             styleEl.id = this.styleId;
-            document.head.appendChild(styleEl);
+            targetDoc.head.appendChild(styleEl);
         }
 
         // Just use the standard prefix. Since themes.ts already has .pixmi-preview-container,
@@ -59,9 +60,10 @@ export class StyleInjector {
 
     /**
      * Removes the injected style block.
+     * @param targetDoc The target document to clear from (defaults to global document).
      */
-    clear(): void {
-        const styleEl = document.getElementById(this.styleId);
+    clear(targetDoc: Document = document): void {
+        const styleEl = targetDoc.getElementById(this.styleId);
         if (styleEl) {
             styleEl.remove();
         }

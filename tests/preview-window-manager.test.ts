@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { PreviewWindowManager } from '../src/preview-window-manager';
+import { StyleInjector } from '../src/style-injector';
 import { App } from 'obsidian';
 
 describe('PreviewWindowManager', () => {
@@ -7,6 +8,7 @@ describe('PreviewWindowManager', () => {
     let mockApp: any;
     let mockWindow: any;
     let mockContainer: any;
+    let mockStyleInjector: any;
     let containerFound = false;
 
     beforeEach(() => {
@@ -14,6 +16,11 @@ describe('PreviewWindowManager', () => {
             // Mock necessary app properties
         };
         
+        mockStyleInjector = {
+            inject: vi.fn(),
+            clear: vi.fn()
+        };
+
         containerFound = false;
         mockContainer = { innerHTML: '', className: '' };
 
@@ -22,6 +29,7 @@ describe('PreviewWindowManager', () => {
                 title: '',
                 write: vi.fn(),
                 close: vi.fn(),
+                getElementById: vi.fn().mockReturnValue(null),
                 body: {
                     innerHTML: '',
                     appendChild: vi.fn().mockImplementation(() => {
@@ -50,7 +58,7 @@ describe('PreviewWindowManager', () => {
         // Mock global window.open
         vi.stubGlobal('open', vi.fn().mockReturnValue(mockWindow));
 
-        manager = new PreviewWindowManager(mockApp);
+        manager = new PreviewWindowManager(mockApp, mockStyleInjector);
     });
 
     afterEach(() => {
@@ -97,5 +105,12 @@ describe('PreviewWindowManager', () => {
         manager.closePreview();
         
         expect(mockWindow.close).toHaveBeenCalled();
+    });
+
+    it('should inject style into the preview window head using StyleInjector', () => {
+        manager.openPreview();
+        manager.injectStyle('default', 'body { color: blue; }');
+
+        expect(mockStyleInjector.inject).toHaveBeenCalledWith('default', 'body { color: blue; }', mockWindow.document);
     });
 });

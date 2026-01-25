@@ -1,11 +1,14 @@
 import { App } from 'obsidian';
+import { StyleInjector } from './style-injector';
 
 export class PreviewWindowManager {
     private app: App;
     private previewWindow: Window | null = null;
+    private styleInjector: StyleInjector;
 
-    constructor(app: App) {
+    constructor(app: App, styleInjector: StyleInjector) {
         this.app = app;
+        this.styleInjector = styleInjector;
     }
 
     openPreview() {
@@ -51,6 +54,12 @@ export class PreviewWindowManager {
              // Fallback
              this.previewWindow.document.body.innerHTML = html;
         }
+    }
+
+    injectStyle(themeId: string, css: string) {
+        if (!this.previewWindow || this.previewWindow.closed) return;
+        
+        this.styleInjector.inject(themeId, css, this.previewWindow.document);
     }
 
     closePreview() {
