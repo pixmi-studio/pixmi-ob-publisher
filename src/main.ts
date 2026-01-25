@@ -178,6 +178,9 @@ export default class PixmiObPublisher extends Plugin {
   }
 
   onunload() {
+    if (this.previewWindowManager) {
+        this.previewWindowManager.closePreview();
+    }
     if (this.logger) {
         this.logger.log('PixmiObPublisher unloaded');
     }

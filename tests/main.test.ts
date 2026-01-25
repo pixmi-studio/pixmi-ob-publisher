@@ -198,8 +198,12 @@ describe('PixmiObPublisher', () => {
 
   it('should log on onunload', async () => {
     await plugin.onload(); // Need onload to init logger
+    plugin.previewWindowManager.closePreview = vi.fn();
+    
     plugin.onunload();
+    
     expect(mocks.logSpy).toHaveBeenCalledWith('PixmiObPublisher unloaded', undefined);
+    expect(plugin.previewWindowManager.closePreview).toHaveBeenCalled();
   });
 
   it('should publish current note', async () => {
