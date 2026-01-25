@@ -2,17 +2,11 @@
 
 This plan outlines the steps to replace the current integrated preview with an isolated, real-time preview window, while cleaning up legacy styling code that impacts Obsidian's native interface.
 
-## Phase 1: Cleanup & Foundation
+## Phase 1: Cleanup & Foundation [checkpoint: 22a249f]
 
 - [x] **Task: Remove Legacy Style Injection** 50bce79
-    - [ ] Identify and remove code in `style-injector.ts` and `main.ts` that applies WeChat-specific styles to Obsidian's native workspace.
-    - [ ] Ensure `theme-switcher.ts` no longer affects the main app's DOM.
-    - [ ] Verify Obsidian native preview is restored to its default look.
 - [x] **Task: Create Preview Window Manager Service** 6a20fc4
-    - [ ] Create a new class/module to manage the lifecycle of the external preview window.
-    - [ ] Implement a method to open a new window using `window.open` or the Obsidian `Window` API.
-    - [ ] Ensure the window instance is tracked to prevent multiple openings.
-- [ ] **Task: Conductor - User Manual Verification 'Phase 1: Cleanup & Foundation' (Protocol in workflow.md)**
+- [x] **Task: Conductor - User Manual Verification 'Phase 1: Cleanup & Foundation' (Protocol in workflow.md)** 22a249f
 
 ## Phase 2: Preview Content & Styling
 
