@@ -13,7 +13,7 @@ This plan outlines the steps to replace the current integrated preview with an i
 - [x] **Task: Implement Isolated Style Injection** 1dc6fb1
     - [ ] Create a logic to inject theme-specific CSS into the *new window* only.
     - [ ] Ensure the preview window's `<head>` does not inherit any stylesheets from the main Obsidian window.
-- [ ] **Task: Implement Real-time Data Synchronization**
+- [x] **Task: Implement Real-time Data Synchronization** 2f13c07
     - [ ] Set up an event listener in `main.ts` for editor changes (`editor-change`).
     - [ ] Implement a communication channel (e.g., direct reference or custom events) to send rendered HTML to the preview window.
     - [ ] Implement the receiving logic in the preview window to update its `innerHTML`.
