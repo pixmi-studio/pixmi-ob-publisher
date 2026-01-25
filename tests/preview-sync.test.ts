@@ -81,4 +81,28 @@ describe('Preview Synchronization', () => {
 
         expect(mockPreviewManagerInstance.injectStyle).toHaveBeenCalledWith('default', 'body { color: red; }');
     });
+
+    it('should update preview with new file content when switching notes', () => {
+        // Setup initial view
+        const file1 = { path: 'note1.md' };
+        mockApp.workspace.getActiveViewOfType.mockReturnValue({
+            file: file1,
+            getViewData: () => '# Note 1'
+        });
+        
+        plugin.markdownParser.render = vi.fn().mockReturnValue('<h1>Note 1</h1>');
+        plugin.updatePreview();
+        expect(mockPreviewManagerInstance.updateContent).toHaveBeenCalledWith('<h1>Note 1</h1>');
+
+        // Switch view
+        const file2 = { path: 'note2.md' };
+        mockApp.workspace.getActiveViewOfType.mockReturnValue({
+            file: file2,
+            getViewData: () => '# Note 2'
+        });
+
+        plugin.markdownParser.render = vi.fn().mockReturnValue('<h1>Note 2</h1>');
+        plugin.updatePreview();
+        expect(mockPreviewManagerInstance.updateContent).toHaveBeenCalledWith('<h1>Note 2</h1>');
+    });
 });
