@@ -10,7 +10,7 @@ This plan outlines the steps to replace the current integrated preview with an i
 
 ## Phase 2: Preview Content & Styling
 
-- [ ] **Task: Implement Isolated Style Injection**
+- [x] **Task: Implement Isolated Style Injection** 1dc6fb1
     - [ ] Create a logic to inject theme-specific CSS into the *new window* only.
     - [ ] Ensure the preview window's `<head>` does not inherit any stylesheets from the main Obsidian window.
 - [ ] **Task: Implement Real-time Data Synchronization**
