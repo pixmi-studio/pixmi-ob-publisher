@@ -175,6 +175,15 @@ describe('PixmiObPublisher', () => {
     }));
   });
 
+  it('should add preview command on onload', async () => {
+    const addCommandSpy = vi.spyOn(plugin, 'addCommand');
+    await plugin.onload();
+    expect(addCommandSpy).toHaveBeenCalledWith(expect.objectContaining({
+        id: 'open-wechat-preview',
+        name: 'Open WeChat Publisher Preview'
+    }));
+  });
+
   it('should update api client when settings change', async () => {
     // Initialize api client
     await plugin.onload();

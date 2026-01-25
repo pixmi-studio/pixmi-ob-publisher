@@ -94,6 +94,15 @@ export default class PixmiObPublisher extends Plugin {
     });
 
     this.addCommand({
+        id: 'open-wechat-preview',
+        name: 'Open WeChat Publisher Preview',
+        callback: () => {
+            this.previewWindowManager.openPreview();
+            this.updatePreview();
+        }
+    });
+
+    this.addCommand({
         id: 'switch-wechat-theme',
         name: 'Switch WeChat Theme',
         checkCallback: (checking: boolean) => {
