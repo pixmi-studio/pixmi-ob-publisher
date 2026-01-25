@@ -16,7 +16,7 @@ This plan outlines the steps to replace the current integrated preview with an i
 
 ## Phase 3: Integration & User Experience
 
-- [ ] **Task: Register Command Palette Trigger**
+- [x] **Task: Register Command Palette Trigger** aff93f5
     - [ ] Add the "Open WeChat Publisher Preview" command in `main.ts`.
     - [ ] Link the command to the Preview Window Manager.
 - [ ] **Task: Handle Active Note Switching**
