@@ -8,6 +8,7 @@ import { LogManager } from './logger';
 import { ThemeManager, Theme } from './themes';
 import { ThemeSwitcher } from './theme-switcher';
 import { StyleInjector } from './style-injector';
+import { PreviewWindowManager } from './preview-window-manager';
 
 export default class PixmiObPublisher extends Plugin {
   settings: PixmiSettings;
@@ -17,6 +18,8 @@ export default class PixmiObPublisher extends Plugin {
   themeManager: ThemeManager;
   themeSwitcher: ThemeSwitcher;
   styleInjector: StyleInjector;
+  previewWindowManager: PreviewWindowManager;
+  markdownParser: MarkdownParser;
   statusBarItem: HTMLElement;
 
   constructor(app: App, manifest: PluginManifest) {
@@ -29,10 +32,12 @@ export default class PixmiObPublisher extends Plugin {
 
     this.logger = new LogManager(this.app, this.manifest);
     this.apiClient = new WeChatApiClient(this.settings.appId, this.settings.appSecret, this.settings.proxyUrl, this.logger);
-    this.publisher = new Publisher(this.apiClient, new MarkdownParser());
+    this.markdownParser = new MarkdownParser();
+    this.publisher = new Publisher(this.apiClient, this.markdownParser);
     this.themeManager = new ThemeManager(this.app);
     this.themeSwitcher = new ThemeSwitcher(this.app);
     this.styleInjector = new StyleInjector(this.app);
+    this.previewWindowManager = new PreviewWindowManager(this.app, this.styleInjector);
 
     await this.themeManager.loadThemes();
 
@@ -43,7 +48,7 @@ export default class PixmiObPublisher extends Plugin {
     this.registerEvent(
         this.app.workspace.on('active-leaf-change', () => {
             this.updateStatusBar();
-            // this.refreshPreviewStyle(); // Removed legacy preview
+            this.updatePreview();
         })
     );
     this.registerEvent(
@@ -56,12 +61,18 @@ export default class PixmiObPublisher extends Plugin {
             const activeView = this.app.workspace.getActiveViewOfType(MarkdownView);
             if (activeView && activeView.file === file) {
                 this.updateStatusBar();
-                // this.refreshPreviewStyle(); // Removed legacy preview
+                this.updatePreview();
             }
         })
     );
 
     this.addSettingTab(new PixmiSettingTab(this.app, this));
+
+    this.registerEvent(
+        this.app.workspace.on('editor-change', () => {
+            this.updatePreview();
+        })
+    );
 
     this.addRibbonIcon('paper-plane', 'Publish to WeChat', async (evt: MouseEvent) => {
         await this.publishCurrentNote();
@@ -196,6 +207,25 @@ export default class PixmiObPublisher extends Plugin {
   refreshPreviewStyle() {
     // Legacy preview style injection removed.
     // Use the new isolated preview window instead.
+  }
+
+  updatePreview() {
+    const activeView = this.app.workspace.getActiveViewOfType(MarkdownView);
+    if (!activeView || !activeView.file) {
+        return;
+    }
+
+    const markdown = activeView.getViewData();
+    const html = this.markdownParser.render(markdown);
+    
+    const themeId = this.themeSwitcher.getTheme(activeView.file) || 'default';
+    const theme = this.themeManager.getTheme(themeId);
+    
+    if (theme) {
+        this.previewWindowManager.injectStyle(theme.id, theme.css);
+    }
+
+    this.previewWindowManager.updateContent(html);
   }
 
   async saveSettings() {
