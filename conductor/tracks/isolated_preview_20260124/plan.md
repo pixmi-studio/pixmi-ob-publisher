@@ -21,7 +21,7 @@ This plan outlines the steps to replace the current integrated preview with an i
     - [ ] Link the command to the Preview Window Manager.
 - [x] **Task: Handle Active Note Switching** 2358f88
     - [ ] Update the preview window content when the user switches to a different active file in the workspace.
-- [ ] **Task: Final Polish & Error Handling**
+- [x] **Task: Final Polish & Error Handling** 556711f
     - [ ] Add graceful handling for when the preview window is manually closed by the user.
     - [ ] Ensure the preview window closes when the plugin is unloaded.
 - [ ] **Task: Conductor - User Manual Verification 'Phase 3: Integration & User Experience' (Protocol in workflow.md)**
