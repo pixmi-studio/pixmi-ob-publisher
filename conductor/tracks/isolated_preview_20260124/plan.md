@@ -19,7 +19,7 @@ This plan outlines the steps to replace the current integrated preview with an i
 - [x] **Task: Register Command Palette Trigger** aff93f5
     - [ ] Add the "Open WeChat Publisher Preview" command in `main.ts`.
     - [ ] Link the command to the Preview Window Manager.
-- [ ] **Task: Handle Active Note Switching**
+- [x] **Task: Handle Active Note Switching** 2358f88
     - [ ] Update the preview window content when the user switches to a different active file in the workspace.
 - [ ] **Task: Final Polish & Error Handling**
     - [ ] Add graceful handling for when the preview window is manually closed by the user.
