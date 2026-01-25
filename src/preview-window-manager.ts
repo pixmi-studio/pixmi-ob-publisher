@@ -13,14 +13,23 @@ export class PreviewWindowManager {
 
     openPreview() {
         if (this.previewWindow && !this.previewWindow.closed) {
+            console.log('[Pixmi] Focusing existing preview window');
             this.previewWindow.focus();
             return;
         }
 
-        this.previewWindow = window.open('', 'PixmiWeChatPreview', 'width=450,height=800,resizable,scrollbars');
+        console.log('[Pixmi] Opening new preview window...');
+        try {
+            this.previewWindow = window.open('about:blank', 'PixmiWeChatPreview', 'width=450,height=800,resizable,scrollbars');
+            console.log('[Pixmi] window.open result:', this.previewWindow);
+        } catch (e) {
+            console.error('[Pixmi] Failed to open window:', e);
+        }
         
         if (this.previewWindow) {
             this.initWindow();
+        } else {
+            console.error('[Pixmi] Window did not open (returned null)');
         }
     }
 
