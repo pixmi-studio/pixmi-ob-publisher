@@ -175,6 +175,15 @@ describe('PixmiObPublisher', () => {
     }));
   });
 
+  it('should add preview command on onload', async () => {
+    const addCommandSpy = vi.spyOn(plugin, 'addCommand');
+    await plugin.onload();
+    expect(addCommandSpy).toHaveBeenCalledWith(expect.objectContaining({
+        id: 'open-wechat-preview',
+        name: 'Open WeChat Publisher Preview'
+    }));
+  });
+
   it('should update api client when settings change', async () => {
     // Initialize api client
     await plugin.onload();
@@ -189,8 +198,12 @@ describe('PixmiObPublisher', () => {
 
   it('should log on onunload', async () => {
     await plugin.onload(); // Need onload to init logger
+    plugin.previewWindowManager.closePreview = vi.fn();
+    
     plugin.onunload();
+    
     expect(mocks.logSpy).toHaveBeenCalledWith('PixmiObPublisher unloaded', undefined);
+    expect(plugin.previewWindowManager.closePreview).toHaveBeenCalled();
   });
 
   it('should publish current note', async () => {
