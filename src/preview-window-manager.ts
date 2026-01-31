@@ -1,9 +1,9 @@
-import { App } from 'obsidian';
+import { App, WorkspaceLeaf } from 'obsidian';
 import { StyleInjector } from './style-injector';
+import { WeChatPreviewView, VIEW_TYPE_WECHAT_PREVIEW } from './preview-view';
 
 export class PreviewWindowManager {
     private app: App;
-    private previewWindow: Window | null = null;
     private styleInjector: StyleInjector;
 
     constructor(app: App, styleInjector: StyleInjector) {
@@ -11,74 +11,64 @@ export class PreviewWindowManager {
         this.styleInjector = styleInjector;
     }
 
-    openPreview() {
-        if (this.previewWindow && !this.previewWindow.closed) {
+    async openPreview() {
+        const existing = this.getExistingLeaf();
+        if (existing) {
             console.log('[Pixmi] Focusing existing preview window');
-            this.previewWindow.focus();
+            this.app.workspace.revealLeaf(existing);
             return;
         }
 
         console.log('[Pixmi] Opening new preview window...');
-        try {
-            this.previewWindow = window.open('about:blank', 'PixmiWeChatPreview', 'width=450,height=800,resizable,scrollbars');
-            console.log('[Pixmi] window.open result:', this.previewWindow);
-        } catch (e) {
-            console.error('[Pixmi] Failed to open window:', e);
-        }
+        // Using openPopoutLeaf to specify window dimensions (iPhone 12/13/14/15 standard size)
+        const leaf = this.app.workspace.openPopoutLeaf({
+            size: {
+                width: 390,
+                height: 844
+            }
+        });
+        await leaf.setViewState({
+            type: VIEW_TYPE_WECHAT_PREVIEW,
+            active: true,
+        });
         
-        if (this.previewWindow) {
-            this.initWindow();
-        } else {
-            console.error('[Pixmi] Window did not open (returned null)');
-        }
+        // Ensure the window is focused
+        this.app.workspace.revealLeaf(leaf);
     }
 
-    private initWindow() {
-        if (!this.previewWindow) return;
-        
-        const doc = this.previewWindow.document;
-        doc.title = 'WeChat Preview';
-        
-        // Ensure body exists and is empty initially
-        if (!doc.body) {
-            doc.write('<body></body>');
-        }
-        
-        // Add the container div if not present
-        let container = doc.querySelector('.pixmi-preview-container');
-        if (!container) {
-            container = doc.createElement('div');
-            container.className = 'pixmi-preview-container';
-            doc.body.appendChild(container);
-        }
+    private getExistingLeaf(): WorkspaceLeaf | null {
+        const leaves = this.app.workspace.getLeavesOfType(VIEW_TYPE_WECHAT_PREVIEW);
+        return leaves.length > 0 ? leaves[0] : null;
     }
 
     updateContent(html: string) {
-        if (!this.previewWindow || this.previewWindow.closed) return;
-        
-        const container = this.previewWindow.document.querySelector('.pixmi-preview-container');
-        if (container) {
-            container.innerHTML = html;
+        const leaf = this.getExistingLeaf();
+        if (leaf && leaf.view instanceof WeChatPreviewView) {
+            const container = leaf.view.getPreviewContainer();
+            if (container) {
+                console.log('[Pixmi] Updating preview content, length:', html.length);
+                container.innerHTML = html;
+            } else {
+                console.warn('[Pixmi] Preview container not found in view');
+            }
         } else {
-             // Fallback
-             this.previewWindow.document.body.innerHTML = html;
+            console.log('[Pixmi] Preview leaf or view not found during update');
         }
     }
 
     injectStyle(themeId: string, css: string) {
-        if (!this.previewWindow || this.previewWindow.closed) return;
-        
-        this.styleInjector.inject(themeId, css, this.previewWindow.document);
-    }
-
-    closePreview() {
-        if (this.previewWindow) {
-            this.previewWindow.close();
-            this.previewWindow = null;
+        const leaf = this.getExistingLeaf();
+        if (leaf && leaf.view instanceof WeChatPreviewView) {
+            // Access the document where the view is rendered (main window or popout)
+            const doc = leaf.view.containerEl.ownerDocument;
+            this.styleInjector.inject(themeId, css, doc);
         }
     }
 
-    getPreviewWindow(): Window | null {
-        return this.previewWindow;
+    closePreview() {
+        const leaf = this.getExistingLeaf();
+        if (leaf) {
+            leaf.detach();
+        }
     }
 }

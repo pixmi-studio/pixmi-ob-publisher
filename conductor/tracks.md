@@ -14,5 +14,5 @@ This file tracks all major tracks for the project. Each track has its own detail
 
 ---
 
-- [~] **Track: Isolated Preview Window**
+- [x] **Track: Isolated Preview Window**
 *Link: [./conductor/tracks/isolated_preview_20260124/](./conductor/tracks/isolated_preview_20260124/)*
