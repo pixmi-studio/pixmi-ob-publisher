@@ -40,31 +40,31 @@ export class Publisher {
         let buffer: ArrayBuffer;
         let filename: string;
 
-        if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
-            // Handle remote images
-            try {
+        try {
+            if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
+                // Handle remote images
                 const response = await requestUrl({ url: imagePath, method: 'GET' });
                 buffer = response.arrayBuffer;
-                filename = 'remote_image.jpg'; // We could try to extract it from URL
-            } catch (e) {
-                console.error(`Failed to fetch remote image ${imagePath}:`, e);
-                continue;
+                filename = 'remote_image.jpg'; 
+            } else {
+                // Handle local images
+                buffer = await imageReader(imagePath);
+                filename = imagePath.split('/').pop() || 'image.jpg';
             }
-        } else {
-            // Handle local images
-            buffer = await imageReader(imagePath);
-            filename = imagePath.split('/').pop() || 'image.jpg';
-        }
-        
-        // Upload for content (using uploadimg API which returns a URL and doesn't count towards material limit)
-        const url = await this.apiClient.uploadImageForContent(buffer, filename);
-        urlMap.set(imagePath, url);
-        
-        // Use the first image as the thumbnail if not already set via thumbnailPath
-        if (!thumbMediaId) {
-            // Must be a permanent material for Draft Box
-            const result = await this.apiClient.uploadMaterial(buffer, filename, 'image');
-            thumbMediaId = result.media_id;
+            
+            // Upload for content (using uploadimg API which returns a URL and doesn't count towards material limit)
+            const url = await this.apiClient.uploadImageForContent(buffer, filename);
+            urlMap.set(imagePath, url);
+            
+            // Use the first image as the thumbnail if not already set via thumbnailPath
+            if (!thumbMediaId) {
+                // Must be a permanent material for Draft Box
+                const result = await this.apiClient.uploadMaterial(buffer, filename, 'image');
+                thumbMediaId = result.media_id;
+            }
+        } catch (e) {
+            console.error(`Failed to process image ${imagePath}:`, e);
+            continue;
         }
     }
 

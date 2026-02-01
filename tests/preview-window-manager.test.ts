@@ -1,62 +1,67 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { PreviewWindowManager } from '../src/preview-window-manager';
+import { WeChatPreviewView, VIEW_TYPE_WECHAT_PREVIEW } from '../src/preview-view';
 import { StyleInjector } from '../src/style-injector';
-import { App } from 'obsidian';
+
+// Mock WeChatPreviewView
+vi.mock('../src/preview-view', () => ({
+    VIEW_TYPE_WECHAT_PREVIEW: 'pixmi-wechat-preview',
+    WeChatPreviewView: class {
+        containerEl: any;
+        constructor() {
+            this.containerEl = {
+                ownerDocument: {}
+            };
+        }
+        getPreviewContainer() {
+            return { innerHTML: '' };
+        }
+    }
+}));
 
 describe('PreviewWindowManager', () => {
     let manager: PreviewWindowManager;
     let mockApp: any;
-    let mockWindow: any;
-    let mockContainer: any;
     let mockStyleInjector: any;
-    let containerFound = false;
+    let mockLeaf: any;
+    let mockView: any;
+    let mockContainer: any;
 
     beforeEach(() => {
+        mockContainer = { innerHTML: '' };
+        
+        mockView = {
+            getPreviewContainer: vi.fn().mockReturnValue(mockContainer),
+            containerEl: {
+                ownerDocument: {}
+            }
+        };
+
+        // Explicitly set the prototype so instanceof checks pass if we were using real classes, 
+        // but here we are mocking interfaces mostly. 
+        // However, the code does `leaf.view instanceof WeChatPreviewView`.
+        // We'll rely on the mock factory above or just mock the property if we can't easily import the class to instance check.
+        // Since we mocked the module, we can use the mocked class.
+        Object.setPrototypeOf(mockView, WeChatPreviewView.prototype);
+
+        mockLeaf = {
+            setViewState: vi.fn().mockResolvedValue(undefined),
+            detach: vi.fn(),
+            view: mockView
+        };
+
         mockApp = {
-            // Mock necessary app properties
+            workspace: {
+                getLeavesOfType: vi.fn().mockReturnValue([]),
+                openPopoutLeaf: vi.fn().mockReturnValue(mockLeaf),
+                revealLeaf: vi.fn()
+            }
         };
         
         mockStyleInjector = {
             inject: vi.fn(),
             clear: vi.fn()
         };
-
-        containerFound = false;
-        mockContainer = { innerHTML: '', className: '' };
-
-        mockWindow = {
-            document: {
-                title: '',
-                write: vi.fn(),
-                close: vi.fn(),
-                getElementById: vi.fn().mockReturnValue(null),
-                body: {
-                    innerHTML: '',
-                    appendChild: vi.fn().mockImplementation(() => {
-                        containerFound = true;
-                    })
-                },
-                head: {
-                    appendChild: vi.fn()
-                },
-                createElement: vi.fn().mockImplementation((tag) => {
-                    if (tag === 'div') return mockContainer;
-                    return { tagName: tag.toUpperCase() };
-                }),
-                querySelector: vi.fn().mockImplementation((sel) => {
-                    if (sel === '.pixmi-preview-container') {
-                        return containerFound ? mockContainer : null;
-                    }
-                    return null;
-                })
-            },
-            focus: vi.fn(),
-            close: vi.fn(),
-            closed: false
-        };
-
-        // Mock global window.open
-        vi.stubGlobal('open', vi.fn().mockReturnValue(mockWindow));
 
         manager = new PreviewWindowManager(mockApp, mockStyleInjector);
     });
@@ -69,48 +74,55 @@ describe('PreviewWindowManager', () => {
         expect(manager).toBeDefined();
     });
 
-    it('should open a new window when openPreview is called', () => {
-        manager.openPreview();
-        expect(window.open).toHaveBeenCalled();
-        expect(mockWindow.document.body.appendChild).toHaveBeenCalledWith(mockContainer);
+    it('should open a new popout leaf when openPreview is called and no existing leaf', async () => {
+        await manager.openPreview();
+        expect(mockApp.workspace.openPopoutLeaf).toHaveBeenCalled();
+        expect(mockLeaf.setViewState).toHaveBeenCalledWith({
+            type: VIEW_TYPE_WECHAT_PREVIEW,
+            active: true,
+        });
+        expect(mockApp.workspace.revealLeaf).toHaveBeenCalledWith(mockLeaf);
     });
 
-    it('should focus existing window if openPreview is called again', () => {
-        manager.openPreview();
-        manager.openPreview();
-        
-        expect(window.open).toHaveBeenCalledTimes(1);
-        expect(mockWindow.focus).toHaveBeenCalled();
-    });
+    it('should focus existing leaf if openPreview is called again', async () => {
+        // Setup existing leaf
+        mockApp.workspace.getLeavesOfType.mockReturnValue([mockLeaf]);
 
-    it('should open a new window if the previous one was closed', () => {
-        manager.openPreview();
+        await manager.openPreview();
         
-        // Simulate closing
-        mockWindow.closed = true;
-        
-        manager.openPreview();
-        expect(window.open).toHaveBeenCalledTimes(2);
+        expect(mockApp.workspace.openPopoutLeaf).not.toHaveBeenCalled();
+        expect(mockApp.workspace.revealLeaf).toHaveBeenCalledWith(mockLeaf);
     });
 
     it('should update content of the preview window container', () => {
-        manager.openPreview();
+        // Setup existing leaf
+        mockApp.workspace.getLeavesOfType.mockReturnValue([mockLeaf]);
+        
         manager.updateContent('<h1>Hello</h1>');
         
+        expect(mockView.getPreviewContainer).toHaveBeenCalled();
         expect(mockContainer.innerHTML).toBe('<h1>Hello</h1>');
     });
 
     it('should close the window when closePreview is called', () => {
-        manager.openPreview();
+        // Setup existing leaf
+        mockApp.workspace.getLeavesOfType.mockReturnValue([mockLeaf]);
+        
         manager.closePreview();
         
-        expect(mockWindow.close).toHaveBeenCalled();
+        expect(mockLeaf.detach).toHaveBeenCalled();
     });
 
-    it('should inject style into the preview window head using StyleInjector', () => {
-        manager.openPreview();
+    it('should inject style into the preview window document', () => {
+        // Setup existing leaf
+        mockApp.workspace.getLeavesOfType.mockReturnValue([mockLeaf]);
+        
         manager.injectStyle('default', 'body { color: blue; }');
 
-        expect(mockStyleInjector.inject).toHaveBeenCalledWith('default', 'body { color: blue; }', mockWindow.document);
+        expect(mockStyleInjector.inject).toHaveBeenCalledWith(
+            'default', 
+            'body { color: blue; }', 
+            mockView.containerEl.ownerDocument
+        );
     });
 });

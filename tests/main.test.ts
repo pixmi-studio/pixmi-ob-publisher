@@ -34,6 +34,7 @@ vi.mock('obsidian', () => {
         };
       }
       registerEvent() {}
+      registerView() {}
     },
     PluginSettingTab: class {},
     Setting: class Setting {
@@ -47,6 +48,18 @@ vi.mock('obsidian', () => {
     },
     Notice: mocks.noticeSpy,
     MarkdownView: class {},
+    ItemView: class {
+        constructor(leaf: any) { this.leaf = leaf; }
+        getViewType() { return ''; }
+        getDisplayText() { return ''; }
+        getIcon() { return ''; }
+        onOpen() { return Promise.resolve(); }
+        onClose() { return Promise.resolve(); }
+    },
+    WorkspaceLeaf: class {
+        view: any;
+        constructor() { this.view = null; }
+    },
     Modal: class {
       app: any;
       constructor(app: any) { this.app = app; }
@@ -72,6 +85,18 @@ vi.mock('../src/logger', () => {
             log(msg: string, level: string) { mocks.logSpy(msg, level); }
             getLogContent() { return Promise.resolve(''); }
             clearLogs() { return Promise.resolve(); }
+        }
+    };
+});
+
+// Mock ThemeManager
+vi.mock('../src/themes', () => {
+    return {
+        ThemeManager: class {
+            constructor() {}
+            loadThemes() { return Promise.resolve(); }
+            getTheme() { return { id: 'default', css: '', name: 'Default' }; }
+            getAllThemes() { return []; }
         }
     };
 });
@@ -108,6 +133,7 @@ describe('PixmiObPublisher', () => {
       },
       workspace: {
         getActiveViewOfType: vi.fn(),
+        getLeavesOfType: vi.fn().mockReturnValue([]),
         on: vi.fn()
       },
       metadataCache: {

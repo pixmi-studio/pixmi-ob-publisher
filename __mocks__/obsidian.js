@@ -94,6 +94,23 @@ module.exports = {
     Notice: class Notice {
         constructor(message) {}
     },
+    ItemView: class ItemView {
+        constructor(leaf) {
+            this.leaf = leaf;
+            this.contentEl = document.createElement('div');
+        }
+        getViewType() { return ''; }
+        getDisplayText() { return ''; }
+        getIcon() { return ''; }
+        onOpen() { return Promise.resolve(); }
+        onClose() { return Promise.resolve(); }
+        addAction(icon, title, callback) {}
+    },
+    WorkspaceLeaf: class WorkspaceLeaf {
+        constructor() {
+            this.view = null;
+        }
+    },
     requestUrl: async () => {
         return {
             status: 200,
