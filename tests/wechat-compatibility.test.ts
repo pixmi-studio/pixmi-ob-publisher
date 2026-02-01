@@ -16,9 +16,9 @@ describe('WeChat Compatibility', () => {
             const converter = new CssConverter();
             const html = '<p>Hello</p>';
             const result = converter.convert(html, '');
-            expect(result).toContain('<section class="wechat-container">');
+            expect(result).toContain('<div class="wechat-container">');
             expect(result).toContain('<p>Hello</p>');
-            expect(result).toContain('</section>');
+            expect(result).toContain('</div>');
         });
 
         it('should force white-space: pre-wrap and word-break: break-all on code blocks', () => {

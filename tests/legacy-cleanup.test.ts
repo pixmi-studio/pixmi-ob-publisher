@@ -72,6 +72,19 @@ describe('Legacy Cleanup', () => {
             loadThemes: vi.fn(),
             getAllThemes: vi.fn()
         } as any;
+
+        plugin.markdownParser = {
+            extractImages: vi.fn().mockReturnValue([]),
+            renderWithReplacements: vi.fn().mockReturnValue('<html></html>')
+        } as any;
+        
+        plugin.cssConverter = {
+            convert: vi.fn().mockReturnValue('<html></html>')
+        } as any;
+
+        plugin.previewWindowManager = {
+            updateContent: vi.fn()
+        } as any;
     });
 
     afterEach(() => {
@@ -98,13 +111,14 @@ describe('Legacy Cleanup', () => {
             containerEl: mockContainerEl,
             contentEl: {
                 querySelector: vi.fn().mockReturnValue(mockPreviewEl)
-            }
+            },
+            getViewData: vi.fn().mockReturnValue('# content')
         };
 
         mockApp.workspace.getActiveViewOfType.mockReturnValue(mockActiveView);
 
         // Call the method that used to do the injection
-        plugin.refreshPreviewStyle();
+        plugin.updatePreview();
 
         // Expectation: styleInjector.inject should NOT be called
         expect(mockStyleInjectorInstance.inject).not.toHaveBeenCalled();
@@ -130,13 +144,14 @@ describe('Legacy Cleanup', () => {
             containerEl: mockContainerEl,
             contentEl: {
                 querySelector: vi.fn().mockReturnValue(mockPreviewEl)
-            }
+            },
+            getViewData: vi.fn().mockReturnValue('# content')
         };
 
         mockApp.workspace.getActiveViewOfType.mockReturnValue(mockActiveView);
 
         // Call the method
-        plugin.refreshPreviewStyle();
+        plugin.updatePreview();
 
         // Expectation: classList.add should NOT be called for the container
         expect(mockContainerEl.classList.add).not.toHaveBeenCalledWith('pixmi-preview-container');

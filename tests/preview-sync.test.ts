@@ -46,7 +46,12 @@ describe('Preview Synchronization', () => {
         // Manually init dependencies that would be in onload
         plugin.previewWindowManager = mockPreviewManagerInstance;
         plugin.markdownParser = {
-            render: vi.fn().mockReturnValue('<p>rendered html</p>')
+            render: vi.fn().mockReturnValue('<p>rendered html</p>'),
+            extractImages: vi.fn().mockReturnValue([]),
+            renderWithReplacements: vi.fn().mockReturnValue('<p>rendered html</p>')
+        } as any;
+        plugin.cssConverter = {
+            convert: vi.fn().mockReturnValue('<p>converted html</p>')
         } as any;
         plugin.themeSwitcher = {
             getTheme: vi.fn().mockReturnValue('default')
@@ -66,11 +71,12 @@ describe('Preview Synchronization', () => {
         // Simulate sync call (which would be triggered by editor events)
         plugin.updatePreview();
 
-        expect(plugin.markdownParser.render).toHaveBeenCalledWith('# content');
-        expect(mockPreviewManagerInstance.updateContent).toHaveBeenCalledWith('<p>rendered html</p>');
+        expect(plugin.markdownParser.renderWithReplacements).toHaveBeenCalledWith('# content', expect.any(Map));
+        expect(plugin.cssConverter.convert).toHaveBeenCalledWith('<p>rendered html</p>', 'body { color: red; }');
+        expect(mockPreviewManagerInstance.updateContent).toHaveBeenCalledWith('<p>converted html</p>');
     });
 
-    it('should inject theme style when updating preview', () => {
+    it('should use CssConverter to apply styles when updating preview', () => {
         const mockView = {
             file: { path: 'test.md' },
             getViewData: vi.fn().mockReturnValue('# content')
@@ -79,7 +85,8 @@ describe('Preview Synchronization', () => {
 
         plugin.updatePreview();
 
-        expect(mockPreviewManagerInstance.injectStyle).toHaveBeenCalledWith('default', 'body { color: red; }');
+        expect(plugin.cssConverter.convert).toHaveBeenCalledWith('<p>rendered html</p>', 'body { color: red; }');
+        expect(mockPreviewManagerInstance.updateContent).toHaveBeenCalledWith('<p>converted html</p>');
     });
 
     it('should update preview with new file content when switching notes', () => {
@@ -90,9 +97,9 @@ describe('Preview Synchronization', () => {
             getViewData: () => '# Note 1'
         });
         
-        plugin.markdownParser.render = vi.fn().mockReturnValue('<h1>Note 1</h1>');
+        plugin.markdownParser.renderWithReplacements = vi.fn().mockReturnValue('<h1>Note 1</h1>');
         plugin.updatePreview();
-        expect(mockPreviewManagerInstance.updateContent).toHaveBeenCalledWith('<h1>Note 1</h1>');
+        expect(mockPreviewManagerInstance.updateContent).toHaveBeenCalledWith('<p>converted html</p>');
 
         // Switch view
         const file2 = { path: 'note2.md' };
@@ -101,8 +108,8 @@ describe('Preview Synchronization', () => {
             getViewData: () => '# Note 2'
         });
 
-        plugin.markdownParser.render = vi.fn().mockReturnValue('<h1>Note 2</h1>');
+        plugin.markdownParser.renderWithReplacements = vi.fn().mockReturnValue('<h1>Note 2</h1>');
         plugin.updatePreview();
-        expect(mockPreviewManagerInstance.updateContent).toHaveBeenCalledWith('<h1>Note 2</h1>');
+        expect(mockPreviewManagerInstance.updateContent).toHaveBeenCalledWith('<p>converted html</p>');
     });
 });
