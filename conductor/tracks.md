@@ -16,3 +16,9 @@ This file tracks all major tracks for the project. Each track has its own detail
 
 - [x] **Track: Isolated Preview Window**
 *Link: [./conductor/tracks/isolated_preview_20260124/](./conductor/tracks/isolated_preview_20260124/)*
+
+---
+
+- [ ] **Track: 优化上传至草稿箱后的文档排版格式 (medium geek)**
+*Link: [./tracks/theme_optimization_20260228/](./tracks/theme_optimization_20260228/)*
+
