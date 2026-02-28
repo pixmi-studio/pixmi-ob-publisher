@@ -477,9 +477,9 @@ li {
 
 /* Links */
 .wechat-container a {
-  color: #576b95 !important; /* WeChat Standard Blue */
+  color: #2c5282 !important; /* Deeper blue for better readability */
   text-decoration: none;
-  border-bottom: 1px solid rgba(87, 107, 149, 0.3);
+  border-bottom: 1px solid rgba(44, 82, 130, 0.3);
 }
 
 /* Force sans-serif for content elements */
@@ -540,8 +540,8 @@ li {
 
 /* Code Blocks */
 .wechat-container pre {
-  background-color: #f6f8fa !important; /* Slightly deeper grey for contrast */
-  border: 1px solid #e1e4e8 !important;
+  background-color: #f7fafc !important; /* Lighter, cleaner background */
+  border: 1px solid #edf2f7 !important;
   border-radius: 6px;
   padding: 16px !important;
   margin: 20px 0;
@@ -576,12 +576,12 @@ li {
 
 /* Blockquotes */
 .wechat-container blockquote {
-  border-left: 4px solid #d0d7de !important;
-  color: rgb(101, 109, 118) !important;
+  border-left: 4px solid #4a5568 !important; /* Deep gray-blue border */
+  color: rgb(74, 85, 104) !important;
   padding: 12px 16px !important; /* Increased vertical padding */
   margin: 24px 0 !important;
   font-style: normal;
-  background-color: #f8f9fa !important; /* Added subtle background */
+  background-color: #edf2f7 !important; /* Light blue-gray background */
   border-radius: 0 6px 6px 0;
 }
 
