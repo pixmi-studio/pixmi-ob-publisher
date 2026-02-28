@@ -94,8 +94,8 @@ export class CssConverter {
         // Apply global fixes for WeChat compatibility
         doc.querySelectorAll('p').forEach(p => {
             const currentStyle = p.getAttribute('style') || '';
-            // Default paragraph spacing for WeChat
-            const fix = 'margin-top: 0px; margin-bottom: 1em; line-height: 1.8;';
+            // Default paragraph spacing and typography for WeChat
+            const fix = 'margin-top: 0px; margin-bottom: 1em; line-height: 1.8; word-break: break-word; font-variant-numeric: tabular-nums;';
             p.setAttribute('style', this.mergeStyles(currentStyle, fix));
         });
 
