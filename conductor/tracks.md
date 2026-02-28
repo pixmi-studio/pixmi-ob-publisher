@@ -20,4 +20,4 @@ This file tracks all major tracks for the project. Each track has its own detail
 ---
 
 - [x] **Track: 优化上传至草稿箱后的文档排版格式 (medium geek)**
-*Link: [./tracks/theme_optimization_20260228/](./tracks/theme_optimization_20260228/)*
+*Link: [./archive/theme_optimization_20260228/](./archive/theme_optimization_20260228/)*
