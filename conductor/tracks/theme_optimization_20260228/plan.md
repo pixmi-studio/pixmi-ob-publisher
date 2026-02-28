@@ -8,7 +8,7 @@
 2. [x] **Task: Conductor - User Manual Verification 'Phase 1: Research & Setup' (Protocol in workflow.md)** (9418a28)
 
 ## Phase 2: Core Refactoring - Layout & Typography
-1. [ ] **Task: 修复换行逻辑**
+1. [x] **Task: 修复换行逻辑** (3f1410a)
    - [ ] 确保转换后的 HTML 能够保留有效的 `<p>` 标签或 `<br>` 标签（微信偏向段落分割）。
    - [ ] 在 `src/css-converter.ts` 或相关处理逻辑中注入微信偏好的段落样式。
 2. [ ] **Task: 优化 `medium geek` 字体与边距**
