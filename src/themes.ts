@@ -470,6 +470,9 @@ li {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif !important;
   color: rgb(51, 51, 51);
   line-height: 1.75;
+  padding: 15px 20px !important;
+  font-size: 15px !important;
+  letter-spacing: 0.5px;
 }
 
 /* Links */
@@ -566,10 +569,10 @@ li {
   margin-top: 24px;
   margin-bottom: 16px;
 }
-.wechat-container h1 { font-size: 28px !important; border-bottom: 1px solid #eaecef; padding-bottom: 5px; }
-.wechat-container h2 { font-size: 24px !important; border-bottom: 1px solid #eaecef; padding-bottom: 5px; }
-.wechat-container h3 { font-size: 20px !important; }
-.wechat-container h4 { font-size: 18px !important; font-weight: bold; }
+.wechat-container h1 { font-size: 22px !important; border-bottom: 1px solid #eaecef; padding-bottom: 5px; }
+.wechat-container h2 { font-size: 20px !important; border-bottom: 1px solid #eaecef; padding-bottom: 5px; }
+.wechat-container h3 { font-size: 18px !important; }
+.wechat-container h4 { font-size: 16px !important; font-weight: bold; }
 
 /* Blockquotes */
 .wechat-container blockquote {
@@ -581,6 +584,7 @@ li {
   background-color: #f8f9fa !important; /* Added subtle background */
   border-radius: 0 6px 6px 0;
 }
+
 
 /* Tables */
 .wechat-container table {
