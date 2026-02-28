@@ -21,11 +21,11 @@
 4. [x] **Task: Conductor - User Manual Verification 'Phase 2: Core Refactoring - Layout & Typography' (Protocol in workflow.md)** (63254d1)
 
 ## Phase 3: Visual Styling & Color Scheme
-1. [ ] **Task: 重塑 `medium geek` 配色方案**
-   - [ ] **引用块**：修改为深灰色/灰蓝边框，背景采用极浅灰/浅蓝灰。
-   - [ ] **代码块**：去除生硬配色，采用低对比度、高可读性的“极简极客”方案（仿暗色/极简背景）。
-   - [ ] **链接与重点**：调整强调色，确保整体色调和谐统一。
-2. [ ] **Task: 全面测试与验证**
-   - [ ] 模拟上传包含引用、代码、各级标题及长 URL 的测试文档。
-   - [ ] 通过微信小程序“公众号预览”检查移动端展示效果。
-3. [ ] **Task: Conductor - User Manual Verification 'Phase 3: Visual Styling & Color Scheme' (Protocol in workflow.md)**
+1. [x] **Task: 重塑 `medium geek` 配色方案** (a6e7b2f)
+   - [x] **引用块**：修改为深灰色/灰蓝边框，背景采用极浅灰/浅蓝灰。
+   - [x] **代码块**：去除生硬配色，采用低对比度、高可读性的“极简极客”方案（仿暗色/极简背景）。
+   - [x] **链接与重点**：调整强调色，确保整体色调和谐统一。
+2. [x] **Task: 全面测试与验证** (a6e7b2f)
+   - [x] 模拟上传包含引用、代码、各级标题及长 URL 的测试文档。
+   - [x] 通过微信小程序“公众号预览”检查移动端展示效果。
+3. [~] **Task: Conductor - User Manual Verification 'Phase 3: Visual Styling & Color Scheme' (Protocol in workflow.md)**
