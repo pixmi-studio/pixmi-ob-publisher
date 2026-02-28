@@ -1,11 +1,11 @@
 # Implementation Plan: `theme_optimization_20260228`
 
-## Phase 1: Research & Setup
+## Phase 1: Research & Setup [checkpoint: 9418a28]
 1. [x] **Task: 调研与复现排版问题** (5342343)
-   - [ ] 检查 `src/markdown-parser.ts` 或 `src/publisher.ts` 中的 Markdown 转换为 HTML 的逻辑，找出换行符丢失的原因。
-   - [ ] 在 `medium geek` 主题中对比当前的 CSS 样式（见 `src/themes.ts`）。
-   - [ ] 使用开发环境测试上传，通过微信草稿箱验证当前的问题。
-2. [ ] **Task: Conductor - User Manual Verification 'Phase 1: Research & Setup' (Protocol in workflow.md)**
+   - [x] 检查 `src/markdown-parser.ts` 或 `src/publisher.ts` 中的 Markdown 转换为 HTML 的逻辑，找出换行符丢失的原因。
+   - [x] 在 `medium geek` 主题中对比当前的 CSS 样式（见 `src/themes.ts`）。
+   - [x] 使用开发环境测试上传，通过微信草稿箱验证当前的问题。
+2. [x] **Task: Conductor - User Manual Verification 'Phase 1: Research & Setup' (Protocol in workflow.md)** (9418a28)
 
 ## Phase 2: Core Refactoring - Layout & Typography
 1. [ ] **Task: 修复换行逻辑**
