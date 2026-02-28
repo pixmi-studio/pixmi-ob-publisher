@@ -62,9 +62,9 @@ module.exports = {
           "versions.json",
           "CHANGELOG.md"
         ],
-        message: "chore(release): ${nextRelease.version} [skip ci]
+        message: `chore(release): ${nextRelease.version} [skip ci]
 
-${nextRelease.notes}"
+${nextRelease.notes}`
       }
     ],
     [
