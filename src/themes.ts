@@ -569,8 +569,8 @@ li {
   margin-top: 24px;
   margin-bottom: 16px;
 }
-.wechat-container h1 { font-size: 22px !important; border-bottom: 1px solid #eaecef; padding-bottom: 5px; }
-.wechat-container h2 { font-size: 20px !important; border-bottom: 1px solid #eaecef; padding-bottom: 5px; }
+.wechat-container h1 { font-size: 22px !important; }
+.wechat-container h2 { font-size: 20px !important; }
 .wechat-container h3 { font-size: 18px !important; }
 .wechat-container h4 { font-size: 16px !important; font-weight: bold; }
 
@@ -583,6 +583,9 @@ li {
   font-style: normal;
   background-color: #edf2f7 !important; /* Light blue-gray background */
   border-radius: 0 6px 6px 0;
+}
+.wechat-container blockquote p {
+  margin-bottom: 0 !important;
 }
 
 
