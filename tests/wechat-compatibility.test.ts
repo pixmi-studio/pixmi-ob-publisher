@@ -17,7 +17,9 @@ describe('WeChat Compatibility', () => {
             const html = '<p>Hello</p>';
             const result = converter.convert(html, '');
             expect(result).toContain('<div class="wechat-container">');
-            expect(result).toContain('<p>Hello</p>');
+            // Paragraph now has injected styles
+            expect(result).toContain('margin-bottom: 1em;');
+            expect(result).toContain('Hello</p>');
             expect(result).toContain('</div>');
         });
 

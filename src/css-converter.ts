@@ -92,6 +92,13 @@ export class CssConverter {
         }
 
         // Apply global fixes for WeChat compatibility
+        doc.querySelectorAll('p').forEach(p => {
+            const currentStyle = p.getAttribute('style') || '';
+            // Default paragraph spacing for WeChat
+            const fix = 'margin-top: 0px; margin-bottom: 1em; line-height: 1.8;';
+            p.setAttribute('style', this.mergeStyles(currentStyle, fix));
+        });
+
         doc.querySelectorAll('img').forEach(img => {
             const currentStyle = img.getAttribute('style') || '';
             const fix = 'max-width: 100% !important; height: auto !important; display: block; margin: 20px auto;';
