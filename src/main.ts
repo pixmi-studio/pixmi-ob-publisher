@@ -167,7 +167,7 @@ export default class PixmiObPublisher extends Plugin {
     const fileCache = this.app.metadataCache.getFileCache(activeFile);
     const frontmatter = fileCache?.frontmatter;
     const thumbnailPath = frontmatter?.thumb || frontmatter?.thumbnail;
-    const themeId = frontmatter?.['pixmi-theme'] || 'default';
+    const themeId = frontmatter?.['pixmi-theme'] || 'medium-geek';
     const theme = this.themeManager.getTheme(themeId);
     const themeCss = theme ? theme.css : '';
     console.log(`[Pixmi] Publishing with Theme: ${themeId}, CSS Length: ${themeCss.length}`);
@@ -222,8 +222,8 @@ export default class PixmiObPublisher extends Plugin {
     }
 
     const themeId = this.themeSwitcher.getTheme(activeView.file);
-    const theme = themeId ? this.themeManager.getTheme(themeId) : null;
-    const themeName = theme ? theme.name : 'Default';
+    const theme = themeId ? this.themeManager.getTheme(themeId) : this.themeManager.getTheme('medium-geek');
+    const themeName = theme ? theme.name : 'Medium Geek';
 
     this.statusBarItem.empty();
     this.statusBarItem.addClass('mod-clickable');
@@ -261,7 +261,7 @@ export default class PixmiObPublisher extends Plugin {
 
     let html = this.markdownParser.renderWithReplacements(markdown, urlMap);
     
-    const themeId = this.themeSwitcher.getTheme(activeView.file) || 'default';
+    const themeId = this.themeSwitcher.getTheme(activeView.file) || 'medium-geek';
     const theme = this.themeManager.getTheme(themeId);
     
     if (theme) {

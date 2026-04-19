@@ -63,12 +63,12 @@ describe('Legacy Cleanup', () => {
         plugin.styleInjector = mockStyleInjectorInstance;
         
         plugin.themeSwitcher = {
-            getTheme: vi.fn().mockReturnValue('default'),
+            getTheme: vi.fn().mockReturnValue('medium-geek'),
             setTheme: vi.fn()
         } as any;
 
         plugin.themeManager = {
-            getTheme: vi.fn().mockReturnValue({ id: 'default', css: 'body { color: red; }', name: 'Default' }),
+            getTheme: vi.fn().mockReturnValue({ id: 'medium-geek', css: 'body { color: red; }', name: 'Medium Geek' }),
             loadThemes: vi.fn(),
             getAllThemes: vi.fn()
         } as any;

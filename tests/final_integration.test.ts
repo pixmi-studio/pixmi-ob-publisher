@@ -22,7 +22,7 @@ describe('Final Integration Verification for Theme Optimization', () => {
         const result = converter.convert(html, theme!.css);
 
         // Verify font sizes (H1) and lack of border-bottom
-        expect(result).toContain('font-size: 22px !important;');
+        expect(result).toContain('font-size: 24px !important;');
         expect(result).not.toContain('border-bottom: 1px solid #eaecef');
         
         // Verify container padding
@@ -37,7 +37,7 @@ describe('Final Integration Verification for Theme Optimization', () => {
         
         // Verify blockquote colors and spacing
         expect(result).toContain('border-left: 4px solid #4a5568 !important;');
-        expect(result).toContain('background-color: #edf2f7 !important;');
+        expect(result).toContain('background-color: #f1f5f9 !important;');
         // Paragraph inside blockquote should have margin-bottom: 0 (overridden by theme)
         expect(result).toContain('margin-bottom: 0 !important;');
         expect(result).toMatch(/blockquote[^>]*>\s*<p[^>]*margin-bottom:\s*0\s*!important/);

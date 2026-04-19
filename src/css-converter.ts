@@ -28,8 +28,9 @@ export class CssConverter {
                         span.style.fontWeight = 'normal';
                         span.appendChild(child);
                     }
-                    // Force the text color inside the wrapper to match our body color
+                    // Force the text color and font-size inside the wrapper to match our body requirements
                     span.style.color = 'rgb(51, 51, 51)';
+                    span.style.setProperty('font-size', '15px', 'important');
                     wrapper.appendChild(span);
                 });
                 li.innerHTML = '';
@@ -39,6 +40,7 @@ export class CssConverter {
                 const span = doc.createElement('span');
                 span.style.fontWeight = 'normal';
                 span.style.color = 'rgb(51, 51, 51)';
+                span.style.setProperty('font-size', '15px', 'important');
                 while (li.firstChild) span.appendChild(li.firstChild);
                 li.appendChild(span);
             }
@@ -46,7 +48,6 @@ export class CssConverter {
 
         // 2. Structural Fix: Replace newlines in code blocks with <br> to force formatting
         doc.querySelectorAll('pre code').forEach(code => {
-            // ... (rest of code block fix)
             const walker = doc.createTreeWalker(code, NodeFilter.SHOW_TEXT);
             const textNodes: Node[] = [];
             while(walker.nextNode()) textNodes.push(walker.currentNode);
@@ -67,7 +68,7 @@ export class CssConverter {
         // 3. Global fixes for WeChat compatibility (Apply BEFORE theme rules so theme can override)
         doc.querySelectorAll('p').forEach(p => {
             const currentStyle = p.getAttribute('style') || '';
-            const fix = 'margin-top: 0px; margin-bottom: 1em; line-height: 1.8; word-break: break-word; font-variant-numeric: tabular-nums;';
+            const fix = 'margin-top: 0px; margin-bottom: 1em; line-height: 1.8; word-break: break-word; font-variant-numeric: tabular-nums; font-size: 15px !important;';
             p.setAttribute('style', this.mergeStyles(currentStyle, fix));
         });
 

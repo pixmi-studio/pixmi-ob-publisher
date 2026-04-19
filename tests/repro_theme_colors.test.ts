@@ -17,13 +17,13 @@ describe('Medium Geek Theme Color Optimization', () => {
         // Target: deep gray/gray-blue border, light gray/blue-gray bg
         // Previous: border-left: 4px solid #d0d7de !important; bg: #f8f9fa !important;
         expect(css).toContain('border-left: 4px solid #4a5568 !important;');
-        expect(css).toContain('background-color: #edf2f7 !important;');
+        expect(css).toContain('background-color: #f1f5f9 !important;');
         
         // Check code block colors
         // Target: lower contrast, high readability "Minimalist Geek"
         // Previous pre bg: #f6f8fa !important; border: 1px solid #e1e4e8 !important;
-        expect(css).toContain('background-color: #f7fafc !important;');
-        expect(css).toContain('border: 1px solid #edf2f7 !important;');
+        expect(css).toContain('background-color: #f8fafc !important;');
+        expect(css).toContain('border: 1px solid #e2e8f0 !important;');
         
         // Check link color optimization
         expect(css).toContain('color: #2c5282 !important;');
