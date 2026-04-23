@@ -1,3 +1,5 @@
+## [1.4.2](https://github.com/pixmi-studio/pixmi-ob-publisher/compare/v1.4.1...v1.4.2) (2026-04-23)
+
 ## [1.4.1](https://github.com/pixmi-studio/pixmi-ob-publisher/compare/v1.4.0...v1.4.1) (2026-02-28)
 
 
