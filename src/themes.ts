@@ -50,6 +50,188 @@ export class ThemeManager implements IThemeManager {
     private loadBuiltinThemes(): void {
         const builtinThemes: Theme[] = [
             {
+                id: 'medium-geek',
+                name: 'Medium Geek',
+                css: `
+/* --- Medium + GitHub Style (Optimized) --- */
+
+/* Base Container Typography */
+.wechat-container {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif !important;
+  color: rgb(51, 51, 51);
+  line-height: 1.75;
+  padding: 15px 20px !important;
+  font-size: 15px !important;
+  --articleFontsize: 15px !important;
+  letter-spacing: 0.5px;
+}
+
+/* Uniform Margins for Direct Children */
+.wechat-container > p, 
+.wechat-container > pre, 
+.wechat-container > blockquote, 
+.wechat-container > img,
+.wechat-container > ul,
+.wechat-container > ol {
+  margin: 0 16px 24px !important;
+}
+
+/* Links */
+.wechat-container a {
+  color: #2c5282 !important; /* Deeper blue for better readability */
+  text-decoration: none;
+  border-bottom: 1px solid rgba(44, 82, 130, 0.3);
+}
+
+/* Force sans-serif for content elements */
+.wechat-container p, 
+.wechat-container div {
+  font-family: inherit !important;
+  color: rgb(51, 51, 51) !important; /* Explicit text color */
+}
+
+/* Monospace for code */
+.wechat-container code, 
+.wechat-container pre {
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", "Menlo", "Consolas", monospace !important;
+  font-size: 15px !important; /* Explicitly set pre font size to match body */
+}
+
+/* Lists - Optimized Indentation */
+.wechat-container ul {
+  padding-inline-start: 28px !important;
+}
+
+.wechat-container ol {
+  padding-inline-start: 28px !important;
+}
+
+.wechat-container li {
+  line-height: 1.75 !important; 
+  margin-bottom: 8px; 
+  color: rgb(51, 51, 51) !important; /* Explicit text color */
+  font-weight: 400 !important;
+}
+
+/* Nested lists - Using smaller px values for Level 2+ */
+.wechat-container li > ul {
+  margin-top: 4px !important;
+  margin-bottom: 4px !important;
+  padding-inline-start: 15px !important;
+}
+
+.wechat-container li > ol {
+  margin-top: 4px !important;
+  margin-bottom: 4px !important;
+  padding-inline-start: 25px !important;
+}
+
+/* Inline Code */
+.wechat-container code {
+  background-color: rgba(175, 184, 193, 0.2) !important;
+  color: #e53e3e !important; /* Slightly reddish for inline highlights */
+  font-size: 14px !important;
+  padding: 3px 6px !important;
+  border-radius: 4px;
+  margin: 0 2px;
+}
+
+/* Code Blocks */
+.wechat-container pre {
+  background-color: #f8fafc !important; /* Very subtle blue-gray */
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 6px;
+  padding: 16px !important;
+  overflow-x: auto;
+}
+
+/* Reset inline code styles inside blocks */
+.wechat-container pre code {
+  color: #2d3748 !important;
+  font-size: 14px !important;
+  line-height: 1.6 !important; /* Increased for readability */
+  background: transparent !important;
+  padding: 0 !important;
+  margin: 0;
+  border-radius: 0;
+  display: block !important;
+  white-space: pre !important;
+}
+
+/* Headings */
+.wechat-container h1, .wechat-container h2, .wechat-container h3, .wechat-container h4, .wechat-container h5, .wechat-container h6 {
+  color: rgb(26, 26, 26) !important;
+  font-weight: 600;
+  line-height: 1.4;
+  margin-top: 32px; /* Increased top margin for section breathing */
+  margin-bottom: 16px;
+  text-align: center !important;
+}
+.wechat-container h1 { font-size: 24px !important; border-bottom: none; }
+.wechat-container h2 { font-size: 21px !important; }
+.wechat-container h3 { font-size: 18px !important; }
+.wechat-container h4 { font-size: 16px !important; font-weight: bold; }
+
+/* Blockquotes */
+.wechat-container blockquote {
+  border-left: 4px solid #4a5568 !important; /* Deep gray-blue border */
+  color: #4a5568 !important;
+  padding: 16px 20px !important; /* Increased padding */
+  font-style: normal;
+  background-color: #f1f5f9 !important; /* Lighter background for less weight */
+  border-radius: 0 6px 6px 0;
+}
+.wechat-container blockquote p {
+  margin-bottom: 0 !important;
+  line-height: 1.7 !important;
+}
+
+
+/* Tables */
+.wechat-container table {
+    font-size: 14px !important;
+    border-collapse: collapse;
+    width: 100%;
+    margin: 24px 0;
+    border: 1px solid #dfe2e5;
+    display: block;
+    overflow-x: auto;
+}
+.wechat-container th {
+    background-color: #f6f8fa !important;
+    font-weight: 600;
+    border: 1px solid #dfe2e5;
+    padding: 10px 13px;
+    text-align: left;
+}
+.wechat-container td {
+    border: 1px solid #dfe2e5;
+    padding: 8px 13px;
+    line-height: 1.5;
+    color: rgb(51, 51, 51);
+}
+
+/* Images */
+.wechat-container img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 8px; /* Slightly rounder */
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08); /* Stronger shadow for better lift */
+}
+
+/* Horizontal Rule */
+.wechat-container hr {
+    height: 1px;
+    padding: 0;
+    margin: 32px 0;
+    background-color: #e1e4e8;
+    border: 0;
+}
+                `,
+                type: 'builtin'
+            },
+            {
                 id: 'default',
                 name: 'Default',
                 css: `
@@ -57,12 +239,20 @@ export class ThemeManager implements IThemeManager {
                     .wechat-container {
                         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
                         line-height: 1.6;
+                        font-size: 15px !important;
+                        --articleFontsize: 15px !important;
                         color: #333;
                         padding: 20px;
                         max-width: 800px;
                         margin: 0 auto;
                         background-color: #fff; /* Ensure white background */
                     }
+                    
+                    /* Uniform Margins for Direct Children */
+                    .wechat-container > p, .wechat-container > pre, .wechat-container > blockquote, .wechat-container > img, .wechat-container > ul, .wechat-container > ol {
+                        margin: 0 16px 24px !important;
+                    }
+                    
                     .wechat-container h1, .wechat-container h2, .wechat-container h3 {
                         margin-top: 1.5em;
                         margin-bottom: 0.5em;
@@ -76,7 +266,6 @@ export class ThemeManager implements IThemeManager {
                     
                     /* Blockquote */
                     .wechat-container blockquote {
-                        margin: 0 0 16px !important;
                         padding: 0 1em !important;
                         color: #6a737d !important;
                         border-left: 0.25em solid #dfe2e5 !important;
@@ -84,10 +273,10 @@ export class ThemeManager implements IThemeManager {
                     }
                     
                     /* Lists */
-                    .wechat-container ul, .wechat-container ol { padding-left: 2em; margin-bottom: 16px; }
+                    .wechat-container ul, .wechat-container ol { padding-left: 2em; }
                     
                     /* Images */
-                    .wechat-container img { max-width: 100%; box-sizing: content-box; background-color: #fff; display: block; margin: 1em 0; }
+                    .wechat-container img { max-width: 100%; box-sizing: content-box; background-color: #fff; display: block; }
                     
                     /* Code Blocks */
                     .wechat-container pre { 
@@ -137,10 +326,16 @@ export class ThemeManager implements IThemeManager {
 @include-when-export url(https://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,700,400&subset=latin,latin-ext);
 
 .wechat-container {
-    font-size: 16px;
+    font-size: 15px !important;
+    --articleFontsize: 15px !important;
     font-family: "Open Sans","Clear Sans","Helvetica Neue",Helvetica,Arial,sans-serif;
     color: rgb(51, 51, 51);
     line-height: 1.6;
+}
+
+/* Uniform Margins for Direct Children */
+.wechat-container > p, .wechat-container > pre, .wechat-container > blockquote, .wechat-container > img, .wechat-container > ul, .wechat-container > ol {
+    margin: 0 16px 24px !important;
 }
 
 .wechat-container a {
@@ -181,7 +376,6 @@ export class ThemeManager implements IThemeManager {
     border-left: 4px solid #FFBF00;
     padding: 0 15px;
     color: #777777;
-    margin: 0.8em 0;
 }
 
 .wechat-container ul,
@@ -240,13 +434,16 @@ export class ThemeManager implements IThemeManager {
                 id: 'technical',
                 name: 'Technical',
                 css: `
-                    .wechat-container { font-family: "Fira Code", monospace !important; color: #24292e !important; line-height: 1.6 !important; background-color: #fff !important; padding: 20px !important; }
-                    .wechat-container p { margin-bottom: 16px !important; color: #24292e !important; }
+                    .wechat-container { font-family: "Fira Code", monospace !important; font-size: 15px !important; --articleFontsize: 15px !important; color: #24292e !important; line-height: 1.6 !important; background-color: #fff !important; padding: 20px !important; }
+                    /* Uniform Margins for Direct Children */
+                    .wechat-container > p, .wechat-container > pre, .wechat-container > blockquote, .wechat-container > img { margin: 0 16px 24px !important; }
+                    
+                    .wechat-container p { color: #24292e !important; }
                     .wechat-container h1 { border-bottom: 1px solid #eaecef !important; padding-bottom: 0.3em !important; color: #0366d6 !important; font-size: 2em !important; margin-top: 24px !important; margin-bottom: 16px !important; }
                     .wechat-container h2 { border-bottom: 1px solid #eaecef !important; padding-bottom: 0.3em !important; color: #0366d6 !important; font-size: 1.5em !important; margin-top: 24px !important; margin-bottom: 16px !important; }
                     .wechat-container code { background-color: rgba(27,31,35,0.05) !important; padding: 0.2em 0.4em !important; border-radius: 3px !important; color: #0366d6 !important; }
                     .wechat-container pre { background-color: #f6f8fa !important; padding: 16px !important; border-radius: 3px !important; border: 1px solid #e1e4e8 !important; overflow: auto !important; }
-                    .wechat-container blockquote { border-left: 0.25em solid #dfe2e5 !important; padding: 0 1em !important; color: #6a737d !important; margin-bottom: 16px !important; }
+                    .wechat-container blockquote { border-left: 0.25em solid #dfe2e5 !important; padding: 0 1em !important; color: #6a737d !important; }
                     .wechat-container table { border-collapse: collapse !important; width: 100% !important; margin-bottom: 16px !important; }
                     .wechat-container th, .wechat-container td { border: 1px solid #dfe2e5 !important; padding: 6px 13px !important; }
                     .wechat-container tr:nth-child(2n) { background-color: #f6f8fa !important; }
@@ -259,12 +456,18 @@ export class ThemeManager implements IThemeManager {
                 css: `
 /* Sspai Web Theme - WeChat Compatible */
 body {
-    font-size: 15px;
+    font-size: 15px !important;
+    --articleFontsize: 15px !important;
     color: #333;
     background: #fff;
     font-family: Helvetica, Arial, "PingFang SC", "Microsoft YaHei", "WenQuanYi Micro Hei", "tohoma,sans-serif";
     margin: 0;
     padding: 10%;
+}
+
+/* Uniform Margins for Direct Children */
+.wechat-container > p, .wechat-container > pre, .wechat-container > blockquote, .wechat-container > img, .wechat-container > ul, .wechat-container > ol {
+    margin: 0 16px 24px !important;
 }
 
 h1 {
@@ -330,7 +533,6 @@ img {
     width: 100%;
     border-radius: 5px;
     display: block;
-    margin-bottom: 15px;
     height: auto;
 }
 
@@ -344,7 +546,6 @@ ul {
 }
 
 p {
-    margin: 0 0 20px;
     padding: 0;
     line-height: 1.8;
 }
@@ -367,7 +568,6 @@ blockquote {
     font-size: 1em;
     font-style: normal;
     padding: 15px 20px;
-    margin: 0 0 15px;
     position: relative;
     line-height: 1.8;
     text-indent: 0;
@@ -392,7 +592,6 @@ del {
 }
 
 pre {
-    margin: 0 0 10px;
     font-size: 13px;
     line-height: 1.42857;
     word-break: break-all;
@@ -403,7 +602,6 @@ pre {
     background: #f8f8f8;
     padding: 10px 20px;
     border: none;
-    margin-bottom: 25px;
     color: #666;
     font-family: Courier, sans-serif;
 }
@@ -455,174 +653,6 @@ ul p {
 li {
     margin-bottom: 0.75em;
     margin-top: 0.75em;
-}
-                `,
-                type: 'builtin'
-            },
-            {
-                id: 'medium-geek',
-                name: 'Medium Geek',
-                css: `
-/* --- Medium + GitHub Style (Optimized) --- */
-
-/* Base Container Typography */
-.wechat-container {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif !important;
-  color: rgb(51, 51, 51);
-  line-height: 1.75;
-}
-
-/* Links */
-.wechat-container a {
-  color: #576b95 !important; /* WeChat Standard Blue */
-  text-decoration: none;
-  border-bottom: 1px solid rgba(87, 107, 149, 0.3);
-}
-
-/* Force sans-serif for content elements */
-.wechat-container p, 
-.wechat-container div {
-  font-family: inherit !important;
-  color: rgb(51, 51, 51) !important; /* Explicit text color */
-}
-
-/* Monospace for code */
-.wechat-container code, 
-.wechat-container pre {
-  font-family: ui-monospace, SFMono-Regular, "SF Mono", "Menlo", "Consolas", monospace !important;
-}
-
-/* Lists - Optimized Indentation */
-.wechat-container ul {
-  margin-top: 8px;
-  margin-bottom: 8px;
-  padding-inline-start: 28px !important;
-}
-
-.wechat-container ol {
-  margin-top: 8px;
-  margin-bottom: 8px;
-  padding-inline-start: 28px !important;
-}
-
-.wechat-container li {
-  line-height: 1.7 !important; 
-  margin-bottom: 6px; 
-  color: rgb(51, 51, 51) !important; /* Explicit text color */
-  font-weight: 400 !important;
-}
-
-/* Nested lists - Using smaller px values for Level 2+ */
-.wechat-container li > ul {
-  margin-top: 3px !important;
-  margin-bottom: 3px !important;
-  padding-inline-start: 15px !important;
-}
-
-.wechat-container li > ol {
-  margin-top: 3px !important;
-  margin-bottom: 3px !important;
-  padding-inline-start: 25px !important;
-}
-
-/* Inline Code */
-.wechat-container code {
-  background-color: rgba(175, 184, 193, 0.2) !important;
-  color: rgb(51, 51, 51) !important;
-  font-size: 14px !important;
-  padding: 3px 6px !important;
-  border-radius: 6px;
-  margin: 0 2px;
-}
-
-/* Code Blocks */
-.wechat-container pre {
-  background-color: #f6f8fa !important; /* Slightly deeper grey for contrast */
-  border: 1px solid #e1e4e8 !important;
-  border-radius: 6px;
-  padding: 16px !important;
-  margin: 20px 0;
-  overflow-x: auto;
-}
-
-/* Reset inline code styles inside blocks */
-.wechat-container pre code {
-  color: rgb(31, 35, 40) !important;
-  font-size: 14px !important;
-  line-height: 1.5 !important;
-  background: transparent !important;
-  padding: 0 !important;
-  margin: 0;
-  border-radius: 0;
-  display: block !important;
-  white-space: pre !important;
-}
-
-/* Headings */
-.wechat-container h1, .wechat-container h2, .wechat-container h3, .wechat-container h4 {
-  color: rgb(26, 26, 26) !important;
-  font-weight: 600;
-  line-height: 1.3;
-  margin-top: 24px;
-  margin-bottom: 16px;
-}
-.wechat-container h1 { font-size: 28px !important; border-bottom: 1px solid #eaecef; padding-bottom: 5px; }
-.wechat-container h2 { font-size: 24px !important; border-bottom: 1px solid #eaecef; padding-bottom: 5px; }
-.wechat-container h3 { font-size: 20px !important; }
-.wechat-container h4 { font-size: 18px !important; font-weight: bold; }
-
-/* Blockquotes */
-.wechat-container blockquote {
-  border-left: 4px solid #d0d7de !important;
-  color: rgb(101, 109, 118) !important;
-  padding: 12px 16px !important; /* Increased vertical padding */
-  margin: 24px 0 !important;
-  font-style: normal;
-  background-color: #f8f9fa !important; /* Added subtle background */
-  border-radius: 0 6px 6px 0;
-}
-
-/* Tables */
-.wechat-container table {
-    font-size: 14px !important;
-    border-collapse: collapse;
-    width: 100%;
-    margin: 24px 0;
-    border: 1px solid #dfe2e5;
-    display: block;
-    overflow-x: auto;
-}
-.wechat-container th {
-    background-color: #f6f8fa !important;
-    font-weight: 600;
-    border: 1px solid #dfe2e5;
-    padding: 10px 13px;
-    text-align: left;
-}
-.wechat-container td {
-    border: 1px solid #dfe2e5;
-    padding: 8px 13px;
-    line-height: 1.5;
-    color: rgb(51, 51, 51);
-}
-
-/* Images */
-.wechat-container img {
-    max-width: 100%;
-    height: auto;
-    display: block;
-    margin: 25px auto;
-    border-radius: 6px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-}
-
-/* Horizontal Rule */
-.wechat-container hr {
-    height: 1px;
-    padding: 0;
-    margin: 32px 0;
-    background-color: #e1e4e8;
-    border: 0;
 }
                 `,
                 type: 'builtin'

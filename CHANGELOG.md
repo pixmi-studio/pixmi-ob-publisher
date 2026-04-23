@@ -1,3 +1,17 @@
+## [1.4.1](https://github.com/pixmi-studio/pixmi-ob-publisher/compare/v1.4.0...v1.4.1) (2026-02-28)
+
+
+### Bug Fixes
+
+* **layout:** Inject default paragraph margins for WeChat compatibility ([3f1410a](https://github.com/pixmi-studio/pixmi-ob-publisher/commit/3f1410a8ce809f28fbbf0d3eac165e1ffc0f51f5))
+* **release:** fix nextRelease ReferenceError in .releaserc.js ([f578d54](https://github.com/pixmi-studio/pixmi-ob-publisher/commit/f578d5476840d4158a2e793076e96e5519f6af64))
+* **release:** fix syntax error in .releaserc.js ([ffdb658](https://github.com/pixmi-studio/pixmi-ob-publisher/commit/ffdb658eb9b66952b8bea3dc4a3c827fd3701b7b))
+
+
+### Features
+
+* **release:** support manual release with version type selection ([31ee6f4](https://github.com/pixmi-studio/pixmi-ob-publisher/commit/31ee6f42247399a81fafb39b634f59840075d361))
+
 # [1.4.0](https://github.com/pixmi-studio/pixmi-ob-publisher/compare/v1.3.0...v1.4.0) (2026-02-01)
 
 

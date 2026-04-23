@@ -1,0 +1,8 @@
+{
+  "track_id": "theme_optimization_20260228",
+  "type": "feature",
+  "status": "new",
+  "created_at": "2026-02-28T10:00:00Z",
+  "updated_at": "2026-02-28T10:00:00Z",
+  "description": "需要优化上传到草稿箱后的文档排版格式,重点优化medium geek 这个主题 。目前发现几个问题: 1.换行逻辑需要优化，上传之后的文章没有换行了 2.优化阅读体验：文章左右 padding 和字体大小需要优化 padding 需要大一些以适配移动端的阅读体验,字体感觉可以整体再小一点 3.中英文混合排版时，word break letter-spacing 等排版逻辑需要优化 4.整体配色优化下,目前有点生硬 比如引用块, 代码块等等,安装 markdown 的支持的格式整体检查调整.提供配色方案让我选择"
+}

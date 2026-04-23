@@ -28,8 +28,9 @@ export class CssConverter {
                         span.style.fontWeight = 'normal';
                         span.appendChild(child);
                     }
-                    // Force the text color inside the wrapper to match our body color
+                    // Force the text color and font-size inside the wrapper to match our body requirements
                     span.style.color = 'rgb(51, 51, 51)';
+                    span.style.setProperty('font-size', '15px', 'important');
                     wrapper.appendChild(span);
                 });
                 li.innerHTML = '';
@@ -39,6 +40,7 @@ export class CssConverter {
                 const span = doc.createElement('span');
                 span.style.fontWeight = 'normal';
                 span.style.color = 'rgb(51, 51, 51)';
+                span.style.setProperty('font-size', '15px', 'important');
                 while (li.firstChild) span.appendChild(li.firstChild);
                 li.appendChild(span);
             }
@@ -46,19 +48,6 @@ export class CssConverter {
 
         // 2. Structural Fix: Replace newlines in code blocks with <br> to force formatting
         doc.querySelectorAll('pre code').forEach(code => {
-            // We need to preserve internal tags if any (like syntax highlighting spans if added later)
-            // But markdown-it output for code block is usually text.
-            // Let's assume text for safety or handle child nodes.
-            // Safe approach: Replace text node newlines.
-            
-            // However, modifying DOM while iterating is tricky. 
-            // Simplest robust way for markdown code blocks:
-            const htmlContent = code.innerHTML;
-            // Only replace newlines that are NOT inside tags (simple regex is risky).
-            // But code blocks usually don't have tags unless highlighted. 
-            // Markdown-it output without highlighter is plain text escaped.
-            
-            // Let's use a node walker to be safe.
             const walker = doc.createTreeWalker(code, NodeFilter.SHOW_TEXT);
             const textNodes: Node[] = [];
             while(walker.nextNode()) textNodes.push(walker.currentNode);
@@ -76,22 +65,13 @@ export class CssConverter {
             });
         });
 
-        const rules = this.parseCss(css);
+        // 3. Global fixes for WeChat compatibility (Apply BEFORE theme rules so theme can override)
+        doc.querySelectorAll('p').forEach(p => {
+            const currentStyle = p.getAttribute('style') || '';
+            const fix = 'margin-top: 0px; margin-bottom: 1em; line-height: 1.8; word-break: break-word; font-variant-numeric: tabular-nums; font-size: 15px !important;';
+            p.setAttribute('style', this.mergeStyles(currentStyle, fix));
+        });
 
-        for (const rule of rules) {
-            try {
-                const elements = doc.querySelectorAll(rule.selector);
-                elements.forEach(el => {
-                    const currentStyle = el.getAttribute('style') || '';
-                    const newStyle = this.mergeStyles(currentStyle, rule.declarations);
-                    el.setAttribute('style', newStyle);
-                });
-            } catch (e) {
-                // Ignore invalid selectors silently in production
-            }
-        }
-
-        // Apply global fixes for WeChat compatibility
         doc.querySelectorAll('img').forEach(img => {
             const currentStyle = img.getAttribute('style') || '';
             const fix = 'max-width: 100% !important; height: auto !important; display: block; margin: 20px auto;';
@@ -110,6 +90,21 @@ export class CssConverter {
              const fix = 'word-break: break-all;'; // Ensure inline code also breaks if too long
              code.setAttribute('style', this.mergeStyles(currentStyle, fix));
         });
+
+        const rules = this.parseCss(css);
+
+        for (const rule of rules) {
+            try {
+                const elements = doc.querySelectorAll(rule.selector);
+                elements.forEach(el => {
+                    const currentStyle = el.getAttribute('style') || '';
+                    const newStyle = this.mergeStyles(currentStyle, rule.declarations);
+                    el.setAttribute('style', newStyle);
+                });
+            } catch (e) {
+                // Ignore invalid selectors silently in production
+            }
+        }
 
         // Clean up whitespace in lists to prevent WeChat editor from creating empty list items
         doc.querySelectorAll('ul, ol').forEach(list => {

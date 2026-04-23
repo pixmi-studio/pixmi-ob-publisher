@@ -1,6 +1,6 @@
 {
   "name": "pixmi-ob-publisher",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "",
   "main": "dist/main.js",
   "scripts": {
@@ -14,7 +14,7 @@
   },
   "keywords": [],
   "author": "Pixmi Studio",
-  "license": "MIT",
+  "license": "GPL-3.0-or-later",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/pixmi-studio/pixmi-ob-publisher.git"

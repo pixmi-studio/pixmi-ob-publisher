@@ -54,10 +54,10 @@ describe('Preview Synchronization', () => {
             convert: vi.fn().mockReturnValue('<p>converted html</p>')
         } as any;
         plugin.themeSwitcher = {
-            getTheme: vi.fn().mockReturnValue('default')
+            getTheme: vi.fn().mockReturnValue('medium-geek')
         } as any;
         plugin.themeManager = {
-            getTheme: vi.fn().mockReturnValue({ id: 'default', css: 'body { color: red; }' })
+            getTheme: vi.fn().mockReturnValue({ id: 'medium-geek', css: 'body { color: red; }' })
         } as any;
     });
 

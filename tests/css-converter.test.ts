@@ -14,7 +14,9 @@ describe('CssConverter', () => {
         const result = converter.convert(html, css);
 
         expect(result).toContain('<h1 style="color: red;">Hello</h1>');
-        expect(result).toContain('<p style="font-size: 14px;">World</p>');
+        // The p tag now has injected styles merged with CSS
+        expect(result).toContain('font-size: 14px;');
+        expect(result).toContain('margin-bottom: 1em;');
     });
 
     it('should handle class selectors', () => {

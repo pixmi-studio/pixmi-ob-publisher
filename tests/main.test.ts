@@ -95,7 +95,7 @@ vi.mock('../src/themes', () => {
         ThemeManager: class {
             constructor() {}
             loadThemes() { return Promise.resolve(); }
-            getTheme() { return { id: 'default', css: '', name: 'Default' }; }
+            getTheme() { return { id: 'medium-geek', css: '', name: 'Medium Geek' }; }
             getAllThemes() { return []; }
         }
     };
