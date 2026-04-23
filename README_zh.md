@@ -3,7 +3,7 @@
 [简体中文] | [English](./README.md)
 
 [![GitHub release (latest by date)](https://img.shields.io/github/v/release/pixmi-studio/pixmi-ob-publisher?style=flat-square)](https://github.com/pixmi-studio/pixmi-ob-publisher/releases)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](https://opensource.org/licenses/MIT)
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg?style=flat-square)](https://www.gnu.org/licenses/gpl-3.0)
 [![Buy Me A Coffee](https://img.shields.io/badge/buy%20me%20a%20coffee-donate-yellow.svg?style=flat-square)](https://www.buymeacoffee.com/pixmistudio)
 [![GitHub stars](https://img.shields.io/github/stars/pixmi-studio/pixmi-ob-publisher?style=flat-square)](https://github.com/pixmi-studio/pixmi-ob-publisher/stargazers)
 
@@ -79,7 +79,7 @@ npm run test
 
 ## 开源协议
 
-本项目采用 MIT 协议开源 - 详见 [LICENSE](LICENSE) 文件。
+本项目采用 GNU General Public License v3.0 协议开源 - 详见 [LICENSE](LICENSE) 文件。
 
 ---
 
